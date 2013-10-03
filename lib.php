@@ -144,7 +144,7 @@ class format_stanford extends format_base {
         }
 
         // check if there are callbacks to extend course navigation
-        parent::extend_course_navigation($navigation, $node);
+        // parent::extend_course_navigation($navigation, $node);
     }
 
     /**

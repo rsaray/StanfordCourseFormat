@@ -29,12 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
 require_once($CFG->dirroot.'/course/format/stanford/stanfordrenderer.php');
 
-/**
- * Basic renderer for topics format.
- *
- * @copyright 2012 Dan Poltawski
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+
 class format_stanford_renderer extends format_section_renderer_base {
 
     protected $stanfordcourserender;
@@ -161,8 +156,8 @@ class format_stanford_renderer extends format_section_renderer_base {
         if ($thissection->summary or !empty($modinfo->sections[0]) or $PAGE->user_is_editing()) {
             echo $this->start_section_list();
             echo $this->section_header($thissection, $course, true, $displaysection);
-            echo $this->courserenderer->course_section_cm_list($course, $thissection, $displaysection);
-            echo $this->courserenderer->course_section_add_cm_control($course, 0, $displaysection);
+            echo $this->stanfordcourserender->stanford_course_section_cm_list($course, $thissection, $displaysection);
+            echo $this->stanfordcourserender->course_section_add_cm_control($course, 0, $displaysection);
             echo $this->section_footer();
             echo $this->end_section_list();
         }
@@ -196,8 +191,8 @@ class format_stanford_renderer extends format_section_renderer_base {
         $completioninfo = new completion_info($course);
         echo $completioninfo->display_help_icon();
 
-        echo $this->courserenderer->course_section_cm_list($course, $thissection, $displaysection);
-        echo $this->courserenderer->course_section_add_cm_control($course, $displaysection, $displaysection);
+        echo $this->stanfordcourserender->stanford_course_section_cm_list($course, $thissection, $displaysection);
+        echo $this->stanfordcourserender->course_section_add_cm_control($course, $displaysection, $displaysection);
         echo $this->section_footer();
         echo $this->end_section_list();
 
