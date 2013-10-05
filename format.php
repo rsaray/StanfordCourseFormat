@@ -29,6 +29,8 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir.'/completionlib.php');
 
+
+
 // Horrible backwards compatible parameter aliasing..
 if ($stanford = optional_param('stanford', 0, PARAM_INT)) {
     $url = $PAGE->url;
@@ -37,6 +39,7 @@ if ($stanford = optional_param('stanford', 0, PARAM_INT)) {
     redirect($url);
 }
 // End backwards-compatible aliasing..
+
 
 $context = context_course::instance($course->id);
 
@@ -51,10 +54,11 @@ course_create_sections_if_missing($course, range(0, $course->numsections));
 
 $renderer = $PAGE->get_renderer('format_stanford');
 
+
+
 function fnRemoveLeftNav($buffer) {
     return (str_replace('<div id="region-pre" class="block-region">','<div id="region-pre" class="block-region block-region-none">' , $buffer));
-}
-    
+}    
 
 if (!$PAGE->user_allowed_editing()) {
 	ob_start("fnRemoveLeftNav");
@@ -67,6 +71,7 @@ if (!empty($displaysection)) {
 }
 
 if(!$PAGE->user_allowed_editing()){
+    echo '<div id="showallitems"><a id="showallitemsaction" href="javascript:void(0);">Show All Course Modules</a></div>';
     echo "<div id='region-sidebar'>";  
         
     echo "<ul>";
@@ -74,7 +79,7 @@ if(!$PAGE->user_allowed_editing()){
     $sidbarArray = $DB->get_recordset_sql('SELECT * FROM {course_sections} WHERE course = ?',array($course->id));
     foreach ($sidbarArray as $value) {
         if($value->name != null && $value->section != 0){
-            echo "<li class='section' id='section-".$seciontNumber."'><a>".$value->name."</a><ul style='display:none;'>";
+            echo "<li class='section' data-id='section-".$seciontNumber."'><a>".$value->name."</a><ul style='display:none;'>";
             
         $sectionID = $DB->get_field ('course_sections', 'id', array('name'=>$value->name,'course'=>$value->course));
 
@@ -86,7 +91,7 @@ if(!$PAGE->user_allowed_editing()){
             // $title = str_replace("<p> </p>","",$title);
             preg_match_all("/<h4>(.*?)<\/h4>/is", $title, $gettitle);
 
-            echo "<li class='module' id='module-".$moduleid."'><a href='#'>".$gettitle[0][0]."</a><ul class='progressBar'></ul></li>";
+            echo "<li class='module' data-id='module-".$moduleid."'><a href='#'>".$gettitle[0][0]."</a><ul class='progressBar'></ul></li>";
         }
         $instance_rs->close();
         
@@ -100,3 +105,6 @@ if(!$PAGE->user_allowed_editing()){
 }
 // Include course format js module
 $PAGE->requires->js('/course/format/stanford/format.js');
+echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>';
+// echo '<script type="text/javascript" src="format/stanford/js/main.js"></script>';
+$PAGE->requires->js('/course/format/stanford/js/main.js');

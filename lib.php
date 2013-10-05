@@ -327,4 +327,11 @@ class format_stanford extends format_base {
         }
         return $this->update_format_options($data);
     }
+    
+    // public function extend_course_navigation($navigation, navigation_node $node) {
+    //     if ($course = $this->get_course()) {
+    //         $navigation->load_generic_course_sections($course, $node);
+    //     }
+    //     return array();
+    // }
 }

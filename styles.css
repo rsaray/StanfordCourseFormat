@@ -745,7 +745,7 @@ p.errormessage {color: #8c1515;
 	background-position: -85px -292px;
 }
 #showallitems {
-	margin-top:15px;
+	margin-left: 9px;
 }
 #showallitems ul {
 	list-style: none;
@@ -767,6 +767,114 @@ p.errormessage {color: #8c1515;
 	margin-left:10px;
 	margin-top:3px;
 }
+
+
+
+/* STANFORD:; TA Feedback - Zhao*/
+.navbar.clearfix > #classnavbar > #ta_feedback_menu #ta_feedback_dropdown {
+	display: none;
+	list-style: none;
+	height: auto;
+	background: #F2F1EB;
+	width: 15em;
+	margin-left: 0;
+	margin-top: 2.2em;
+	position: absolute;
+	z-index: 99;
+	-moz-box-shadow: 3px 3px 4px #8A887D;
+	-webkit-box-shadow: 3px 3px 4px #8A887D;
+	box-shadow: 3px 3px 4px #8A887D;
+	/* For IE 8 */
+	-ms-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#8A887D');
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#8A887D');
+}
+
+.navbar.clearfix > #classnavbar > #ta_feedback_menu {
+	text-decoration: none;
+	color: #8C1515;
+	border: 1px solid #D5D0C0;
+	border-bottom: none;
+	background: #fff;
+	width: 25px;
+	-webkit-border-top-left-radius: 3px;
+	-webkit-border-top-right-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-topright: 3px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	height: 32px;
+}
+
+.navbar.clearfix > #classnavbar > #ta_feedback_menu #ta_feedback_dropdown li.unread {
+	border-top: 1px solid #8C1515;
+	width: 15em;
+	cursor: pointer;
+	text-indent: 0;
+	background: #eed3d7;
+}
+
+.navbar.clearfix > #classnavbar > #ta_feedback_menu #ta_feedback_dropdown li {
+	border-top: 1px solid #8C1515;
+	width: 15em;
+	cursor: pointer;
+	text-indent: 0;
+}
+.navbar.clearfix > #classnavbar > #ta_feedback_menu #ta_feedback_dropdown li:hover {
+	background-color: #fff;
+	cursor: pointer;
+}
+
+.navbar.clearfix > #classnavbar > #ta_feedback_menu > #ta_feedback_dropdown.drop {
+	display: block;
+}
+
+.navbar.clearfix > #classnavbar > #ta_feedback_menu > #ta_feedback_dropdown  a{
+	background-image:none;
+	float: left;
+	padding: 5px;
+	cursor:pointer;
+} 
+
+#ta_feedback_menu > #ta_feedback_dropdown a span{
+	display: inline-block;
+	overflow: hidden;
+	width: 15em;
+	zoom: 1;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: #369;
+}
+
+.navbar.clearfix > #classnavbar > #ta_feedback_menu > a{
+	text-decoration: none;
+	background: transparent url([[pix:theme|scpd-moodle-ta-feedback-flag]]) no-repeat;	
+	float: left;
+	text-indent: 0;
+	color: transparent; 
+	margin: 3px;
+}
+
+.navbar.clearfix > #classnavbar > #ta_feedback_menu.with > a{
+	background: transparent url([[pix:theme|scpd-moodle-ta-feeback-flag_blue]]) no-repeat;	
+}
+.navbar.clearfix > #classnavbar > #ta_feedback_menu #feedback_number{
+	text-indent: 0;
+	position: absolute;
+	-webkit-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+	width: 14px;
+	text-align: center;
+	top: 93px;
+	background: #336699;
+	color: #fff;
+	font-size: .7em;
+	margin-left: 13px;
+}
+
+
 
 /* Footer */
 #page-footer p.helplink {
