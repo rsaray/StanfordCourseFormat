@@ -93,7 +93,7 @@ class stanford_course_renderer extends core_course_renderer {
                     continue;
                 }
                 $instancename = $mod->get_formatted_name();
-                if ($modulehtml = $this->course_section_cm($course,
+                if ($modulehtml = $this->stanford_course_section_cm($course,
                         $completioninfo, $mod, $sectionreturn, $displayoptions)) {
 
                     $moduleshtml[$modnumber][0] = $modulehtml;
@@ -181,6 +181,238 @@ class stanford_course_renderer extends core_course_renderer {
             $output .= html_writer::end_tag('ul'); // .section
         }
 
+        return $output;
+    }
+
+    /**
+     * Renders HTML to display one course module in a course section
+     *
+     * This includes link, content, availability, completion info and additional information
+     * that module type wants to display (i.e. number of unread forum posts)
+     *
+     * This function calls:
+     * {@link core_course_renderer::course_section_cm_name()}
+     * {@link cm_info::get_after_link()}
+     * {@link core_course_renderer::course_section_cm_text()}
+     * {@link core_course_renderer::course_section_cm_availability()}
+     * {@link core_course_renderer::course_section_cm_completion()}
+     * {@link course_get_cm_edit_actions()}
+     * {@link core_course_renderer::course_section_cm_edit_actions()}
+     *
+     * @param stdClass $course
+     * @param completion_info $completioninfo
+     * @param cm_info $mod
+     * @param int|null $sectionreturn
+     * @param array $displayoptions
+     * @return string
+     */
+    public function stanford_course_section_cm($course, &$completioninfo, cm_info $mod, $sectionreturn, $displayoptions = array()) {
+        $output = '';
+        // We return empty string (because course module will not be displayed at all)
+        // if:
+        // 1) The activity is not visible to users
+        // and
+        // 2a) The 'showavailability' option is not set (if that is set,
+        //     we need to display the activity so we can show
+        //     availability info)
+        // or
+        // 2b) The 'availableinfo' is empty, i.e. the activity was
+        //     hidden in a way that leaves no info, such as using the
+        //     eye icon.
+        if (!$mod->uservisible &&
+            (empty($mod->showavailability) || empty($mod->availableinfo))) {
+            return $output;
+        }
+
+        $indentclasses = 'mod-indent';
+        if (!empty($mod->indent)) {
+            $indentclasses .= ' mod-indent-'.$mod->indent;
+            if ($mod->indent > 15) {
+                $indentclasses .= ' mod-indent-huge';
+            }
+        }
+        $output .= html_writer::start_tag('div', array('class' => $indentclasses));
+
+        // Start the div for the activity title, excluding the edit icons.
+        $output .= html_writer::start_tag('div', array('class' => 'activityinstance'));
+
+        // Display the link to the module (or do nothing if module has no url)
+        $output .= $this->stanford_course_section_cm_name($course, $completioninfo, $mod, $displayoptions);
+
+        // Module can put text after the link (e.g. forum unread)
+        $output .= $mod->get_after_link();
+
+        // Closing the tag which contains everything but edit icons. Content part of the module should not be part of this.
+        $output .= html_writer::end_tag('div'); // .activityinstance
+
+        // If there is content but NO link (eg label), then display the
+        // content here (BEFORE any icons). In this case cons must be
+        // displayed after the content so that it makes more sense visually
+        // and for accessibility reasons, e.g. if you have a one-line label
+        // it should work similarly (at least in terms of ordering) to an
+        // activity.
+        $contentpart = $this->course_section_cm_text($mod, $displayoptions);
+        $url = $mod->get_url();
+        if (empty($url)) {
+            $output .= $contentpart;
+        }
+
+        if ($this->page->user_is_editing()) {
+            $editactions = course_get_cm_edit_actions($mod, $mod->indent, $sectionreturn);
+            $output .= ' '. $this->course_section_cm_edit_actions($editactions);
+            $output .= $mod->get_after_edit_icons();
+        }
+
+        $output .= $this->course_section_cm_completion($course, $completioninfo, $mod, $displayoptions);
+
+        // If there is content AND a link, then display the content here
+        // (AFTER any icons). Otherwise it was displayed before
+        if (!empty($url)) {
+            $output .= $contentpart;
+        }
+
+        // show availability info (if module is not available)
+        $output .= $this->course_section_cm_availability($mod, $displayoptions);
+
+        // if($mod->module ==23){
+        //     global $DB;
+        //     $richmediaDescription = $DB->get_field('richmedia', 'intro', array('id'=>$mod->instance), IGNORE_MISSING);
+        //     $output .= html_writer::start_tag('div', array('class' => 'richmedia_intr'));
+        //         $output .= $richmediaDescription;
+        //     $output .= html_writer::end_tag('div');    
+        // }
+
+        $output .= html_writer::end_tag('div'); // $indentclasses
+
+        // if($mod->module ==23){
+        //     global $DB;
+        //     $richmediaDescription = $DB->get_field('richmedia', 'intro', array('id'=>$mod->instance), IGNORE_MISSING);
+        //     $output .= html_writer::start_tag('div', array('class' => 'richmedia_intr'));
+        //         $output .= $richmediaDescription;
+        //     $output .= html_writer::end_tag('div');    
+        // }
+
+        return $output;
+    }
+
+    /**
+     * Renders html to display a name with the link to the course module on a course page
+     *
+     * If module is unavailable for user but still needs to be displayed
+     * in the list, just the name is returned without a link
+     *
+     * Note, that for course modules that never have separate pages (i.e. labels)
+     * this function return an empty string
+     *
+     * @param cm_info $mod
+     * @param array $displayoptions
+     * @return string
+     */
+    public function stanford_course_section_cm_name($course, &$completioninfo, cm_info $mod, $displayoptions = array()) {
+        global $CFG;
+        $output = '';
+        if (!$mod->uservisible &&
+                (empty($mod->showavailability) || empty($mod->availableinfo))) {
+            // nothing to be displayed to the user
+            return $output;
+        }
+        $url = $mod->get_url();
+        if (!$url) {
+            return $output;
+        }
+
+        //Accessibility: for files get description via icon, this is very ugly hack!
+        $instancename = $mod->get_formatted_name();
+        // $altname = $mod->modfullname;
+
+        if($mod->module == 23) {
+            $altname = 'Video';    
+        }else {
+            $altname = $mod->modfullname;    
+        }
+
+        // Avoid unnecessary duplication: if e.g. a forum name already
+        // includes the word forum (or Forum, etc) then it is unhelpful
+        // to include that in the accessible description that is added.
+        if (false !== strpos(textlib::strtolower($instancename),
+                textlib::strtolower($altname))) {
+            $altname = '';
+        }
+        // File type after name, for alphabetic lists (screen reader).
+        if ($altname) {
+            $altname = get_accesshide(' '.$altname);
+        }
+
+        // For items which are hidden but available to current user
+        // ($mod->uservisible), we show those as dimmed only if the user has
+        // viewhiddenactivities, so that teachers see 'items which might not
+        // be available to some students' dimmed but students do not see 'item
+        // which is actually available to current student' dimmed.
+        $conditionalhidden = $this->is_cm_conditionally_hidden($mod);
+        $accessiblebutdim = (!$mod->visible || $conditionalhidden) &&
+                (!$mod->uservisible || has_capability('moodle/course:viewhiddenactivities',
+                        context_course::instance($mod->course)));
+
+        $linkclasses = '';
+        $accesstext = '';
+        $textclasses = '';
+        if ($accessiblebutdim) {
+            $linkclasses .= ' dimmed';
+            $textclasses .= ' dimmed_text';
+            if ($conditionalhidden) {
+                $linkclasses .= ' conditionalhidden';
+                $textclasses .= ' conditionalhidden';
+            }
+            if ($mod->uservisible) {
+                // show accessibility note only if user can access the module himself
+                $accesstext = get_accesshide(get_string('hiddenfromstudents').':'. $mod->modfullname);
+            }
+        }
+
+        // Get on-click attribute value if specified and decode the onclick - it
+        // has already been encoded for display (puke).
+        $onclick = htmlspecialchars_decode($mod->get_on_click(), ENT_QUOTES);
+
+        $groupinglabel = '';
+        if (!empty($mod->groupingid) && has_capability('moodle/course:managegroups', context_course::instance($mod->course))) {
+            $groupings = groups_get_all_groupings($mod->course);
+            $groupinglabel = html_writer::tag('span', '('.format_string($groupings[$mod->groupingid]->name).')',
+                    array('class' => 'groupinglabel '.$textclasses));
+        }
+
+        if ($completioninfo === null) {
+            $completioninfo = new completion_info($course);
+        }
+        $completiondata = $completioninfo->get_data($mod, true);
+        $newstate = $completiondata->completionstate == COMPLETION_COMPLETE? COMPLETION_INCOMPLETE: COMPLETION_COMPLETE;
+
+        // Display link itself.
+        $activitylink = html_writer::empty_tag('img', array('src' => $mod->get_icon_url(),
+                'class' => 'iconlarge activityicon', 'alt' => ' ', 'role' => 'presentation')) . $accesstext .
+                html_writer::tag('span', $instancename . $altname, array('class' => 'instancename'));
+        if ($mod->uservisible) {
+            // $output .= html_writer::link($url, $activitylink, array('class' => $linkclasses, 'onclick' => $onclick)) .
+            //         $groupinglabel;
+            if($mod->module == 23 || $mod->module == 16 ){
+                if($newstate !== COMPLETION_COMPLETE){
+                    $output .= html_writer::link("javascript:void(0);", $activitylink, array('class' => $linkclasses." done", 'onclick' => $onclick,'data-url'=>$url)) .
+                    $groupinglabel;
+                }else {
+                    $output .= html_writer::link("javascript:void(0);", $activitylink, array('class' => $linkclasses, 'onclick' => $onclick,'data-url'=>$url)) .
+                    $groupinglabel;
+                }
+                
+            }else {
+                $output .= html_writer::link($url, $activitylink, array('class' => $linkclasses, 'onclick' => $onclick)) .
+                    $groupinglabel;
+            }
+
+        } else {
+            // We may be displaying this just in order to show information
+            // about visibility, without the actual link ($mod->uservisible)
+            $output .= html_writer::tag('div', $activitylink, array('class' => $textclasses)) .
+                    $groupinglabel;
+        }
         return $output;
     }
 

@@ -63,6 +63,7 @@ $(function() {/* clicking left Navigation to hide/show right content */
 
 		appendProgressBar.append(id4hide);
 		$('#'+id4hide).siblings('li').hide();
+		$('.content .section li','#'+id4hide).show();
 		$('#section-0').show();		
 		$('.content .section','#section-0').hide();
 		$('#'+id4hide,'.stanford_course_list').css('display','block');
@@ -130,5 +131,44 @@ $(function() {/* clicking left Navigation to hide/show right content */
 		$('#section-0').children('.content').children('.section').show();
 		$('#section-0 .section.img-text li').last().addClass('lastchild');
 	});
+
+
+	$('.section.img-text .richmedia .activityinstance>a').click(function() {
+		var popUpUrl = $(this).attr('data-url');
+		var popUpVideoTitle = $(this).parents('li').attr('title');
+		popUpUrl = popUpUrl+'&embedded';
+		$('#dropdownvideopage iframe').attr('src',popUpUrl);
+		$('#dropdownvideopage span.videotitle').html(popUpVideoTitle);
+		$('#dropdownvideopage').slideDown('slow');
+	});
+	
+	$('.section.img-text .quiz .activityinstance>a').click(function() {
+		var popUpUrl = $(this).attr('data-url');
+		
+		var parentURL = document.URL;
+
+		if(parentURL.indexOf("review") != -1){
+			popUpUrl = popUpUrl+'&embedded&review';
+		}else {
+			popUpUrl = popUpUrl+'&embedded';	
+		}
+
+		$('#dropdownvideopage iframe').attr('src',popUpUrl);
+		$('#dropdownvideopage').slideDown('slow');
+	});
+	
+	$('#dropdownvideopage>.slideUpButton').click(function() {
+		slideUPFromLiner();
+	});
+
+
 });
 
+function slideUPFromLiner(moduleid) {
+	$('#dropdownvideopage').slideUp('slow');
+	$('#dropdownvideopage iframe').attr('src','about:blank');
+	// $('#'+moduleid).find('.activityinstance').children('a').addClass('done');
+	// $('#dropdownvideopage span.videotitle').html('');
+	// $('#'+moduleid).find('input[name="completionstate"]').attr('value',0);
+	// $('#region-sidebar #progressEleShowId-'+moduleid).addClass('done');
+}

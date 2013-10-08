@@ -127,6 +127,26 @@ ul.stanford_course_list li.section {
 	padding-bottom:0;
 	margin-top:15px;	
 }
+#page-course-view-stanford .course-content .section li.activity.modtype_label {
+	margin-bottom:1em;
+}
+#page-course-view-stanford .mod-indent-1, #page-course-view-stanford .mod-indent-2, #page-course-view-stanford .mod-indent-3 {
+	margin-left:0;
+}
+
+#page-course-view-stanford .sitetopic .section .activity .activityinstance, 
+#page-course-view-stanford .course-content .section .activity .activityinstance, 
+#page-course-view-stanford .sitetopic .section .activity .activityinstance div, 
+#page-course-view-stanford .course-content .section .activity .activityinstance div {
+	display: block;
+}
+
+#page-course-view-stanford .course-content .section li.activity, 
+#page-course-view-stanford .sitetopic .section .activity .activityinstance, 
+#page-course-view-stanford .course-content .section .activity .activityinstance {
+	padding: 0;
+}
+
 /*top Navigation Bar in Forum/Virtual Study Hall/Course page*/
 #page-course-view-topics .navbar{
 	margin: 0 20px;
@@ -975,4 +995,62 @@ p.errormessage {color: #8c1515;
 	color: #E3DFD5;
 	clear:left;
 }
+/* Drop Down window */
+#dropdownvideopage {
+	position: fixed;
+	top: 25px;
+	left: 0;
+	width: 94%;
+	height: 86%;
+	z-index: 9999;
+	margin:0px 2% auto 3%;
+	border: 4px solid #8A887D;
+	border-top: 40px solid #8A887D;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-ms-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+	box-shadow: 6px 6px 10px #666;
+	
+}
+#dropdownvideopage a.slideUpButton img{
+	display:none;
+}
+#dropdownvideopage a.slideUpButton{
+	position: relative;
+	float:right;
+	width:25px;
+	height:25px;
+	text-indent:-9999em;
+	cursor: pointer;
+	margin: -28px 5px 0 0;
+	padding:0;
+	background: url("../stanford/img/popup-sprites.png") no-repeat -281px 0;
+	
+}
+#dropdownvideopage span.videotitle {
+	position: relative;
+	float: left;
+	margin: -28px 5px 0 16%;
+	padding: 0;
+	font-size: 1.2em;
+	color: #fff;
+	font-weight: 600;
+}
 
+#dropdownvideopage a#popuprichmedia {
+	position: relative;
+	float:right;
+	width:25px;
+	height:25px;
+	text-indent:-9999em;
+	cursor: pointer;
+	margin: -28px 50px 0 0;
+	padding:0;
+	background: url("stanford/img/popup-sprites.png") no-repeat 0 0;	
+}
+/*.main .center {
+    min-height: 520px;
+    border:1px solid red;
+}*/

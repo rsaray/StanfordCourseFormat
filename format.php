@@ -103,8 +103,20 @@ if(!$PAGE->user_allowed_editing()){
     $sidbarArray->close();
     echo "</ul></div>";
 }
+
+echo "<div id='dropdownvideopage' style='display:none;'>";
+echo '<span class="videotitle"></span>';
+echo '<a class="slideUpButton"><img src="format/flow/head/img/icon_close.png"></a>';
+// if($detect->isMobile()){
+//     echo '<div style="height: 100%;-webkit-overflow-scrolling:touch;overflow: scroll;"><iframe id="videochat" style="width:100%;height:100%;" src="" frameborder="0"></iframe></div>';  
+// }else {
+    echo '<div style="height: 100%;"><iframe id="videochat" style="width:100%;height:100%;" src="" frameborder="0"></iframe></div>';
+// }
+
+echo "</div>";
+    
 // Include course format js module
 $PAGE->requires->js('/course/format/stanford/format.js');
 echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>';
-// echo '<script type="text/javascript" src="format/stanford/js/main.js"></script>';
-$PAGE->requires->js('/course/format/stanford/js/main.js');
+echo '<script type="text/javascript" src="format/stanford/js/main.js"></script>';
+// $PAGE->requires->js('/course/format/stanford/js/main.js');
