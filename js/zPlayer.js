@@ -1,3 +1,11 @@
+// STANFORD: video controls bar - Zhao
+jQuery.fn.extend({ //live feature has been removed from jQuery since 1.7, we have to add following code to make our code work
+    live: function (types, data, fn) {
+        jQuery(this.context).on(types, this.selector, data, fn);
+        return this;
+    }
+});
+
 
 // STANFORD: player controller module -- developed by Zhao
 var zPlayer = (function () {
@@ -16,12 +24,10 @@ var zPlayer = (function () {
 
     var play = function () {
         _video.play();
-        zSender.playAction(getCurrentTime());
     };
 
     var pause = function () {
         _video.pause();
-        zSender.pauseAction(getCurrentTime());
     };
 
     var setVideoMuted = function (val) {
@@ -174,31 +180,8 @@ var zPlayer = (function () {
 
         _video.addEventListener("seeked", function () {
 
-            zSender.jumpAction(getCurrentTime());
             return false;
         }, false);
-    };
-
-    var loadCaptionFile = function () {
-        var j = 0;
-        $.get('test.txt', function (data) {
-            var n = data.split("<-#->");
-            for (var i = 1; i <= n.length - 1; i++) {
-                var cell = n[i].split("-->");
-                var dataS = cell[0].split(":");
-                var dataS1 = parseInt(dataS[0]) * 3600;
-                var dataS2 = parseInt(dataS[1]) * 60;
-                var dataS3 = parseInt(dataS[2]);
-                var timeS = dataS1 + dataS2 + dataS3;
-
-                var dataE = cell[1].split(":");
-                var dataE1 = parseInt(dataE[0]) * 3600;
-                var dataE2 = parseInt(dataE[1]) * 60;
-                var dataE3 = parseInt(dataE[2]);
-                var timeE = dataE1 + dataE2 + dataE3;
-                _subArray[timeS] = [timeS, timeE, cell[2]];
-            };
-        });
     };
 
     var changeResolution = function (elem) {
@@ -272,7 +255,6 @@ var zPlayer = (function () {
                         var videoSource = _video.getElementsByTagName('source');
                         videoSource[0].src = aResoultion['url'][i]['webm-url'];
                         _video.load();
-                        zSender.getIDAction(aResoultion['assetid'], videoSource[0].src);
                         keyLock = false;
                         sAppendHtml += '<li class="selected"><a data-resource="' + aResoultion['url'][i]['webm-url'] + '" href="javascript:void(0);">' + aResoultion['url'][i]['title'] + '</a></li>';
                     } else if (aResoultion['url'][i]['webm-url'] != "") {
@@ -293,7 +275,6 @@ var zPlayer = (function () {
                         var videoSource = _video.getElementsByTagName('source');
                         videoSource[0].src = aResoultion['url'][i]['ogv-url'];
                         _video.load();
-                        zSender.getIDAction(aResoultion['assetid'], videoSource[0].src);
                         keyLock = false;
                         sAppendHtml += '<li class="selected"><a data-resource="' + aResoultion['url'][i]['ogv-url'] + '" href="javascript:void(0);">' + aResoultion['url'][i]['title'] + '</a></li>';
                     } else if (aResoultion['url'][i]['ogv-url'] != "") {
@@ -355,7 +336,6 @@ var zPlayer = (function () {
                         var videoSource = _video.getElementsByTagName('source');
                         videoSource[0].src = aResoultion['url'][i]['mp4-url'];
                         _video.load();
-                        zSender.getIDAction(aResoultion['assetid'], videoSource[0].src);
                         sAppendHtml += '<li class="selected"><a data-resource="' + aResoultion['url'][i]['mp4-url'] + '" href="javascript:void(0);">' + aResoultion['url'][i]['title'] + '</a></li>';
                     } else {
                         sAppendHtml += '<li><a data-resource="' + aResoultion['url'][i]['mp4-url'] + '" href="javascript:void(0);">' + aResoultion['url'][i]['title'] + '</a></li>';
@@ -483,7 +463,6 @@ var zPlayer = (function () {
         showDuration: showDuration,
         launchFullScreen: launchFullScreen,
         showCurrentTime: showCurrentTime,
-        loadCaptionFile: loadCaptionFile,
         getSubArrayLength: getSubArrayLength,
         setCurrentTime: setCurrentTime,
         getDurationTime: getDurationTime,
@@ -560,7 +539,6 @@ $('#volume-btn').click(function () {
 });
 
 $('.video_progress').click(function (e) {
-    zSender.setBeginTime(zPlayer.getCurrentTime());
     var ps = $(this).offset();
     var newPosition = e.pageX - ps.left;
     var progressBarLength = $('.video_progress').css('width');
@@ -596,7 +574,7 @@ $('.video-cc').click(function () {
     var subArrayLength = zPlayer.getSubArrayLength();
     if ($(this).children('a').hasClass('selected')) {
         if (subArrayLength == 0) {
-            zPlayer.loadCaptionFile();
+            
             $('#caption_stage').show();
         } else {
             $('#caption_stage').show();
@@ -721,7 +699,6 @@ $('#video-controls').live('mouseup', function () {
 
 $('#progressbar_handle').live('mousedown', function (e) {
     handle.setMouseStatus(true);
-    zSender.setBeginTime(zPlayer.getCurrentTime());
     return false;
 
 }).live('mouseup', function (e) {
@@ -729,284 +706,4 @@ $('#progressbar_handle').live('mousedown', function (e) {
     return false;
 });
 
-
-var zSender = (function () {
-    _userName = $('#spanLoggedUserName').text();
-    _courseID = '';
-    _courseName = '';
-    _videoTitle = '';
-    _videoURL = '';
-    _assetID = '';
-    _beginTime = 0;
-    _logID = '';
-    _url = '../../UserPlaybackActions/';
-
-    var setAssetID = function (val) {
-        _assetID = val;
-    };
-    var setUserName = function (val) {
-        _userName = val;
-    };
-    var setVideoURL = function (val) {
-        _videoURL = val;
-    };
-    var setBeginTime = function (val) {
-        _beginTime = val;
-    }
-
-    var getBeginTime = function () {
-        return _beginTime;
-    }
-
-    var getIDAction = function (id,u) {
-        _assetID = id;
-        _videoURL = u;
-        zData = {
-            userName: _userName,
-            videoUrl: _videoURL,
-            assetId: _assetID,
-            sourceText: "VideoViewer"
-        }
-        console.log(zData);
-        $.ajax({
-            url: _url + "UserVideoStarted",
-            type: 'POST',
-            dataType: 'json',
-            data: zData,
-            success: function (d) {
-                console.log(d.ok);
-
-                if (d.ok) {
-                    _logID = d.Id;
-                }
-            }
-        });
-    }
-
-    var playAction = function (val) {
-        console.log('Play' + _userName);
-        if (_logID == "") {
-            zData = {
-                userName: "NOUSERNAME",
-                videoUrl: _videoURL,
-                assetId: _assetID
-            }
-            console.log(zData);
-            $.ajax({
-                url: _url + "UserVideoStarted",
-                type: 'POST',
-                dataType: 'json',
-                data: zData,
-                success: function (d) {
-                    console.log(d);
-
-                    if (d.ok) {
-                        _logID = d.Id;
-                        playAction(zPlayer.getCurrentTime());
-                    }
-                },
-                error: function (a) {
-                    console.log('error' + a);
-                }
-
-            });
-        } else {
-            zData = {
-                logId: _logID,
-                action: 'play',
-                time: val,
-
-            }
-            console.log(zData);
-            $.ajax({
-                url: _url + "SetUserPlay",
-                type: 'POST',
-                dataType: 'json',
-                data: zData,
-                success: function (d) {
-                    console.log(d);
-                }
-            });
-        }
-
-        return false;
-    };
-
-    var pauseAction = function (val) {
-        console.log('Pause' + _userName);
-        if (_logID == "") {
-            zData = {
-                userName: "NONE-USERNAME",
-                videoUrl: _videoURL,
-                assetId: _assetID
-            }
-            console.log(zData);
-            $.ajax({
-                url: _url + "UserVideoStarted",
-                type: 'POST',
-                dataType: 'json',
-                data: zData,
-                success: function (d) {
-                    console.log(d.ok);
-
-                    if (d.ok) {
-                        _logID = d.Id;
-                        pauseAction(zPlayer.getCurrentTime());
-                    }
-                }
-            });
-        } else {
-            zData = {
-                logId: _logID,
-                action: 'pause',
-                time: val
-            }
-            console.log(zData);
-            $.ajax({
-                url: _url + "SetUserPause",
-                type: 'POST',
-                dataType: 'json',
-                data: zData,
-                success: function (d) {
-                    console.log(d);
-                },
-                error: function (a) {
-                    console.log(a);
-                }
-            });
-        }
-
-
-        return false;
-    };
-    var _endTime = 0;
-    var jumpAction = function (endT) {
-        console.log('jump' + _userName);
-        if (_logID == "") {
-            zData = {
-                userName: "NONE-USERNAME",
-                videoUrl: _videoURL,
-                assetId: _assetID
-            }
-            console.log(zData);
-            $.ajax({
-                url: _url + "UserVideoStarted",
-                type: 'POST',
-                dataType: 'json',
-                data: zData,
-                success: function (d) {
-                    console.log(d.ok);
-
-                    if (d.ok) {
-                        _logID = d.Id;
-                        jumpAction(zPlayer.getCurrentTime());
-                    }
-                }
-            });
-        } else {
-            if (_endTime != endT) {
-                _endTime = endT;
-
-                zData = {
-                    logId: _logID,
-                    action: 'jump',
-                    begin: getBeginTime(),
-                    end: endT
-                }
-                console.log(zData);
-                $.ajax({
-                    url: _url + "SetUserJump",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: zData,
-                    success: function (d) {
-                        console.log(d);
-                    }
-                });
-                return false;
-            }
-        }
-
-
-
-    };
-
-    var changResolutionAction = function (val) {
-        console.log('Resolution' + _userName);
-        zData = {
-            username: _userName,
-            action: 'changeResolution',
-            resolution: val,
-            assetid: _assetID,
-            videourl: _videoURL
-        }
-        console.log(zData);
-        // $.ajax({
-        //   url:url,
-        //   type:'POST',
-        //   dataType: 'json',
-        //   data: zData,
-        //   success: function(d) {
-
-        //   }
-        // });
-    };
-
-    var changeSpeedAction = function (val) {
-        console.log('Speed' + _userName);
-        zData = {
-            username: _userName,
-            action: 'changeSpeedAction',
-            rate: val,
-            assetid: _assetID,
-            videourl: _videoURL
-        }
-        console.log(zData);
-        // $.ajax({
-        //   url:url,
-        //   type:'POST',
-        //   dataType: 'json',
-        //   data: zData,
-        //   success: function(d) {
-
-        //   }
-        // });
-    };
-
-    var videoEndedAction = function () {
-        console.log('ended' + _userName);
-        zData = {
-            username: _userName,
-            action: 'endedAction',
-            videoName: '',
-            assetid: _assetID,
-            videourl: _videoURL
-        }
-        console.log(zData);
-        // $.ajax({
-        //   url:url,
-        //   type:'POST',
-        //   dataType: 'json',
-        //   data: zData,
-        //   success: function(d) {
-
-        //   }
-        // });
-    }
-
-
-    return {
-        setUserName: setUserName,
-        playAction: playAction,
-        pauseAction: pauseAction,
-        jumpAction: jumpAction,
-        changResolutionAction: changResolutionAction,
-        changeSpeedAction: changeSpeedAction,
-        setBeginTime: setBeginTime,
-        videoEndedAction: videoEndedAction,
-        setAssetID: setAssetID,
-        getIDAction: getIDAction
-
-    };
-})();
 

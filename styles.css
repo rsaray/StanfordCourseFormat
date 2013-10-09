@@ -1000,8 +1000,8 @@ p.errormessage {color: #8c1515;
 	position: fixed;
 	top: 25px;
 	left: 0;
-	width: 94%;
-	height: 86%;
+	width: 93%;
+	height: 69%;
 	z-index: 9999;
 	margin:0px 2% auto 3%;
 	border: 4px solid #8A887D;
@@ -1050,6 +1050,11 @@ p.errormessage {color: #8c1515;
 	padding:0;
 	background: url("stanford/img/popup-sprites.png") no-repeat 0 0;	
 }
+
+#dropdownvideopage iframe{
+	width: 70%;
+}
+
 /*.main .center {
     min-height: 520px;
     border:1px solid red;

@@ -162,7 +162,7 @@ $(function() {/* clicking left Navigation to hide/show right content */
 		var moduleid = $(this).parent('.activityinstance').parent('.mod-indent').parent('.url').attr('id');
 		moduleid = moduleid.replace('module-','');
 		
-		var popUpUrl = "http://192.168.30.81/formats/course/format/stanford/videoPlayer.php?id="+moduleid;
+		var popUpUrl = "format/stanford/videoPlayer.php?id="+moduleid;
 		$('#dropdownvideopage iframe').attr('src',popUpUrl);
 		$('#dropdownvideopage').slideDown('slow');
 	});
