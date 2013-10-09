@@ -156,6 +156,16 @@ $(function() {/* clicking left Navigation to hide/show right content */
 		$('#dropdownvideopage iframe').attr('src',popUpUrl);
 		$('#dropdownvideopage').slideDown('slow');
 	});
+
+
+	$('.section.img-text .url .activityinstance>a').click(function() {
+		var moduleid = $(this).parent('.activityinstance').parent('.mod-indent').parent('.url').attr('id');
+		moduleid = moduleid.replace('module-','');
+		
+		var popUpUrl = "http://192.168.30.81/formats/course/format/stanford/videoPlayer.php?id="+moduleid;
+		$('#dropdownvideopage iframe').attr('src',popUpUrl);
+		$('#dropdownvideopage').slideDown('slow');
+	});
 	
 	$('#dropdownvideopage>.slideUpButton').click(function() {
 		slideUPFromLiner();

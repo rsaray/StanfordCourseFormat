@@ -273,7 +273,8 @@ class stanford_course_renderer extends core_course_renderer {
 
         // show availability info (if module is not available)
         $output .= $this->course_section_cm_availability($mod, $displayoptions);
-
+        
+        /* it should be removed when you are using richmedia */
         // if($mod->module ==23){
         //     global $DB;
         //     $richmediaDescription = $DB->get_field('richmedia', 'intro', array('id'=>$mod->instance), IGNORE_MISSING);
@@ -284,6 +285,7 @@ class stanford_course_renderer extends core_course_renderer {
 
         $output .= html_writer::end_tag('div'); // $indentclasses
 
+        /* it should be removed when you are using richmedia */
         // if($mod->module ==23){
         //     global $DB;
         //     $richmediaDescription = $DB->get_field('richmedia', 'intro', array('id'=>$mod->instance), IGNORE_MISSING);
@@ -402,6 +404,9 @@ class stanford_course_renderer extends core_course_renderer {
                     $groupinglabel;
                 }
                 
+            }else if($mod->module == 20){
+                $output .= html_writer::link("javascript:void(0);", $activitylink, array('class' => $linkclasses)) .
+                    $groupinglabel;
             }else {
                 $output .= html_writer::link($url, $activitylink, array('class' => $linkclasses, 'onclick' => $onclick)) .
                     $groupinglabel;
