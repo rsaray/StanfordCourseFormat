@@ -172,6 +172,34 @@ $(function() {/* clicking left Navigation to hide/show right content */
 	});
 
 
+	$('#ta_feedback_menu>a').click(function() {
+		if($('#ta_feedback_dropdown').hasClass('drop')) {
+			$('#ta_feedback_dropdown').removeClass('drop');	
+		}else {
+			$('#ta_feedback_dropdown').addClass('drop');
+		}
+		
+	});
+
+	
+	$('#ta_feedback_dropdown li a').click(function() {
+		// var domainName = document.domain;
+		// var subDomainName = window.location;
+		// var parts = subDomainName.toString().split('/'.toString());
+		// var attempid = $(this).attr('url_data');
+		// var protocolValue = 'http';
+	 // 	if (window.location.protocol == "https:"){
+		// 	protocolValue = 'https';
+		// }
+		// var url1 = protocolValue+'://'+domainName+'/'+parts[3]+'/course/updatetafeedback.php?id='+attempid;
+
+		var popUpUrl = $(this).attr('data-popup');
+		
+		popUpUrl = popUpUrl+'&showall=1&embedded';
+		$('#dropdownvideopage iframe').attr('src',popUpUrl);
+		$('#dropdownvideopage').slideDown('slow');
+	});
+
 });
 
 function slideUPFromLiner(moduleid) {

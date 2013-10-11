@@ -179,6 +179,7 @@ if(count($supplementsArray) > 0){
 $headeroutput = '<meta http-equiv="pragma" content="no-cache" />';
 $headeroutput .= '<meta http-equiv="expires" content="0" />';
 $headeroutput .= '<link rel="stylesheet" href="css/stanford-jquery-ui.css">';
+$headeroutput .= '<link rel="stylesheet" href="css/main.css">';
 $headeroutput .= '<link rel="stylesheet" href="css/zPlayer.css">';
 echo $headeroutput;
 
@@ -276,7 +277,18 @@ echo "</head><body id='pageLecture'>";
 			if(count($supplementsArray) > 3) {
 				echo "<span class='pdf-next pdf-tile-nav inactive'>&rsaquo;&rsaquo;</span>";	
 			}
-
+			if($haveSupplements) { 
+			?>
+				<ul id="viewmodes">
+					<li class="mode T " onclick="popupPDF();"></li>
+					<!-- <li class="mode Ti active"></li> -->
+				</ul>
+				
+			<?php
+				echo "<div class='pdfsidebarTab'></div>";
+			}else {
+				echo "<div class='pdfsidebarTab'><div class='supplementView'><strong>No supplementary materials are available for this video.</strong></div></div>";
+			}
 		?>
 	</div>
 <?php
