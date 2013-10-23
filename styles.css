@@ -797,8 +797,7 @@ p.errormessage {color: #8c1515;
 	height: auto;
 	background: #F2F1EB;
 	width: 15em;
-	margin-left: 0;
-	margin-top: 2.2em;
+	margin: 2.6em 0em 0em -2em;
 	position: absolute;
 	z-index: 99;
 	-moz-box-shadow: 3px 3px 4px #8A887D;
@@ -1028,7 +1027,7 @@ p.errormessage {color: #8c1515;
 	cursor: pointer;
 	margin: -28px 5px 0 0;
 	padding:0;
-	background: url("../stanford/img/popup-sprites.png") no-repeat -281px 0;
+	background: url([[pix:theme|popup-sprites]]) no-repeat -281px 0;
 	
 }
 #dropdownvideopage span.videotitle {

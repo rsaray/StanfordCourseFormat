@@ -106,7 +106,7 @@ if(!$PAGE->user_allowed_editing()){
 
 echo "<div id='dropdownvideopage' style='display:none;'>";
 echo '<span class="videotitle"></span>';
-echo '<a class="slideUpButton"><img src="format/flow/head/img/icon_close.png"></a>';
+echo '<a href="javascript:void(0)" class="slideUpButton" data-moduleid="" data-moduletype=""></a>';
 // if($detect->isMobile()){
 //     echo '<div style="height: 100%;-webkit-overflow-scrolling:touch;overflow: scroll;"><iframe id="videochat" style="width:100%;height:100%;" src="" frameborder="0"></iframe></div>';  
 // }else {

@@ -152,6 +152,8 @@ $(function() {/* clicking left Navigation to hide/show right content */
 		}else {
 			popUpUrl = popUpUrl+'&embedded';	
 		}
+		$('#dropdownvideopage>a').attr('data-moduleid',$(this).parent('.activityinstance').parent('.mod-indent').parent('.quiz').attr('id'));
+		$('#dropdownvideopage>a').attr('data-moduletype','quiz');		
 
 		$('#dropdownvideopage iframe').attr('src',popUpUrl);
 		$('#dropdownvideopage').slideDown('slow');
@@ -168,13 +170,18 @@ $(function() {/* clicking left Navigation to hide/show right content */
 	});
 	
 	$('#dropdownvideopage>.slideUpButton').click(function() {
+		if($(this).attr('data-moduletype') === "quiz") {
+			var moduleid = $(this).attr('data-moduleid');
+			$('#'+moduleid).find('a').addClass('done');
+			unlockModules(moduleid);
+		}
 		slideUPFromLiner();
 	});
 
 
 	$('#ta_feedback_menu>a').click(function() {
 		if($('#ta_feedback_dropdown').hasClass('drop')) {
-			$('#ta_feedback_dropdown').removeClass('drop');	
+			$('#ta_feedback_dropdown').removeClass('drop');
 		}else {
 			$('#ta_feedback_dropdown').addClass('drop');
 		}
@@ -202,6 +209,77 @@ $(function() {/* clicking left Navigation to hide/show right content */
 
 });
 
+function unlockModules(moduleid) {
+	console.log(moduleid);
+	moduleid = moduleid.replace('module-','');
+	/* Making ajax call to togglecompletion.php*/
+
+	var domainName = document.domain;
+	var subDomainName = window.location;
+	var parts = subDomainName.toString().split('/'.toString());
+	var protocolValue = 'http';
+ 	if (window.location.protocol == "https:"){
+		protocolValue = 'https';
+	}
+	
+	$.ajax({
+		type: "GET",
+	  	url: protocolValue+'://'+domainName+'/'+parts[3]+'/course/format/stanford/togglecompletionlib.php?op=quiz&cmid='+moduleid
+	}).done(function (data) {
+		$.ajax({
+			type: "GET",
+		  	url: protocolValue+'://'+domainName+'/'+parts[3]+'/course/format/stanford/unlockmodules.php?id='+moduleid
+		}).done(function (data) {
+			unlockNodes = jQuery.parseJSON(data);
+			console.log(unlockNodes);			  
+			var unlockNodesArray = new Array();
+			var domainName = document.domain;
+			var subDomainName = window.location;
+			var parts = subDomainName.toString().split('/'.toString());
+			var protocolValue = 'http'; 
+			if (window.location.protocol == "https:"){
+				protocolValue = 'https'
+			}
+			$.each(unlockNodes, function(index, unlockNode) {
+				// unlockNodesArray[index] = unlockNode.toString();
+				// console.log(unlockNode);
+				var targetUnlockNode = $('#module-'+unlockNode);
+				
+				// handle richmedia node
+				if(targetUnlockNode.hasClass('richmedia') && (targetUnlockNode.find('.availabilityinfo').length > 0)) {
+					// console.log('richmedia');
+					if(targetUnlockNode.find('.dimmed_text>span').length > 0) {
+						targetUnlockNode.find('.dimmed_text>span').addClass('instancename');
+					var objectcontent = targetUnlockNode.find('.dimmed_text').html();
+					targetUnlockNode.find('.activityinstance').html('<a class onclick="" href="javascript: void(0)" data-url="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/richmedia/view.php?id='+unlockNode+'">'+objectcontent+'</a>');	
+					}
+				}
+				// handle resource node
+				if(targetUnlockNode.hasClass('resource') && (targetUnlockNode.find('.availabilityinfo').length > 0)) {
+					// console.log('pdf');
+					if(targetUnlockNode.find('.dimmed_text>span').length > 0) {
+					targetUnlockNode.find('.dimmed_text>span').addClass('instancename');
+					var resourceobjectcontent = targetUnlockNode.find('.dimmed_text').html();
+					targetUnlockNode.find('.activityinstance').html('<a class="" onclick="window.open(\''+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/resource/view.php?id='+unlockNode+'&amp;redirect=1\', \'\', \'width=620,height=450,toolbar=no,location=no,menubar=no,copyhistory=no,status=no,directories=no,scrollbars=yes,resizable=yes\'); return false;" href="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/resource/view.php?id='+unlockNode+'">'+resourceobjectcontent+'</a>');
+					}
+				}
+				// handle final exame node
+				if(targetUnlockNode.hasClass('modtype_url') && (targetUnlockNode.find('.availabilityinfo').length > 0)) {
+					// console.log('url');
+					if(targetUnlockNode.find('.dimmed_text>span').length > 0) {
+					targetUnlockNode.find('.dimmed_text>span').addClass('instancename');
+					var resourceobjectcontent = targetUnlockNode.find('.dimmed_text').html();
+					targetUnlockNode.find('.activityinstance').html('<a class="" onclick="window.open(\''+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'&amp;redirect=1\', \'\', \'width=620,height=450,toolbar=no,location=no,menubar=no,copyhistory=no,status=no,directories=no,scrollbars=yes,resizable=yes\'); return false;" href="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'">'+resourceobjectcontent+'</a>');
+					}
+				}
+
+			});
+		});
+	});
+
+
+}
+
 function slideUPFromLiner(moduleid) {
 	$('#dropdownvideopage').slideUp('slow');
 	$('#dropdownvideopage iframe').attr('src','about:blank');
@@ -210,3 +288,4 @@ function slideUPFromLiner(moduleid) {
 	// $('#'+moduleid).find('input[name="completionstate"]').attr('value',0);
 	// $('#region-sidebar #progressEleShowId-'+moduleid).addClass('done');
 }
+
