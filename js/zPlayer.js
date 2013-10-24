@@ -78,7 +78,7 @@ var zPlayer = (function () {
 
     var showDuration = function () {
         var dt = getDurationTime();
-        
+        loadFirstPDF();
         _videoPoster = $('video').attr('poster');
         var displaySecond = dt % 60;
         if (displaySecond < 10) {

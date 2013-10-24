@@ -17,9 +17,9 @@
 /**
  * Renderer for outputting the topics course format.
  *
- * @package stanford course formate
+ * @package Stanford Course Format
  * @copyright 2013 Stanford University
- * @author Zhao
+ * @author Michael Rouan, Ray Saray, ZhaoFeng Zeng
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.5
  */

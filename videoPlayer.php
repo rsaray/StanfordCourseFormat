@@ -294,6 +294,8 @@ echo "</head><body id='pageLecture'>";
 <?php
 echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>';
 echo '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>';
+echo '<script type="text/javascript" src="js/pdfobject.js"></script>';
+echo '<script type="text/javascript" src="js/pdfserver.js"></script>';
 echo '<script type="text/javascript" src="js/zPlayer.js"></script>';
 echo "</body></html>";
     

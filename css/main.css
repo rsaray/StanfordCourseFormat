@@ -146,8 +146,8 @@ iframe.supplementView {
 	position:absolute; 
 	float:left;
 	border-radius:0;
-	height:85%;
-	width:35%;
+	/*height:85%;*/
+	width:28%;
 }
 #tablet_pdf_nav {
 	list-style-type: none;
@@ -213,3 +213,35 @@ iframe.supplementView {
 	font-size:.8em;
 }
 
+#viewmodes {
+	position: relative;
+	top: auto;
+	right: auto;
+	float: left;
+	padding: .5em 0 0 0;
+	margin-top: 0;
+	margin-bottom: .35em;
+	width: 100%;
+	border-top: 1px dotted #8A887D;
+}
+#viewmodes .mode {
+	display: block;
+	bottom: 0;
+	right: 0;
+	position: relative;
+	width: 22px;
+	height: 21px;
+	background: url(img/popup-sprites.png) no-repeat;
+	cursor: pointer;
+	color: transparent;
+}
+
+#viewmodes .mode.T {
+	right: auto;
+	width: 30px;
+	height: 21px;
+	background: url(img/popup-sprites.png) no-repeat;
+	background-position: 6px 0px;
+	float: right;
+	margin-right: .5em;
+}
