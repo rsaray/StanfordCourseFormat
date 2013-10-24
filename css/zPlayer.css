@@ -42,20 +42,6 @@ video.video-js {
 	left:inherit;
 }
 
-#progress {
-	display:block;
-	width:100%;
-	position:absolute;
-	display:block;
-	bottom:48px;
-	left:0;
-	height: 10px;
-	/*background-color:#222;*/
-	opacity:0.9;
-	box-shadow: 0 -2px 5px 0 rgba(0, 0, 0, 0.65);
-}
-
-
 .video-duration, .video-timer {
 	position: relative;
 	display:inline-block;
@@ -91,15 +77,44 @@ video.video-js {
 }
 .video_progress.hide {
 	height: 3px;
+	/*top: 7px;*/
+}
+#progress.hide {
+	height: 3px;
+	top: 0px;
+}
+#fake_progress_bar.hide{
+	height: 3px;
 	top: 7px;
+}
+
+#progress {
+	display:block;
+	width:100%;
+	position:absolute;
+	display:block;
+	bottom:48px;
+	left:0;
+	height: 10px;
+	opacity:0.9;
+	box-shadow: 0 -2px 5px 0 rgba(0, 0, 0, 0.65);
+	background-color: #8C1515;
+ 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#8C1515', endColorstr='#820000'); /* for IE */
+	background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #8c1515), color-stop(100%, #820000));
+	background: -webkit-linear-gradient(#8c1515, #820000);
+	background: -moz-linear-gradient(#8c1515, #820000);
+	background: -o-linear-gradient(#8c1515, #820000);
+	background: linear-gradient(#8c1515, #820000);
 }
 
 .video_progress {
 	position:relative;
 	display:inline-block;
 	float:left;
-	width: 100%;
+	width: 98.5%;
+	margin: 0 9px;
 	height:10px;
+	z-index: 1;
  	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3F3C30', endColorstr='#565347');
 	background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #3f3c30), color-stop(100%, #565347));
 	background: -webkit-linear-gradient(#3f3c30, #565347);
@@ -113,41 +128,59 @@ video.video-js {
 }
 
 .video_progress a {
+	left: -9px;
 	position: relative;
 	display:block;
 	height: 18px;
 	width: 18px;
 	border-radius:9px;
  	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#8A887D', endColorstr='#565347');
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #8a887d), color-stop(100%, #565347));
-  background: -webkit-linear-gradient(#8a887d, #565347);
-  background: -moz-linear-gradient(#8a887d, #565347);
-  background: -o-linear-gradient(#8a887d, #565347);
-  background: linear-gradient(#8a887d, #565347);
-  margin-top: -13px;
-  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.65);
-  -moz-box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.65);
-  -webkit-box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.65);
+	background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #8a887d), color-stop(100%, #565347));
+	background: -webkit-linear-gradient(#8a887d, #565347);
+	background: -moz-linear-gradient(#8a887d, #565347);
+	background: -o-linear-gradient(#8a887d, #565347);
+	background: linear-gradient(#8a887d, #565347);
+	margin-top: -13px;
+	box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.65);
+	-moz-box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.65);
+	-webkit-box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.65);
 }
 .video_progress_bar {
 	background-color: #8C1515;
  	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#8C1515', endColorstr='#820000'); /* for IE */
 	background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #8c1515), color-stop(100%, #820000));
-  background: -webkit-linear-gradient(#8c1515, #820000);
-  background: -moz-linear-gradient(#8c1515, #820000);
-  background: -o-linear-gradient(#8c1515, #820000);
-  background: linear-gradient(#8c1515, #820000);
+	background: -webkit-linear-gradient(#8c1515, #820000);
+	background: -moz-linear-gradient(#8c1515, #820000);
+	background: -o-linear-gradient(#8c1515, #820000);
+	background: linear-gradient(#8c1515, #820000);
 	height: 100%;
-	
 	left: 0;
 	width: 0;
+}
+#fake_progress_bar{
+	position: relative;
+	display: inline-block;
+	float: right;
+	width: 1.7%;
+	margin: -10px 0;
+	height: 10px;
+	z-index: 0;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3F3C30', endColorstr='#565347');
+	background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #3f3c30), color-stop(100%, #565347));
+	background: -webkit-linear-gradient(#3f3c30, #565347);
+	background: -moz-linear-gradient(#3f3c30, #565347);
+	background: -o-linear-gradient(#3f3c30, #565347);
+	background: linear-gradient(#3f3c30, #565347);
 }
 .arrow-right {
 	position:relative;
 	float:left;
-	display:inline-block;
+	/*display:inline-block;*/
 	z-index: 20;
+	top: 28px;
+	left: -36px;
 	cursor: pointer;
+	display: table-row;
 }
 .arrow-right.pause {
 	width: 35px;

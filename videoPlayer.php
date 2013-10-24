@@ -196,10 +196,12 @@ echo "</head><body id='pageLecture'>";
 	                <div class="video_progress_bar"></div>
 	                <a id="progressbar_handle" href="javascript:void(0);"></a>
 	            </div>
+	            <div id="fake_progress_bar"></div>
 	        </div>
 
-	        <div class="arrow-right pause"></div>
+	        
 	        <div id="timer-container">
+	        	<div class="arrow-right pause"></div>
 	            <div class="video-duration">00:00:00</div>
 	            <div id="timer-seperator">&nbsp;|&nbsp;</div>
 	            <div class="video-timer">00:00:00</div>

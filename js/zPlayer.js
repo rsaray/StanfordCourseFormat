@@ -65,12 +65,16 @@ var zPlayer = (function () {
 
     var resetControlFadeOut = function () {
         $('.video_progress').removeClass('hide');
+        $('#progress').removeClass('hide');
+        $('#fake_progress_bar').removeClass('hide');
         $('.video_progress a').removeClass('hide');
         if (_fadeoutTimer != null) {
             clearTimeout(_fadeoutTimer);
         }
         _fadeoutTimer = setTimeout(function () {
             $('.video_progress').addClass('hide');
+            $('#progress').addClass('hide');
+            $('#fake_progress_bar').addClass('hide');
             $('.video_progress a').addClass('hide');
         }, 3000);
         return false;
@@ -170,7 +174,7 @@ var zPlayer = (function () {
 
         _video.addEventListener("ended", function (e) {
             $('.video_progress_bar').css('width', '0');
-            $('.video_progress a').css('left', '0');
+            $('.video_progress a').css('left', '-9px');
             $('.arrow-right').removeClass('pause');
             $('.arrow-right').addClass('play');
             $('.video-timer').html('00:00:00');
