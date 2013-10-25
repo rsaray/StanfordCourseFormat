@@ -38,7 +38,7 @@ x.jumpmenu {
 	float: none;
 	padding: 0;
 	margin: 0;
-	background: transparent url([[pix:theme|scpd-moodle-page-header-bg]]) repeat-x 0 0;
+	background: transparent url([[pix:format_stanford|scpd-moodle-page-header-bg]]) repeat-x 0 0;
 	border: none;
 	width: 100%;	
 	height: 90px;
@@ -91,7 +91,7 @@ ul.stanford_course_list li.section {
 
 #page-course-view-stanford .site-topic ul.section, 
 #page-course-view-stanford .course-content ul.section {
-	background-image: url([[pix:theme|course-page-content]]);
+	background-image: url([[pix:format_stanford|course-page-content]]);
 	background-color:transparent;
 	background-repeat:repeat;
 	font-family: 'Source Sans Pro', sans-serif;
@@ -103,7 +103,7 @@ ul.stanford_course_list li.section {
 }
 #page-course-view-stanford .course-content ul.stanford_course_list li.section .content .summary {
 	display:inline-block;
-	background-image: url([[pix:theme|course-colorkey-squares]]);
+	background-image: url([[pix:format_stanford|course-colorkey-squares]]);
 	background-color:#fff;
 	background-repeat:no-repeat;
 	height:11px;
@@ -215,7 +215,7 @@ ul.stanford_course_list li.section {
 	border-radius: 3px 3px 0 0;	
 }
 #classnavbar li a {
-	background-image: url([[pix:theme|scpd-moodle-breadcrumb-buttons]]);	
+	background-image: url([[pix:format_stanford|scpd-moodle-breadcrumb-buttons]]);	
 	background-repeat: no-repeat;
 	height:33px;
 	float:right;
@@ -286,11 +286,11 @@ ul.stanford_course_list li.section {
 	margin-left:0!important;
 }
 .mod-indent {
-	background: url([[pix:theme|course-node-connector-bottom]]) no-repeat center top;
+	background: url([[pix:format_stanford|course-node-connector-bottom]]) no-repeat center top;
 	padding-top: 14px;
 }
 .mod-indent .activityinstance {
-	background: url([[pix:theme|course-node-connector-top]]) no-repeat center bottom;
+	background: url([[pix:format_stanford|course-node-connector-top]]) no-repeat center bottom;
 	padding-bottom: 14px!important;
 }
 .mod-indent-1 .activityinstance {
@@ -343,7 +343,7 @@ li.lastchild .activityinstance {
 }
 /* additional indent level */
 .mod-indent-3 {
-	background: url([[pix:theme|course-mod-indent-3]]) no-repeat center top;
+	background: url([[pix:format_stanford|course-mod-indent-3]]) no-repeat center top;
 	padding-left: 184px;
 	padding-top: 0;
 }
@@ -366,7 +366,7 @@ li.lastchild .activityinstance {
 	position: relative;
 	overflow: hidden;
 	margin: 0 0 0 0;
-	background-image:url([[pix:theme|scpd-moodle-module-icons]]);
+	background-image:url([[pix:format_stanford|scpd-moodle-module-icons]]);
 	background-repeat: no-repeat;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
@@ -499,7 +499,7 @@ li.lastchild .activityinstance {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	color: #336699;
-	background: url([[pix:theme|course-node-gradient]]) repeat-x left top;
+	background: url([[pix:format_stanford|course-node-gradient]]) repeat-x left top;
 }
 .activityinstance a.dimmed span {
 	color: #8A887D;
@@ -693,7 +693,7 @@ p.errormessage {color: #8c1515;
 #page-course-view-stanford #region-sidebar ul li {
 	border-top: 1px dotted #D5D0C0;
 	padding:6px 0 6px 16px;
-	background:url([[pix:theme|scpd-moodle-course-status-icons]]) no-repeat -490px -114px;
+	background:url([[pix:format_stanford|scpd-moodle-course-status-icons]]) no-repeat -490px -114px;
 }
 #page-course-view-stanford #region-sidebar ul li.downward {
 	background-position:-121px -156px;
@@ -744,7 +744,7 @@ p.errormessage {color: #8c1515;
 #page-course-view-stanford #region-sidebar ul li ul li ul.progressBar li {
 	width:11px;
 	height:8px;
-	background-image:url([[pix:theme|scpd-moodle-course-status-icons]]);
+	background-image:url([[pix:format_stanford|scpd-moodle-course-status-icons]]);
 	background-repeat: no-repeat;
 	padding:0;
 	margin-right:3px;
@@ -867,7 +867,7 @@ p.errormessage {color: #8c1515;
 
 .navbar.clearfix > #classnavbar > #ta_feedback_menu > a{
 	text-decoration: none;
-	background: transparent url([[pix:theme|scpd-moodle-ta-feedback-flag]]) no-repeat;	
+	background: transparent url([[pix:format_stanford|scpd-moodle-ta-feedback-flag]]) no-repeat;	
 	float: left;
 	text-indent: 0;
 	color: transparent; 
@@ -875,7 +875,7 @@ p.errormessage {color: #8c1515;
 }
 
 .navbar.clearfix > #classnavbar > #ta_feedback_menu.with > a{
-	background: transparent url([[pix:theme|scpd-moodle-ta-feeback-flag_blue]]) no-repeat;	
+	background: transparent url([[pix:format_stanford|scpd-moodle-ta-feeback-flag_blue]]) no-repeat;	
 }
 .navbar.clearfix > #classnavbar > #ta_feedback_menu #feedback_number{
 	text-indent: 0;
@@ -940,7 +940,7 @@ p.errormessage {color: #8c1515;
     border:none;
     width:19px;
 	height:17px;
-	background: url([[pix:theme|home-icon]]) no-repeat 0 0;
+	background: url([[pix:format_stanford|home-icon]]) no-repeat 0 0;
 	text-indent: -9999em;
 	margin:0 auto;
 	padding:5px;
@@ -1027,7 +1027,7 @@ p.errormessage {color: #8c1515;
 	cursor: pointer;
 	margin: -28px 5px 0 0;
 	padding:0;
-	background: url([[pix:theme|popup-sprites]]) no-repeat -281px 0;
+	background: url([[pix:format_stanford|popup-sprites]]) no-repeat -281px 0;
 	
 }
 #dropdownvideopage span.videotitle {
