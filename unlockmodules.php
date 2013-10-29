@@ -5,6 +5,7 @@
 	require_once('../../../config.php');
 	require_once('ChromePhp.php');
 	
+	$id = optional_param('id', 0, PARAM_INT);
 	global $DB;
 	$userFinishedModulesArray = array();
 	$userFinishedModules = 'SELECT * FROM {course_modules_completion} where userid = ?';
@@ -15,28 +16,15 @@
 	$userFinishedModulesResult->close();
 
 	$moduleset = array();
-	$sql = 'SELECT * FROM {course_modules_availability} where sourcecmid = ?';
-	$courseModulesql = 'SELECT * FROM {course_modules_availability} where coursemoduleid = ?';
-
-	$rs = $DB->get_recordset_sql($sql,array($_GET['id']));
-
-	foreach ($rs as $value) {
-
-		$courseModuleset = array();
-		$courseModulesResult = $DB->get_recordset_sql($courseModulesql,array($value->coursemoduleid));
-		foreach ($courseModulesResult as $value) {
-			array_push($courseModuleset, $value->sourcecmid);
-		}
-		$courseModulesResult->close();	
-	
-		$moduleset[$value->coursemoduleid] = $courseModuleset;
-	
+	$sql = 'SELECT * FROM {course_modules_availability} cma2 WHERE coursemoduleid IN (SELECT cma1.coursemoduleid FROM {course_modules_availability} cma1 WHERE cma1.sourcecmid = ?)';
+	$courseModulesAvailableArray = $DB->get_recordset_sql($sql,array($id));
+	foreach ($courseModulesAvailableArray as $key => $value) {
+		$moduleset[$value->coursemoduleid][] = $value->sourcecmid;
 	}
-	$rs->close();
+	$courseModulesAvailableArray->close();
 	$returnResults = array();
 	foreach ($moduleset as $key => $value) {
 		$containsSearch = count(array_intersect($userFinishedModulesArray, $value)) == count($value);
-		
 		if($containsSearch) {
 			array_push($returnResults, $key);
 		}
