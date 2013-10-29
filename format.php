@@ -29,8 +29,6 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir.'/completionlib.php');
 
-
-
 // Horrible backwards compatible parameter aliasing..
 if ($stanford = optional_param('stanford', 0, PARAM_INT)) {
     $url = $PAGE->url;
@@ -39,7 +37,6 @@ if ($stanford = optional_param('stanford', 0, PARAM_INT)) {
     redirect($url);
 }
 // End backwards-compatible aliasing..
-
 
 $context = context_course::instance($course->id);
 
@@ -73,32 +70,23 @@ if (!empty($displaysection)) {
 if(!$PAGE->user_allowed_editing()){
     echo '<div id="showallitems"><a id="showallitemsaction" href="javascript:void(0);">Show All Course Modules</a></div>';
     echo "<div id='region-sidebar'>";  
-        
     echo "<ul>";
-    $seciontNumber = 1;
-    $sidbarArray = $DB->get_recordset_sql('SELECT * FROM {course_sections} WHERE course = ?',array($course->id));
+    
+    $subsidebarSQL = 'SELECT cm.id,l.name,cm.section FROM {label} l LEFT JOIN {course_modules} cm ON l.id = cm.instance LEFT JOIN {course_sections} cs ON cs.id = cm.instance WHERE cm.module = 12 AND cm.course = ?';
+    $subsidebarArray = array();
+    $subsidebar = $DB->get_recordset_sql($subsidebarSQL,array($course->id));
+    foreach ($subsidebar as $key => $value) {
+        $subsidebarArray[$value->section][] = array($value->id,$value->name);
+    }
+    $subsidebar->close();
+    $sidbarArray = $DB->get_recordset_sql('SELECT * FROM {course_sections} WHERE course = ?  AND section <> 0 AND NAME <> "NULL"',array($course->id));
     foreach ($sidbarArray as $value) {
-        if($value->name != null && $value->section != 0){
-            echo "<li class='section' data-id='section-".$seciontNumber."'><a>".$value->name."</a><ul style='display:none;'>";
-            
-        $sectionID = $DB->get_field ('course_sections', 'id', array('name'=>$value->name,'course'=>$value->course));
-
-        $instance_rs = $DB->get_recordset_sql('SELECT * FROM {course_modules} WHERE module = ? AND course = ? AND section = ?',array(12,$value->course,$sectionID));
-        
-        foreach ($instance_rs as $value) {
-            $title = $DB->get_field ('label', 'intro', array('id'=>$value->instance));
-            $moduleid = $DB->get_field ('course_modules', 'id', array('course'=>$value->course,'module'=>12,'instance'=>$value->instance));
-            // $title = str_replace("<p> </p>","",$title);
-            preg_match_all("/<h4>(.*?)<\/h4>/is", $title, $gettitle);
-
-            echo "<li class='module' data-id='module-".$moduleid."'><a href='#'>".$gettitle[0][0]."</a><ul class='progressBar'></ul></li>";
+        echo "<li class='section' data-id='section-".$value->section."'><a>".$value->name."</a><ul style='display:none;'>";
+        $subSideBarItemArray = $subsidebarArray[$value->id];
+        foreach ($subSideBarItemArray as $key => $value) {
+           echo "<li class='module' data-id='module-".$value[0]."'><a href='#'><h4>".$value[1]."</h4></a><ul class='progressBar'></ul></li>";
         }
-        $instance_rs->close();
-        
-        $seciontNumber++;    
         echo "</ul></li>";
-        }
-        
     }
     $sidbarArray->close();
     echo "</ul></div>";
@@ -118,5 +106,5 @@ echo "</div>";
 // Include course format js module
 $PAGE->requires->js('/course/format/stanford/format.js');
 echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>';
-echo '<script type="text/javascript" src="format/stanford/js/main.js"></script>';
-// $PAGE->requires->js('/course/format/stanford/js/main.js');
+// echo '<script type="text/javascript" src="format/stanford/js/main.js"></script>';
+$PAGE->requires->js('/course/format/stanford/js/main.js');
