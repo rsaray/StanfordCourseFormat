@@ -40,10 +40,11 @@ if (empty($exturl) or $exturl === 'http://') {
 /* start getting supplemental */
 $supplementsArray = array();
 
-	
+// Get all labels' id for the current course's modules
 $course_section_labels_sql = 'SELECT * FROM mdl_course_modules WHERE module = (SELECT m.id FROM {modules} m WHERE m.name = "label") AND section = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = ?)';
 $course_section_labels = $DB->get_recordset_sql($course_section_labels_sql,array($id));
 
+// Trying to get the first label id from the labels array
 $section_label_ids = array();
 $course_section_labels_key = 0;
 $first_label = '';
@@ -56,10 +57,12 @@ foreach ($course_section_labels as $value) {
 }
 $course_section_labels->close();
 
+// getting modules' id for the current section
 $section_sequence_sql = 'SELECT cs.sequence FROM {course_sections} cs WHERE id = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = ?)';
 $section_sequence = $DB->get_record_sql($section_sequence_sql, array($id));
 $piecesOfSequence = explode(",", $section_sequence->sequence);
 
+// only get resources(PDFs) before the first label 
 $piecesOfSequenceItems = array();
 foreach ($piecesOfSequence as $value) {
 	if($first_label == $value){
@@ -67,41 +70,44 @@ foreach ($piecesOfSequence as $value) {
 	}
 	$piecesOfSequenceItems[] = $value;
 }
-$piecesOfSequenceItemString = join(',',$piecesOfSequenceItems);
+if(count($piecesOfSequenceItems) > 0) {
+	$piecesOfSequenceItemString = join(',',$piecesOfSequenceItems);
 
+	$moduleslideGroup = 'SELECT cm.*, m.revision FROM {course_modules} cm JOIN {modules} md ON md.id = cm.module JOIN {resource} m ON m.id = cm.instance LEFT JOIN {course_sections} cw ON cw.id = cm.section WHERE cm.id IN ('.$piecesOfSequenceItemString.') AND md.name = "resource" AND cm.course = ?';
 
-$moduleslideGroup = 'SELECT cm.id FROM `mdl_course_modules`cm WHERE cm.id IN ('.$piecesOfSequenceItemString.') AND module = (SELECT m.id FROM `mdl_modules` m WHERE m.name = "resource")';
-$moduleslideGrouprs = $DB->get_recordset_sql($moduleslideGroup,null);
+	$moduleslideGrouprs = $DB->get_recordset_sql($moduleslideGroup,array($course->id));
 
-foreach ($moduleslideGrouprs as $key => $value) {
-	$resresource = get_coursemodule_from_id('resource', $value->id, $course->id, false, MUST_EXIST);
-	
-	$revision = $DB->get_record_sql('SELECT revision FROM {resource} WHERE id = '.$resresource->instance);
-
-	$rescontext = get_context_instance(CONTEXT_MODULE, $value->id);
-	$resfs = get_file_storage();
-	$resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
-	if (count($resfiles) < 1) {
-		resource_print_filenotfound($resource, $cm, $course);
-		die;
-	} else {
-		$file = reset($resfiles);
-		unset($resfiles);
-	}
-	$filename=$file->get_filename();
-	$rest = substr($filename, 0, -4);
-	if(!in_array($rest, $verifySingleRecord)) {
-		$verifySingleRecord[] = $rest;
-		if(substr($filename,-3)=="pdf"){
-			$supplementnewex=",true";
+	// pushing the resouces(PDFs) URLs to supplementsArray
+	foreach ($moduleslideGrouprs as $key => $value) {
+		$rescontext = get_context_instance(CONTEXT_MODULE, $value->id);
+		$resfs = get_file_storage();
+		$resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
+		if (count($resfiles) < 1) {
+			resource_print_filenotfound($resource, $cm, $course);
+			die;
+		} else {
+			$file = reset($resfiles);
+			unset($resfiles);
 		}
-			$path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$revision->revision.$file->get_filepath().$filename;
+		$filename=$file->get_filename();
+		$rest = substr($filename, 0, -4);
+		if(!in_array($rest, $verifySingleRecord)) {
+			$verifySingleRecord[] = $rest;
+			if(substr($filename,-3)=="pdf"){
+				$supplementnewex=",true";
+			}
+			$path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$value->revision.$file->get_filepath().$filename;
 			$unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$value->id);
 			$supplementsArray[] = $unitArray;
+		}
+		
 	}
-	
+	$moduleslideGrouprs->close();
 }
-$moduleslideGrouprs->close();
+
+// END: General resource 
+
+// Looking for videos' resources(PDFs)
 $targetSequece = array();
 $finallyTarget = array();
 
@@ -130,50 +136,49 @@ for($slIndex = 0; $slIndex < count($section_label_ids); $slIndex++) {
 
 $finallocker = false;
 
-foreach ($finallyTarget as $value1) {
-	
-	if($finallocker == true) {
-		// $verifySupplementalOrNot = $DB->get_field('course_modules', * , array('id' => $value1));
-		$verifySupplementalOrNot = $DB->get_records_sql('SELECT * FROM {course_modules} WHERE id = ?', array($value1));
-		if($verifySupplementalOrNot[$value1]->module != 17) {
-			break;
-		}else {
-			if($verifySupplementalOrNot[$value1]->indent == 3 || $verifySupplementalOrNot[$value1]->indent == 1){
-				
-				// ChromePhp::log($value1);
-				$rescontext = get_context_instance(CONTEXT_MODULE, $value1);
-	
-				$resresource = get_coursemodule_from_id('resource', $value1, $course->id, false, MUST_EXIST);
-				$revision = $DB->get_record_sql('SELECT revision FROM {resource} WHERE id = '.$resresource->instance);
-				
-				$resfs = get_file_storage();
-				$resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
-				if (count($resfiles) < 1) {
-					resource_print_filenotfound($resource, $cm, $course);
-					die;
-				} else {
-					$file = reset($resfiles);
-					unset($resfiles);
-				}
-				$filename=$file->get_filename();
-				$rest = substr($filename, 0, -4);
-				if(!in_array($rest, $verifySingleRecord)) {
-					$verifySingleRecord[] = $rest;
-					if(substr($filename,-3)=="pdf"){
-						$supplementnewex=",true";
+// $finalTarget has all the all the modules' id between two labels 
+if(count($finallyTarget) > 0){
+	$finallyTargetString = join(',',$finallyTarget);
+	$finallyTargetGroup = 'SELECT cm.*, m.revision FROM {course_modules} cm JOIN {modules} md ON md.id = cm.module JOIN {resource} m ON m.id = cm.instance LEFT JOIN {course_sections} cw ON cw.id = cm.section WHERE cm.id IN ('.$finallyTargetString.') AND md.name = "resource" AND cm.course = ?';
+
+	$finallyTargetGroups = $DB->get_recordset_sql($finallyTargetGroup,array($course->id));
+
+	foreach ($finallyTarget as $value1) {
+		
+		if($finallocker == true) {
+			foreach ($finallyTargetGroups as $finallyTargetGroupItem) {
+				if($value1 == $finallyTargetGroupItem->id && ($finallyTargetGroupItem->indent ==3 || $finallyTargetGroupItem->indent ==1)){
+					$rescontext = get_context_instance(CONTEXT_MODULE, $finallyTargetGroupItem->id);
+		
+					$resfs = get_file_storage();
+					$resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
+					if (count($resfiles) < 1) {
+						resource_print_filenotfound($resource, $cm, $course);
+						die;
+					} else {
+						$file = reset($resfiles);
+						unset($resfiles);
 					}
-						$path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$revision->revision.$file->get_filepath().$filename;
-						$unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$value1);
-						$supplementsArray[] = $unitArray;
+					$filename=$file->get_filename();
+					$rest = substr($filename, 0, -4);
+					if(!in_array($rest, $verifySingleRecord)) {
+						$verifySingleRecord[] = $rest;
+						if(substr($filename,-3)=="pdf"){
+							$supplementnewex=",true";
+						}
+							$path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$finallyTargetGroupItem->revision.$file->get_filepath().$filename;
+							$unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$finallyTargetGroupItem->id);
+							$supplementsArray[] = $unitArray;
+					}
 				}
-				
 			}
 		}
-	}
-	if($value1 == $PAGE->cm->id) {
-		$finallocker = true;
+		if($value1 == $PAGE->cm->id) {
+			$finallocker = true;
+		}
 	}
 }
+
 /* END supplemental */
 
 if(count($supplementsArray) > 0){ 
