@@ -1,13 +1,12 @@
 <?php
 require_once('../../../config.php');
+require_once('ChromePhp.php');
 include 'Mobile_Detect.php';
 
 
 require_once($CFG->libdir . '/completionlib.php');
 
 $id = optional_param('id', 0, PARAM_INT);        // Course module ID
-// $u        = optional_param('u', 0, PARAM_INT);         // URL instance id
-// $redirect = optional_param('redirect', 0, PARAM_BOOL);
 
 if ($id) {
     $cm = get_coursemodule_from_id('url', $id, 0, false, MUST_EXIST);
@@ -38,32 +37,48 @@ if (empty($exturl) or $exturl === 'http://') {
 }
 // unset($exturl);
 
-
-global $DB;
 /* start getting supplemental */
 $supplementsArray = array();
-$course_section_id = $DB->get_field('course_modules', 'section', array('id' => $id));
+
 	
-$course_section_labels_sql = 'SELECT * FROM mdl_course_modules where module = ? and section = ?';
-$course_section_labels = $DB->get_recordset_sql($course_section_labels_sql,array(12,$course_section_id));
+$course_section_labels_sql = 'SELECT * FROM mdl_course_modules WHERE module = (SELECT m.id FROM {modules} m WHERE m.name = "label") AND section = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = ?)';
+$course_section_labels = $DB->get_recordset_sql($course_section_labels_sql,array($id));
+
 $section_label_ids = array();
+$course_section_labels_key = 0;
+$first_label = '';
 foreach ($course_section_labels as $value) {
+	if($course_section_labels_key == 0) {
+		$first_label = $value->id;
+	}
+	$course_section_labels_key++;
 	array_push($section_label_ids, $value->id);
 }
 $course_section_labels->close();
 
-$section_sequence = $DB->get_field('course_sections', 'sequence', array('id' => $course_section_id));
-$piecesOfSequence = explode(",", $section_sequence);
+$section_sequence_sql = 'SELECT cs.sequence FROM {course_sections} cs WHERE id = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = ?)';
+$section_sequence = $DB->get_record_sql($section_sequence_sql, array($id));
+$piecesOfSequence = explode(",", $section_sequence->sequence);
 
-$moudleslide = $DB->get_field('course_modules', 'module', array('id' => $piecesOfSequence[0]));
+$piecesOfSequenceItems = array();
+foreach ($piecesOfSequence as $value) {
+	if($first_label == $value){
+		break;
+	}
+	$piecesOfSequenceItems[] = $value;
+}
+$piecesOfSequenceItemString = join(',',$piecesOfSequenceItems);
 
-if($moudleslide == 17){
+
+$moduleslideGroup = 'SELECT cm.id FROM `mdl_course_modules`cm WHERE cm.id IN ('.$piecesOfSequenceItemString.') AND module = (SELECT m.id FROM `mdl_modules` m WHERE m.name = "resource")';
+$moduleslideGrouprs = $DB->get_recordset_sql($moduleslideGroup,null);
+
+foreach ($moduleslideGrouprs as $key => $value) {
+	$resresource = get_coursemodule_from_id('resource', $value->id, $course->id, false, MUST_EXIST);
 	
-	$rescontext = get_context_instance(CONTEXT_MODULE, $piecesOfSequence[0]);
-	
-	$resresource = get_coursemodule_from_id('resource', $piecesOfSequence[0], $course->id, false, MUST_EXIST);
 	$revision = $DB->get_record_sql('SELECT revision FROM {resource} WHERE id = '.$resresource->instance);
-	
+
+	$rescontext = get_context_instance(CONTEXT_MODULE, $value->id);
 	$resfs = get_file_storage();
 	$resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
 	if (count($resfiles) < 1) {
@@ -81,12 +96,12 @@ if($moudleslide == 17){
 			$supplementnewex=",true";
 		}
 			$path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$revision->revision.$file->get_filepath().$filename;
-			$unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$piecesOfSequence[0]);
+			$unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$value->id);
 			$supplementsArray[] = $unitArray;
 	}
 	
 }
-
+$moduleslideGrouprs->close();
 $targetSequece = array();
 $finallyTarget = array();
 
