@@ -241,7 +241,7 @@ iframe.supplementView {
 	width: 30px;
 	height: 21px;
 	background: url(img/popup-sprites.png) no-repeat;
-	background-position: 6px 0px;
+	background-position: 6px -215px;
 	float: right;
 	margin-right: .5em;
 }
