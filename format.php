@@ -19,7 +19,6 @@
  *
  * @package stanford course formate
  * @copyright 2013 Stanford University
- * @author Zhao
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.5
  */
@@ -72,9 +71,14 @@ if(!$PAGE->user_allowed_editing()){
     echo "<div id='region-sidebar'>";  
     echo "<ul>";
     
-    $subsidebarSQL = 'SELECT cm.id,l.name,cm.section FROM {label} l LEFT JOIN {course_modules} cm ON l.id = cm.instance LEFT JOIN {course_sections} cs ON cs.id = cm.instance WHERE cm.module = 12 AND cm.course = ?';
+    $subsidebarSQL = "SELECT cm.id,l.name,cm.section 
+                        FROM {label} l 
+                   LEFT JOIN {course_modules} cm ON l.id = cm.instance 
+                   LEFT JOIN {course_sections} cs ON cs.id = cm.instance 
+                       WHERE cm.module = 12 
+                             AND cm.course = :course";
     $subsidebarArray = array();
-    $subsidebar = $DB->get_recordset_sql($subsidebarSQL,array($course->id));
+    $subsidebar = $DB->get_recordset_sql($subsidebarSQL,array('course'=>$course->id));
     foreach ($subsidebar as $key => $value) {
         $subsidebarArray[$value->section][] = array($value->id,$value->name);
     }

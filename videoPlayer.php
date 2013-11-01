@@ -41,8 +41,11 @@ if (empty($exturl) or $exturl === 'http://') {
 $supplementsArray = array();
 
 // Get all labels' id for the current course's modules
-$course_section_labels_sql = 'SELECT * FROM mdl_course_modules WHERE module = (SELECT m.id FROM {modules} m WHERE m.name = "label") AND section = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = ?)';
-$course_section_labels = $DB->get_recordset_sql($course_section_labels_sql,array($id));
+$course_section_labels_sql = "SELECT * 
+								FROM mdl_course_modules 
+							   WHERE module = (SELECT m.id FROM {modules} m WHERE m.name = 'label') 
+									 AND section = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = :id)";
+$course_section_labels = $DB->get_recordset_sql($course_section_labels_sql,array('id'=>$id));
 
 // Trying to get the first label id from the labels array
 $section_label_ids = array();
@@ -58,8 +61,10 @@ foreach ($course_section_labels as $value) {
 $course_section_labels->close();
 
 // getting modules' id for the current section
-$section_sequence_sql = 'SELECT cs.sequence FROM {course_sections} cs WHERE id = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = ?)';
-$section_sequence = $DB->get_record_sql($section_sequence_sql, array($id));
+$section_sequence_sql = "SELECT cs.sequence 
+						   FROM {course_sections} cs 
+						  WHERE id = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = :id)";
+$section_sequence = $DB->get_record_sql($section_sequence_sql, array('id'=>$id));
 $piecesOfSequence = explode(",", $section_sequence->sequence);
 
 // only get resources(PDFs) before the first label 
@@ -73,9 +78,15 @@ foreach ($piecesOfSequence as $value) {
 if(count($piecesOfSequenceItems) > 0) {
 	$piecesOfSequenceItemString = join(',',$piecesOfSequenceItems);
 
-	$moduleslideGroup = 'SELECT cm.*, m.revision FROM {course_modules} cm JOIN {modules} md ON md.id = cm.module JOIN {resource} m ON m.id = cm.instance LEFT JOIN {course_sections} cw ON cw.id = cm.section WHERE cm.id IN ('.$piecesOfSequenceItemString.') AND md.name = "resource" AND cm.course = ?';
+	$moduleslideGroup = "SELECT cm.*, m.revision 
+	 					   FROM {course_modules} cm 
+	 					   JOIN {modules} md ON md.id = cm.module 
+	 					   JOIN {resource} m ON m.id = cm.instance 
+ 					  LEFT JOIN {course_sections} cw ON cw.id = cm.section 
+					      WHERE cm.id IN (".$piecesOfSequenceItemString.") 
+					      		AND md.name = "resource" AND cm.course = :course";
 
-	$moduleslideGrouprs = $DB->get_recordset_sql($moduleslideGroup,array($course->id));
+	$moduleslideGrouprs = $DB->get_recordset_sql($moduleslideGroup,array('course'=>$course->id));
 
 	// pushing the resouces(PDFs) URLs to supplementsArray
 	foreach ($moduleslideGrouprs as $key => $value) {
@@ -139,9 +150,16 @@ $finallocker = false;
 // $finalTarget has all the all the modules' id between two labels 
 if(count($finallyTarget) > 0){
 	$finallyTargetString = join(',',$finallyTarget);
-	$finallyTargetGroup = 'SELECT cm.*, m.revision FROM {course_modules} cm JOIN {modules} md ON md.id = cm.module JOIN {resource} m ON m.id = cm.instance LEFT JOIN {course_sections} cw ON cw.id = cm.section WHERE cm.id IN ('.$finallyTargetString.') AND md.name = "resource" AND cm.course = ?';
+	$finallyTargetGroup = "SELECT cm.*, m.revision 
+							 FROM {course_modules} cm 
+							 JOIN {modules} md ON md.id = cm.module 
+							 JOIN {resource} m ON m.id = cm.instance 
+						LEFT JOIN {course_sections} cw ON cw.id = cm.section 
+							WHERE cm.id IN ('.$finallyTargetString.') 
+								  AND md.name = 'resource' 
+								  AND cm.course = :course";
 
-	$finallyTargetGroups = $DB->get_recordset_sql($finallyTargetGroup,array($course->id));
+	$finallyTargetGroups = $DB->get_recordset_sql($finallyTargetGroup,array('course'=>$course->id));
 
 	foreach ($finallyTarget as $value1) {
 		
@@ -189,7 +207,7 @@ if(count($supplementsArray) > 0){
 
 
     
-        echo '<!DOCTYPE html>
+echo '<!DOCTYPE html>
 <html  dir="ltr" lang="en" xml:lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -303,7 +321,6 @@ echo "</head><body id='pageLecture'>";
 			?>
 				<ul id="viewmodes">
 					<li class="mode T " onclick="popupPDF();"></li>
-					<!-- <li class="mode Ti active"></li> -->
 				</ul>
 				
 			<?php

@@ -23,16 +23,22 @@ require_login($course, false, $cm);
 function toggle_quiz_completion($userid,$moduleid) {
 	global $DB ;
 
-	$count_quiz_sql = 'SELECT count(*) FROM {quiz_attempts} WHERE userid = ? AND quiz = (SELECT cm.instance FROM {course_modules} cm WHERE cm.id = ?)';
-	$quiz_sql = 'SELECT * FROM {quiz_attempts} WHERE userid = ? AND quiz = (SELECT cm.instance FROM {course_modules} cm WHERE cm.id = ?)';
+	$count_quiz_sql = "SELECT count(*) 
+						 FROM {quiz_attempts} 
+						WHERE userid = :userid 
+						  	  AND quiz = (SELECT cm.instance FROM {course_modules} cm WHERE cm.id = :cmid)";
+	$quiz_sql = "SELECT * 
+				   FROM {quiz_attempts} 
+				  WHERE userid = :userid 
+				      	AND quiz = (SELECT cm.instance FROM {course_modules} cm WHERE cm.id = :cmid)";
 
-	$counter = $DB->count_records_sql($count_quiz_sql, array($userid,$moduleid));
+	$counter = $DB->count_records_sql($count_quiz_sql, array('userid'=>$userid,'cmid'=>$moduleid));
 
 	if($counter === 0) {
 		echo "empty";	
 	}else {
 		
-		$quiz_rs = $DB->get_recordset_sql($quiz_sql, array($userid,$moduleid));
+		$quiz_rs = $DB->get_recordset_sql($quiz_sql, array('userid'=>$userid,'cmid'=>$moduleid));
 		foreach ($quiz_rs as $record) {
 			
 			if($record->state == 'finished'){
