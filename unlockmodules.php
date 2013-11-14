@@ -8,16 +8,22 @@
 	$id = optional_param('id', 0, PARAM_INT);
 	global $DB;
 	$userFinishedModulesArray = array();
-	$userFinishedModules = 'SELECT * FROM {course_modules_completion} where userid = ?';
-	$userFinishedModulesResult = $DB->get_recordset_sql($userFinishedModules,array($USER->id));
+	$userFinishedModules = "SELECT * 
+						      FROM {course_modules_completion} 
+						     where userid = :userid";
+	$userFinishedModulesResult = $DB->get_recordset_sql($userFinishedModules,array('userid'=>$USER->id));
 	foreach ($userFinishedModulesResult as $value) {
 		array_push($userFinishedModulesArray, $value->coursemoduleid);
 	}
 	$userFinishedModulesResult->close();
 
 	$moduleset = array();
-	$sql = 'SELECT * FROM {course_modules_availability} cma2 WHERE coursemoduleid IN (SELECT cma1.coursemoduleid FROM {course_modules_availability} cma1 WHERE cma1.sourcecmid = ?)';
-	$courseModulesAvailableArray = $DB->get_recordset_sql($sql,array($id));
+	$sql = "SELECT * 
+			  FROM {course_modules_availability} cma2 
+			 WHERE coursemoduleid IN (SELECT cma1.coursemoduleid 
+			 							FROM {course_modules_availability} cma1 
+			 						   WHERE cma1.sourcecmid = :sourcecmid)";
+	$courseModulesAvailableArray = $DB->get_recordset_sql($sql,array('sourcecmid'=>$id));
 	foreach ($courseModulesAvailableArray as $key => $value) {
 		$moduleset[$value->coursemoduleid][] = $value->sourcecmid;
 	}

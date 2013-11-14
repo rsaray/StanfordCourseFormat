@@ -1,10 +1,12 @@
 <?php
+
+// defined('MOODLE_INTERNAL') || die();
+
 require_once('../../../config.php');
+require_once($CFG->libdir.'/filelib.php');
+require_once($CFG->libdir . '/completionlib.php');
 require_once('ChromePhp.php');
 include 'Mobile_Detect.php';
-
-
-require_once($CFG->libdir . '/completionlib.php');
 
 $id = optional_param('id', 0, PARAM_INT);        // Course module ID
 
@@ -40,156 +42,12 @@ if (empty($exturl) or $exturl === 'http://') {
 /* start getting supplemental */
 $supplementsArray = array();
 
-// Get all labels' id for the current course's modules
-$course_section_labels_sql = 'SELECT * FROM mdl_course_modules WHERE module = (SELECT m.id FROM {modules} m WHERE m.name = "label") AND section = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = ?)';
-$course_section_labels = $DB->get_recordset_sql($course_section_labels_sql,array($id));
+$supplementsArray = lecture_supplemental($course->id,$id);
 
-// Trying to get the first label id from the labels array
-$section_label_ids = array();
-$course_section_labels_key = 0;
-$first_label = '';
-foreach ($course_section_labels as $value) {
-	if($course_section_labels_key == 0) {
-		$first_label = $value->id;
-	}
-	$course_section_labels_key++;
-	array_push($section_label_ids, $value->id);
-}
-$course_section_labels->close();
-
-// getting modules' id for the current section
-$section_sequence_sql = 'SELECT cs.sequence FROM {course_sections} cs WHERE id = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = ?)';
-$section_sequence = $DB->get_record_sql($section_sequence_sql, array($id));
-$piecesOfSequence = explode(",", $section_sequence->sequence);
-
-// only get resources(PDFs) before the first label 
-$piecesOfSequenceItems = array();
-foreach ($piecesOfSequence as $value) {
-	if($first_label == $value){
-		break;
-	}
-	$piecesOfSequenceItems[] = $value;
-}
-if(count($piecesOfSequenceItems) > 0) {
-	$piecesOfSequenceItemString = join(',',$piecesOfSequenceItems);
-
-	$moduleslideGroup = 'SELECT cm.*, m.revision FROM {course_modules} cm JOIN {modules} md ON md.id = cm.module JOIN {resource} m ON m.id = cm.instance LEFT JOIN {course_sections} cw ON cw.id = cm.section WHERE cm.id IN ('.$piecesOfSequenceItemString.') AND md.name = "resource" AND cm.course = ?';
-
-	$moduleslideGrouprs = $DB->get_recordset_sql($moduleslideGroup,array($course->id));
-
-	// pushing the resouces(PDFs) URLs to supplementsArray
-	foreach ($moduleslideGrouprs as $key => $value) {
-		$rescontext = get_context_instance(CONTEXT_MODULE, $value->id);
-		$resfs = get_file_storage();
-		$resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
-		if (count($resfiles) < 1) {
-			resource_print_filenotfound($resource, $cm, $course);
-			die;
-		} else {
-			$file = reset($resfiles);
-			unset($resfiles);
-		}
-		$filename=$file->get_filename();
-		$rest = substr($filename, 0, -4);
-		if(!in_array($rest, $verifySingleRecord)) {
-			$verifySingleRecord[] = $rest;
-			if(substr($filename,-3)=="pdf"){
-				$supplementnewex=",true";
-			}
-			$path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$value->revision.$file->get_filepath().$filename;
-			$unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$value->id);
-			$supplementsArray[] = $unitArray;
-		}
-		
-	}
-	$moduleslideGrouprs->close();
-}
-
-// END: General resource 
-
-// Looking for videos' resources(PDFs)
-$targetSequece = array();
-$finallyTarget = array();
-
-for($slIndex = 0; $slIndex < count($section_label_ids); $slIndex++) {
-	$haschild = '';
-	$locker = false;
-	for($sqIndex = 0; $sqIndex < count($piecesOfSequence); $sqIndex++){
-		if(($section_label_ids[$slIndex] == $piecesOfSequence[$sqIndex]) && ($locker == false)){
-			$haschild = true;
-			$locker = true;
-		}
-		if($haschild == true && $haschild != ''){
-			array_push($targetSequece, $piecesOfSequence[$sqIndex]);
-		}
-		if($piecesOfSequence[$sqIndex] == $section_label_ids[$slIndex+1]){
-			$haschild = false;	
-		}
-	}
-	foreach ($targetSequece as $value) {
-		if($value == $PAGE->cm->id){
-			$finallyTarget = $targetSequece;
-		}
-	}
-	$targetSequece = array();		
-}
-
-$finallocker = false;
-
-// $finalTarget has all the all the modules' id between two labels 
-if(count($finallyTarget) > 0){
-	$finallyTargetString = join(',',$finallyTarget);
-	$finallyTargetGroup = 'SELECT cm.*, m.revision FROM {course_modules} cm JOIN {modules} md ON md.id = cm.module JOIN {resource} m ON m.id = cm.instance LEFT JOIN {course_sections} cw ON cw.id = cm.section WHERE cm.id IN ('.$finallyTargetString.') AND md.name = "resource" AND cm.course = ?';
-
-	$finallyTargetGroups = $DB->get_recordset_sql($finallyTargetGroup,array($course->id));
-
-	foreach ($finallyTarget as $value1) {
-		
-		if($finallocker == true) {
-			foreach ($finallyTargetGroups as $finallyTargetGroupItem) {
-				if($value1 == $finallyTargetGroupItem->id && ($finallyTargetGroupItem->indent ==3 || $finallyTargetGroupItem->indent ==1)){
-					$rescontext = get_context_instance(CONTEXT_MODULE, $finallyTargetGroupItem->id);
-		
-					$resfs = get_file_storage();
-					$resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
-					if (count($resfiles) < 1) {
-						resource_print_filenotfound($resource, $cm, $course);
-						die;
-					} else {
-						$file = reset($resfiles);
-						unset($resfiles);
-					}
-					$filename=$file->get_filename();
-					$rest = substr($filename, 0, -4);
-					if(!in_array($rest, $verifySingleRecord)) {
-						$verifySingleRecord[] = $rest;
-						if(substr($filename,-3)=="pdf"){
-							$supplementnewex=",true";
-						}
-							$path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$finallyTargetGroupItem->revision.$file->get_filepath().$filename;
-							$unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$finallyTargetGroupItem->id);
-							$supplementsArray[] = $unitArray;
-					}
-				}
-			}
-		}
-		if($value1 == $PAGE->cm->id) {
-			$finallocker = true;
-		}
-	}
-}
-
-/* END supplemental */
-
-if(count($supplementsArray) > 0){ 
-	$haveSupplements = true;
-}else {
-	$haveSupplements = false;
-}
-
+$supplementsarraycount = count($supplementsArray);
 
     
-        echo '<!DOCTYPE html>
+echo '<!DOCTYPE html>
 <html  dir="ltr" lang="en" xml:lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -257,63 +115,60 @@ echo "</head><body id='pageLecture'>";
 	        </div>
 	    </div>
 	</div>
-	<div id="supplementalBlock">
-		<?php 
-			if(count($supplementsArray) > 3) {
-				$hideliornot = "none";
-				echo "<span class='pdf-prev pdf-tile-nav active'>&lsaquo;&lsaquo;</span>";	
-			}else {
-				$hideliornot = "block";
-			}
-			
-			echo '<ul id="sidebarTab-pdf-sub-nav" class="pdf-tile-nav">';
-			
-			if($haveSupplements) {
-				
-				foreach ($supplementsArray as $key => $value) {
-					$tmpModValue = $key % 3;
-					$totalElement = count($supplementsArray) - 1;
-					if($tmpModValue === 0) {
-						if($key == 0) {
-							echo "<li class='firstchild currentchild' style='display:block;'><ul>";	
-						}else if($key === $totalElement){
-							echo "<li class='lastchild' style='display:none;'><ul>";	
-						}else{
-							echo "<li style='display:none;'><ul>";	
-						}
-					}
-					if($key == 0) {
-						$actived = "actived";
-					}else {
-						$actived = "";
-					}
 
-					echo '<li class="sidebarTab pdf-sub-elem '.$actived.'" data-strlen="'.$valueLength.'" data-url="'.$value['url'].'" data-urlid="'.$value['urlid'].'" style="display:block;"><a href="javascript: void(0)" onclick="switchpdf($(this));">'.$value['name'].'</a></li>';
-					if($tmpModValue === 2 || $key === $totalElement) {
-						echo "</ul></li>";
-					}
+	<!-- <div id="supplementalBlock"> -->
+	<?php 
+	$outputsupplementcontent ='';
+	$outputsupplementcontent .= html_writer::start_tag('div',array('id'=>'supplementalBlock'));
+
+	$outputsupplementcontent .= html_writer::start_tag('ul',array('id'=>'sidebarTab-pdf-sub-nav','class'=>'pdf-tile-nav'));
+
+	if($supplementsarraycount>0) {
+		foreach ($supplementsArray as $key => $value) {
+			$tmpModValue = $key % 3;
+			$totalElement = count($supplementsArray) - 1;
+
+			if($tmpModValue === 0) {
+				if($key == 0) {
+					$outputsupplementcontent .= "<li class='firstchild currentchild' style='display:block;'><ul>";	
+				}else if($key === $totalElement){
+					$outputsupplementcontent .= "<li class='lastchild' style='display:none;'><ul>";	
+				}else{
+					$outputsupplementcontent .= "<li style='display:none;'><ul>";	
 				}
-			} 
-			
-			echo '</ul>';
-			if(count($supplementsArray) > 3) {
-				echo "<span class='pdf-next pdf-tile-nav inactive'>&rsaquo;&rsaquo;</span>";	
 			}
-			if($haveSupplements) { 
-			?>
-				<ul id="viewmodes">
-					<li class="mode T " onclick="popupPDF();"></li>
-					<!-- <li class="mode Ti active"></li> -->
-				</ul>
-				
-			<?php
-				echo "<div class='pdfsidebarTab'></div>";
-			}else {
-				echo "<div class='pdfsidebarTab'><div class='supplementView'><strong>No supplementary materials are available for this video.</strong></div></div>";
+			$activedclass = 'sidebarTab pdf-sub-elem ';
+			if($key == 0) {
+				$activedclass .= "actived ";
 			}
-		?>
-	</div>
-<?php
+			$outputsupplementcontent .= html_writer::start_tag('li',array('class'=>$activedclass,'data-url'=>$value['url'],'data-urlid'=>$value['urlid'],'style'=>'display:block'));
+			$outputsupplementcontent .= html_writer::link('javascript:void(0)',$value['name'],array('onclick'=>'switchpdf($(this))'));
+			$outputsupplementcontent .= html_writer::end_tag('li');
+			if($tmpModValue === 2 || $key === $totalElement) {
+				$outputsupplementcontent .= html_writer::end_tag('ul');
+				$outputsupplementcontent .= html_writer::end_tag('li');
+			}
+		}
+	} 
+	
+	$outputsupplementcontent .= html_writer::end_tag('ul');
+	if($supplementsarraycount > 3) {
+		$outputsupplementcontent = html_writer::tag('span','&lsaquo;&lsaquo;',array('class'=>'pdf-prev pdf-tile-nav active')) . $outputsupplementcontent .
+									html_writer::tag('span','&rsaquo;&rsaquo;',array('class'=>'pdf-next pdf-tile-nav inactive'));
+	}
+	
+	if($supplementsarraycount > 0) { 
+		$outputsupplementcontent .= html_writer::start_tag('ul',array('id' =>'viewmodes'));
+		// TODO: need to implement a drag/drop switch button
+		$outputsupplementcontent .= html_writer::tag('li','',array('class'=>'mode T','onclick'=>"popupPDF();"));
+		$outputsupplementcontent .= html_writer::end_tag('ul');
+		$outputsupplementcontent .= html_writer::tag('div','',array('class'=>'pdfsidebarTab'));
+	}else {
+		$outputsupplementcontent .= html_writer::tag('div',"<div class='supplementView'><strong>No supplementary materials are available for this video.</strong></div>",array('class'=>'pdfsidebarTab'));
+	}
+	$outputsupplementcontent .= html_writer::end_tag('div');
+	echo $outputsupplementcontent;
+	
 echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>';
 echo '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>';
 echo '<script type="text/javascript" src="js/pdfobject.js"></script>';

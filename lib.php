@@ -17,22 +17,16 @@
 /**
  * This file contains main class for the course format Topic
  *
- * @since     2.0
- * @package   format_topics
- * @copyright 2009 Sam Hemelryk
+ * @since     2.5
+ * @package   format_stanford
+ * @copyright 2013 Stanford University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
+// require_once($CFG->dirroot. 'config.php');
 require_once($CFG->dirroot. '/course/format/lib.php');
 
-/**
- * Main class for the Topics course format
- *
- * @package    format_topics
- * @copyright  2012 Marina Glancy
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class format_stanford extends format_base {
 
     /**
@@ -334,4 +328,253 @@ class format_stanford extends format_base {
     //     }
     //     return array();
     // }
+}
+
+/**
+ * remove the moodle left navigation bar 
+ *
+ *
+ * @param page buffer data
+ */
+function remove_left_nav($buffer) {
+    return (str_replace('<div id="region-pre" class="block-region">','<div id="region-pre" class="block-region block-region-none">' , $buffer));
+}
+/**
+ * output a dropdown iframe for embedding quiz,video,pdf pages
+ * @return string
+ */
+function output_dropdown() {
+
+    $outputdropdown = '';
+    $outputdropdown .= html_writer::start_tag('div', array('id' => 'dropdownvideopage'));
+    $outputdropdown .= html_writer::tag('span','',array('class' => 'videotitle'));
+    $outputdropdown .= html_writer::link("javascript:void(0)",'',array('class'=>'slideUpButton','data-moduleid'=>" ",'data-moduletype'=>' '));
+    $outputdropdown .= html_writer::start_tag('div');
+    $outputdropdown .= html_writer::tag('iframe', '', array('id'=>'videochat',
+                'style'=>'width:100%;height:100%;','src'=>'', 'frameborder'=>0) );
+    $outputdropdown .= html_writer::end_tag('div');
+    $outputdropdown .= html_writer::end_tag('div');
+    return $outputdropdown;
+}
+
+/**
+ * for student users, only output stanford navigation bar
+ * @param course id
+ * @return string
+ */
+function left_nav_bar($courseid) {
+    global $DB;
+    $stanfordleftnavbar = '';
+    $stanfordleftnavbar .= html_writer::start_tag('div',array('id'=>'showallitems'));
+    $stanfordleftnavbar .= html_writer::link('javascript:void(0)','Show All Course Modules',array('id'=>'showallitemsaction'));
+    $stanfordleftnavbar .= html_writer::end_tag('div');
+    $stanfordleftnavbar .= html_writer::start_tag('div',array('id'=>'region-sidebar'));
+    $stanfordleftnavbar .= html_writer::start_tag('ul');
+    
+    $subsidebarSQL = "SELECT cm.id,l.name,cm.section 
+                        FROM {course_modules} cm 
+                   LEFT JOIN {label} l ON l.id = cm.instance 
+                   LEFT JOIN {course_sections} cs ON cs.id = cm.instance 
+                       WHERE cm.module = 12 
+                             AND cm.course = :course";
+    $subsidebarArray = array();
+    $subsidebar = $DB->get_recordset_sql($subsidebarSQL,array('course'=>$courseid));
+    foreach ($subsidebar as $key => $value) {
+        $subsidebarArray[$value->section][] = array($value->id,$value->name);
+    }
+    $subsidebar->close();
+    $sidbarArray = $DB->get_recordset_sql('SELECT * FROM {course_sections} WHERE course = ?  AND section <> 0 AND NAME <> "NULL"',array($courseid));
+    foreach ($sidbarArray as $value) {
+        $stanfordleftnavbar .= html_writer::start_tag('li',array('class'=>'section','data-id'=>'section-'.$value->section));
+        $stanfordleftnavbar .= html_writer::link('javascript:void(0)',$value->name);
+        $stanfordleftnavbar .= html_writer::start_tag('ul',array('style'=>"display:none"));
+        $subSideBarItemArray = $subsidebarArray[$value->id];
+        foreach ($subSideBarItemArray as $key => $value) {
+            $stanfordleftnavbar .= html_writer::start_tag('li',array('class'=>'module','data-id'=>'module-'.$value[0]));
+            $stanfordleftnavbar .= html_writer::link('javascript:void(0)', '<h4>'.$value[1].'</h4>');
+            $stanfordleftnavbar .= html_writer::tag('ul','',array('class'=>'progressBar'));
+            $stanfordleftnavbar .= html_writer::end_tag('li');
+        }
+        $stanfordleftnavbar .= html_writer::end_tag('ul');
+        $stanfordleftnavbar .= html_writer::end_tag('li');
+    }
+    $sidbarArray->close();
+    $stanfordleftnavbar .= html_writer::end_tag('ul');
+    $stanfordleftnavbar .= html_writer::end_tag('div');
+    return $stanfordleftnavbar;
+}
+
+/**
+ * supplemental on the video page
+ *
+ * @param course module id
+ * @param course id
+ * @return array() with supplemental url
+ */
+
+// function lecture_supplemental($id,$courseid) {
+function lecture_supplemental($courseid,$id){
+    global $DB,$CFG;
+    $sArray = array();
+    $course_section_labels_sql = "SELECT * 
+                                    FROM mdl_course_modules 
+                                   WHERE module = (SELECT m.id FROM {modules} m WHERE m.name = 'label') 
+                                         AND section = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = :id)";
+    $course_section_labels = $DB->get_recordset_sql($course_section_labels_sql,array('id'=>$id));
+
+    // Trying to get the first label id from the labels array
+    $section_label_ids = array();
+    $course_section_labels_key = 0;
+    $first_label = '';
+    foreach ($course_section_labels as $value) {
+        if($course_section_labels_key == 0) {
+            $first_label = $value->id;
+        }
+        $course_section_labels_key++;
+        array_push($section_label_ids, $value->id);
+    }
+    $course_section_labels->close();
+
+    // getting modules' id for the current section
+    $section_sequence_sql = "SELECT cs.sequence 
+                               FROM {course_sections} cs 
+                              WHERE id = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = :id)";
+    $section_sequence = $DB->get_record_sql($section_sequence_sql, array('id'=>$id));
+    $piecesOfSequence = explode(",", $section_sequence->sequence);
+
+    // only get resources(PDFs) before the first label 
+    $piecesOfSequenceItems = array();
+    foreach ($piecesOfSequence as $value) {
+        if($first_label == $value){
+            break;
+        }
+        $piecesOfSequenceItems[] = $value;
+    }
+    if(count($piecesOfSequenceItems) > 0) {
+        $piecesOfSequenceItemString = join(',',$piecesOfSequenceItems);
+
+        $moduleslideGroup = "SELECT cm.*, m.revision 
+                               FROM {course_modules} cm 
+                               JOIN {modules} md ON md.id = cm.module 
+                               JOIN {resource} m ON m.id = cm.instance 
+                          LEFT JOIN {course_sections} cw ON cw.id = cm.section 
+                              WHERE cm.id IN (".$piecesOfSequenceItemString.") 
+                                    AND md.name = 'resource' AND cm.course = :course";
+
+        $moduleslideGrouprs = $DB->get_recordset_sql($moduleslideGroup,array('course'=>$courseid));
+
+        // pushing the resouces(PDFs) URLs to supplementsArray
+        foreach ($moduleslideGrouprs as $key => $value) {
+            $rescontext = get_context_instance(CONTEXT_MODULE, $value->id);
+            $resfs = get_file_storage();
+            $resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
+            if (count($resfiles) < 1) {
+                resource_print_filenotfound($resource, $cm, $course);
+                die;
+            } else {
+                $file = reset($resfiles);
+                unset($resfiles);
+            }
+            $filename=$file->get_filename();
+            $rest = substr($filename, 0, -4);
+            if(!in_array($rest, $verifySingleRecord)) {
+                $verifySingleRecord[] = $rest;
+                if(substr($filename,-3)=="pdf"){
+                    $supplementnewex=",true";
+                }
+                $path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$value->revision.$file->get_filepath().$filename;
+                $unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$value->id);
+                $sArray[] = $unitArray;
+            }
+            
+        }
+        $moduleslideGrouprs->close();
+    }
+
+    // END: General resource 
+
+    // Looking for videos' resources(PDFs)
+    $targetSequece = array();
+    $finallyTarget = array();
+
+    for($slIndex = 0; $slIndex < count($section_label_ids); $slIndex++) {
+        $haschild = '';
+        $locker = false;
+        for($sqIndex = 0; $sqIndex < count($piecesOfSequence); $sqIndex++){
+            if(($section_label_ids[$slIndex] == $piecesOfSequence[$sqIndex]) && ($locker == false)){
+                $haschild = true;
+                $locker = true;
+            }
+            if($haschild == true && $haschild != ''){
+                array_push($targetSequece, $piecesOfSequence[$sqIndex]);
+            }
+            if($piecesOfSequence[$sqIndex] == $section_label_ids[$slIndex+1]){
+                $haschild = false;  
+            }
+        }
+        foreach ($targetSequece as $value) {
+            
+            if($value == $id){
+
+                $finallyTarget = $targetSequece;
+
+            }
+        }
+        $targetSequece = array();       
+    }
+
+    $finallocker = false;
+
+    // $finalTarget has all the all the modules' id between two labels 
+    
+    if(count($finallyTarget) > 0){
+        $finallyTargetString = join(',',$finallyTarget);
+        $finallyTargetGroup = "SELECT cm.*, m.revision 
+                                 FROM {course_modules} cm 
+                                 JOIN {modules} md ON md.id = cm.module 
+                                 JOIN {resource} m ON m.id = cm.instance 
+                            LEFT JOIN {course_sections} cw ON cw.id = cm.section 
+                                WHERE cm.id IN (".$finallyTargetString.") 
+                                      AND md.name = 'resource' 
+                                      AND cm.course = :course";
+
+        $finallyTargetGroups = $DB->get_recordset_sql($finallyTargetGroup,array('course'=>$courseid));
+
+        foreach ($finallyTarget as $value1) {
+            
+            if($finallocker == true) {
+                foreach ($finallyTargetGroups as $finallyTargetGroupItem) {
+                    if($value1 == $finallyTargetGroupItem->id && ($finallyTargetGroupItem->indent ==3 || $finallyTargetGroupItem->indent ==1)){
+                        $rescontext = get_context_instance(CONTEXT_MODULE, $finallyTargetGroupItem->id);
+            
+                        $resfs = get_file_storage();
+                        $resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
+                        if (count($resfiles) < 1) {
+                            resource_print_filenotfound($resource, $cm, $course);
+                            die;
+                        } else {
+                            $file = reset($resfiles);
+                            unset($resfiles);
+                        }
+                        $filename=$file->get_filename();
+                        $rest = substr($filename, 0, -4);
+                        if(!in_array($rest, $verifySingleRecord)) {
+                            $verifySingleRecord[] = $rest;
+                            if(substr($filename,-3)=="pdf"){
+                                $supplementnewex=",true";
+                            }
+                                $path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$finallyTargetGroupItem->revision.$file->get_filepath().$filename;
+                                $unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$finallyTargetGroupItem->id);
+                                $sArray[] = $unitArray;
+                        }
+                    }
+                }
+            }
+            if($value1 == $id) {
+                $finallocker = true;
+            }
+        }
+    }
+
+    return $sArray;
 }

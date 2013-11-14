@@ -265,14 +265,21 @@ function unlockModules(moduleid) {
 				}
 				// handle final exame node
 				if(targetUnlockNode.hasClass('modtype_url') && (targetUnlockNode.find('.availabilityinfo').length > 0)) {
-					// console.log('url');
+					console.log('url');
 					if(targetUnlockNode.find('.dimmed_text>span').length > 0) {
-					targetUnlockNode.find('.dimmed_text>span').addClass('instancename');
-					var resourceobjectcontent = targetUnlockNode.find('.dimmed_text').html();
-					targetUnlockNode.find('.activityinstance').html('<a class="" onclick="window.open(\''+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'&amp;redirect=1\', \'\', \'width=620,height=450,toolbar=no,location=no,menubar=no,copyhistory=no,status=no,directories=no,scrollbars=yes,resizable=yes\'); return false;" href="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'">'+resourceobjectcontent+'</a>');
+						console.log("getting in");
+						targetUnlockNode.find('.dimmed_text>span').addClass('instancename');
+						var resourceobjectcontent = targetUnlockNode.find('.dimmed_text').html();
+						if(targetUnlockNode.attr('title') == 'zPlayer'){
+							console.log('zPlayer');							
+							targetUnlockNode.find('.activityinstance').html('<a class="" href="javascript:void(0);">'+resourceobjectcontent+'</a>');
+						}else {
+
+							targetUnlockNode.find('.activityinstance').html('<a class="" onclick="window.open(\''+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'&amp;redirect=1\', \'\', \'width=620,height=450,toolbar=no,location=no,menubar=no,copyhistory=no,status=no,directories=no,scrollbars=yes,resizable=yes\'); return false;" href="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'">'+resourceobjectcontent+'</a>');
+						}
+						
 					}
 				}
-
 			});
 		});
 	});
