@@ -192,15 +192,6 @@ $(function() {/* clicking left Navigation to hide/show right content */
 
 	
 	$('#ta_feedback_dropdown li a').click(function() {
-		// var domainName = document.domain;
-		// var subDomainName = window.location;
-		// var parts = subDomainName.toString().split('/'.toString());
-		// var attempid = $(this).attr('url_data');
-		// var protocolValue = 'http';
-	 // 	if (window.location.protocol == "https:"){
-		// 	protocolValue = 'https';
-		// }
-		// var url1 = protocolValue+'://'+domainName+'/'+parts[3]+'/course/updatetafeedback.php?id='+attempid;
 
 		var popUpUrl = $(this).attr('data-popup');
 		
@@ -215,22 +206,14 @@ function unlockModules(moduleid) {
 	console.log(moduleid);
 	moduleid = moduleid.replace('module-','');
 	/* Making ajax call to togglecompletion.php*/
-
-	var domainName = document.domain;
-	var subDomainName = window.location;
-	var parts = subDomainName.toString().split('/'.toString());
-	var protocolValue = 'http';
- 	if (window.location.protocol == "https:"){
-		protocolValue = 'https';
-	}
 	
 	$.ajax({
 		type: "GET",
-	  	url: protocolValue+'://'+domainName+'/'+parts[3]+'/course/format/stanford/togglecompletionlib.php?op=quiz&cmid='+moduleid
+	  	url: 'format/stanford/togglecompletionlib.php?op=quiz&cmid='+moduleid
 	}).done(function (data) {
 		$.ajax({
 			type: "GET",
-		  	url: protocolValue+'://'+domainName+'/'+parts[3]+'/course/format/stanford/unlockmodules.php?id='+moduleid
+		  	url: 'format/stanford/unlockmodules.php?id='+moduleid
 		}).done(function (data) {
 			unlockNodes = jQuery.parseJSON(data);
 			console.log(unlockNodes);			  
@@ -299,9 +282,5 @@ function showvideoplayer(elem) {
 function slideUPFromLiner(moduleid) {
 	$('#dropdownvideopage').slideUp('slow');
 	$('#dropdownvideopage iframe').attr('src','about:blank');
-	// $('#'+moduleid).find('.activityinstance').children('a').addClass('done');
-	// $('#dropdownvideopage span.videotitle').html('');
-	// $('#'+moduleid).find('input[name="completionstate"]').attr('value',0);
-	// $('#region-sidebar #progressEleShowId-'+moduleid).addClass('done');
 }
 
