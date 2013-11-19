@@ -50,16 +50,6 @@ course_create_sections_if_missing($course, range(0, $course->numsections));
 
 $renderer = $PAGE->get_renderer('format_stanford');
 
-
-
-function fnRemoveLeftNav($buffer) {
-    return (str_replace('<div id="region-pre" class="block-region">','<div id="region-pre" class="block-region block-region-none">' , $buffer));
-}    
-
-if (!$PAGE->user_allowed_editing()) {
-	ob_start("fnRemoveLeftNav");
-}
-
 if (!empty($displaysection)) {
 	$renderer->stanford_print_single_section_page($course, null, null, null, null, $displaysection);
 } else {
@@ -67,48 +57,14 @@ if (!empty($displaysection)) {
 }
 
 if(!$PAGE->user_allowed_editing()){
-    echo '<div id="showallitems"><a id="showallitemsaction" href="javascript:void(0);">Show All Course Modules</a></div>';
-    echo "<div id='region-sidebar'>";  
-    echo "<ul>";
-    
-    $subsidebarSQL = "SELECT cm.id,l.name,cm.section 
-                        FROM {label} l 
-                   LEFT JOIN {course_modules} cm ON l.id = cm.instance 
-                   LEFT JOIN {course_sections} cs ON cs.id = cm.instance 
-                       WHERE cm.module = 12 
-                             AND cm.course = :course";
-    $subsidebarArray = array();
-    $subsidebar = $DB->get_recordset_sql($subsidebarSQL,array('course'=>$course->id));
-    foreach ($subsidebar as $key => $value) {
-        $subsidebarArray[$value->section][] = array($value->id,$value->name);
-    }
-    $subsidebar->close();
-    $sidbarArray = $DB->get_recordset_sql('SELECT * FROM {course_sections} WHERE course = ?  AND section <> 0 AND NAME <> "NULL"',array($course->id));
-    foreach ($sidbarArray as $value) {
-        echo "<li class='section' data-id='section-".$value->section."'><a>".$value->name."</a><ul style='display:none;'>";
-        $subSideBarItemArray = $subsidebarArray[$value->id];
-        foreach ($subSideBarItemArray as $key => $value) {
-           echo "<li class='module' data-id='module-".$value[0]."'><a href='#'><h4>".$value[1]."</h4></a><ul class='progressBar'></ul></li>";
-        }
-        echo "</ul></li>";
-    }
-    $sidbarArray->close();
-    echo "</ul></div>";
+    ob_start("remove_left_nav");
+    echo left_nav_bar($course->id);
 }
 
-echo "<div id='dropdownvideopage' style='display:none;'>";
-echo '<span class="videotitle"></span>';
-echo '<a href="javascript:void(0)" class="slideUpButton" data-moduleid="" data-moduletype=""></a>';
-// if($detect->isMobile()){
-//     echo '<div style="height: 100%;-webkit-overflow-scrolling:touch;overflow: scroll;"><iframe id="videochat" style="width:100%;height:100%;" src="" frameborder="0"></iframe></div>';  
-// }else {
-    echo '<div style="height: 100%;"><iframe id="videochat" style="width:100%;height:100%;" src="" frameborder="0"></iframe></div>';
-// }
+echo output_dropdown();
 
-echo "</div>";
-    
 // Include course format js module
 $PAGE->requires->js('/course/format/stanford/format.js');
 echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>';
-// echo '<script type="text/javascript" src="format/stanford/js/main.js"></script>';
-$PAGE->requires->js('/course/format/stanford/js/main.js');
+echo '<script type="text/javascript" src="format/stanford/js/main.js"></script>';
+// $PAGE->requires->js('/course/format/stanford/js/main.js');

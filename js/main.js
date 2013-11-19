@@ -163,11 +163,13 @@ $(function() {/* clicking left Navigation to hide/show right content */
 	$('.section.img-text .url .activityinstance>a').click(function() {
 		var moduleid = $(this).parent('.activityinstance').parent('.mod-indent').parent('.url').attr('id');
 		moduleid = moduleid.replace('module-','');
-		
+		console.log(moduleid);
 		var popUpUrl = "format/stanford/videoPlayer.php?id="+moduleid;
 		$('#dropdownvideopage iframe').attr('src',popUpUrl);
 		$('#dropdownvideopage').slideDown('slow');
 	});
+
+
 	
 	$('#dropdownvideopage>.slideUpButton').click(function() {
 		if($(this).attr('data-moduletype') === "quiz") {
@@ -190,15 +192,6 @@ $(function() {/* clicking left Navigation to hide/show right content */
 
 	
 	$('#ta_feedback_dropdown li a').click(function() {
-		// var domainName = document.domain;
-		// var subDomainName = window.location;
-		// var parts = subDomainName.toString().split('/'.toString());
-		// var attempid = $(this).attr('url_data');
-		// var protocolValue = 'http';
-	 // 	if (window.location.protocol == "https:"){
-		// 	protocolValue = 'https';
-		// }
-		// var url1 = protocolValue+'://'+domainName+'/'+parts[3]+'/course/updatetafeedback.php?id='+attempid;
 
 		var popUpUrl = $(this).attr('data-popup');
 		
@@ -213,22 +206,14 @@ function unlockModules(moduleid) {
 	console.log(moduleid);
 	moduleid = moduleid.replace('module-','');
 	/* Making ajax call to togglecompletion.php*/
-
-	var domainName = document.domain;
-	var subDomainName = window.location;
-	var parts = subDomainName.toString().split('/'.toString());
-	var protocolValue = 'http';
- 	if (window.location.protocol == "https:"){
-		protocolValue = 'https';
-	}
 	
 	$.ajax({
 		type: "GET",
-	  	url: protocolValue+'://'+domainName+'/'+parts[3]+'/course/format/stanford/togglecompletionlib.php?op=quiz&cmid='+moduleid
+	  	url: 'format/stanford/togglecompletionlib.php?op=quiz&cmid='+moduleid
 	}).done(function (data) {
 		$.ajax({
 			type: "GET",
-		  	url: protocolValue+'://'+domainName+'/'+parts[3]+'/course/format/stanford/unlockmodules.php?id='+moduleid
+		  	url: 'format/stanford/unlockmodules.php?id='+moduleid
 		}).done(function (data) {
 			unlockNodes = jQuery.parseJSON(data);
 			console.log(unlockNodes);			  
@@ -265,14 +250,19 @@ function unlockModules(moduleid) {
 				}
 				// handle final exame node
 				if(targetUnlockNode.hasClass('modtype_url') && (targetUnlockNode.find('.availabilityinfo').length > 0)) {
-					// console.log('url');
 					if(targetUnlockNode.find('.dimmed_text>span').length > 0) {
-					targetUnlockNode.find('.dimmed_text>span').addClass('instancename');
-					var resourceobjectcontent = targetUnlockNode.find('.dimmed_text').html();
-					targetUnlockNode.find('.activityinstance').html('<a class="" onclick="window.open(\''+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'&amp;redirect=1\', \'\', \'width=620,height=450,toolbar=no,location=no,menubar=no,copyhistory=no,status=no,directories=no,scrollbars=yes,resizable=yes\'); return false;" href="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'">'+resourceobjectcontent+'</a>');
+						// console.log("getting in");
+						targetUnlockNode.find('.dimmed_text>span').addClass('instancename');
+						var resourceobjectcontent = targetUnlockNode.find('.dimmed_text').html();
+						if(targetUnlockNode.attr('title') == 'zPlayer'){
+							targetUnlockNode.find('.activityinstance').html('<a class="" onclick="showvideoplayer($(this));" href="javascript:void(0);">'+resourceobjectcontent+'</a>');
+						}else {
+
+							targetUnlockNode.find('.activityinstance').html('<a class="" onclick="window.open(\''+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'&amp;redirect=1\', \'\', \'width=620,height=450,toolbar=no,location=no,menubar=no,copyhistory=no,status=no,directories=no,scrollbars=yes,resizable=yes\'); return false;" href="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'">'+resourceobjectcontent+'</a>');
+						}
+						
 					}
 				}
-
 			});
 		});
 	});
@@ -280,12 +270,17 @@ function unlockModules(moduleid) {
 
 }
 
+function showvideoplayer(elem) {
+	var moduleid = elem.parent('.activityinstance').parent('.mod-indent').parent('.activity').attr('id');
+	moduleid = moduleid.replace('module-','');
+	console.log(moduleid);
+	var popUpUrl = "format/stanford/videoPlayer.php?id="+moduleid;
+	$('#dropdownvideopage iframe').attr('src',popUpUrl);
+	$('#dropdownvideopage').slideDown('slow');
+}
+
 function slideUPFromLiner(moduleid) {
 	$('#dropdownvideopage').slideUp('slow');
 	$('#dropdownvideopage iframe').attr('src','about:blank');
-	// $('#'+moduleid).find('.activityinstance').children('a').addClass('done');
-	// $('#dropdownvideopage span.videotitle').html('');
-	// $('#'+moduleid).find('input[name="completionstate"]').attr('value',0);
-	// $('#region-sidebar #progressEleShowId-'+moduleid).addClass('done');
 }
 
