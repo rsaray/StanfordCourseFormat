@@ -11,7 +11,8 @@ Moodle course format installation guide
 3. Copy `moodle/course/format/stanford/view.php-example` to `moodle/course/view.php`, replacing the original 
    version of the file with the one from the `stanford/` directory.
 
-4. Login into your Moodle site with an admin role
+4. Login into your Moodle site with an admin role. You should be prompted by the "Plugins check" screen to upgrade
+   your database to install the plugin. Do so.
 
 5. Click Turn editing on the top right.
 
