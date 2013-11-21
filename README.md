@@ -2,22 +2,23 @@ Stanford University
 Moodle course format installation guide
 =============
 
-1. Download the Stanford Course Format, unzip it if needed, and move it to the `moodle/course/format/` directory.
+1. Download the Stanford Course Format, unzip it if needed.
 
-2. Remove ".example extension" from the  "view.php.example extension"
+2. Move it to the `moodle/course/format/` directory, naming it `stanford`
 
-3. Replace "view.php" under course directory with "view.php" from stanford course format
+2. Copy `moodle/course/view.php` to `moodle/course/view.php-original` in order to make a backup of it.
 
-4. Move stanford folder to format directory
+3. Copy `moodle/course/format/stanford/view.php-example` to `moodle/course/view.php`, replacing the original 
+   version of the file with the one from the `stanford/` directory.
 
-5. Login into your Moodle site with an admin role
+4. Login into your Moodle site with an admin role
 
-6.  Click Turn editing on the top right.
+5. Click Turn editing on the top right.
 
-7. Click Courses under Site Administration on the left menu
+6. Click Courses under Site Administration on the left menu
 
-8. Click add/ edit courses
+7. Click add/edit courses
 
-9. Choose Stanford Format from the Course format drop-down menu and Click Save changes
+8. Choose Stanford Format from the Course format drop-down menu and Click Save changes
 
 Stanford University
