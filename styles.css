@@ -26,8 +26,7 @@ body {
 	margin: 0;
 	padding: 0;
 }
-#page-mod-linqto-view .navbar,
-#page-mod-lti-view .navbar,
+
 #page-course-view-stanford .navbar {
     display:block;
     border-bottom:1px dotted #D5D0C0;
@@ -46,7 +45,7 @@ body {
 	font-size: 1em;
 	margin-top: -23px;
 }
-#page-header>h1.headermain,
+/*#page-header>h1.headermain,*/
 #page-course-view-stanford #page-header .headermain {
 	float: none;
 	padding: 0;
@@ -166,8 +165,7 @@ ul.stanford_course_list li.section {
 	margin: 0 20px;
 	padding: 10px 20px 0 0;
 }
-#page-mod-linqto-view .navbar,
-#page-mod-lti-view .navbar,
+
 #page-course-view-stanford .navbar {
     display:block;
     border-bottom:1px dotted #D5D0C0;
@@ -180,8 +178,7 @@ ul.stanford_course_list li.section {
 	background-color: #fff;
 	width: auto;
 }
-#page-mod-linqto-view .navbar .breadcrumb,
-#page-mod-lti-view .navbar .breadcrumb,
+
 #page-course-view-stanford .navbar .breadcrumb {
     padding: 0;
     margin:.25em 0 .25em 0;
@@ -190,8 +187,6 @@ ul.stanford_course_list li.section {
     display:inline;
     border-bottom:none;
 }
-#page-mod-linqto-view .navbar ul#classnavbar,
-#page-mod-lti-view .navbar ul#classnavbar,
 #page-course-view-stanford .navbar ul#classnavbar {
 	width:auto;
 	float:right;
@@ -203,78 +198,6 @@ ul.stanford_course_list li.section {
 
 #page-course-view-stanford .navbar .navbutton {
     float:right;
-}
-#classnavbar li {
-	list-style:none;
-	text-indent: -9999em;
-	height:33px;
-	float:left;
-	margin:0 0 0 2px;
-}
-#classnavbar li.forum {
-	width:94px;
-}
-#classnavbar li.courselink {
-	width:105px;
-	}
-#classnavbar li.studyhall {
-	width:166px;
-	}
-#classnavbar li.courseresource {
-	width:120px;
-	text-indent: 0;
-	background-color: #369;
-	-webkit-border-radius: 3px 3px 0 0;
-	-moz-border-radius: 3px 3px 0 0;
-	border-radius: 3px 3px 0 0;	
-}
-#classnavbar li a {
-	background-image: url([[pix:format_stanford|scpd-moodle-breadcrumb-buttons]]);	
-	background-repeat: no-repeat;
-	height:33px;
-	float:right;
-}
-#classnavbar li.courselink a {
-	background-position: 0 -140px;
-	width:105px;
-}
-#classnavbar li.studyhall a {
-	background-position: -108px -184px;
-	width:166px;
-}
-#classnavbar li.forum a {
-	background-position: -277px -228px;	
-	width:94px;
-}
-
-#classnavbar li.courselink a:hover {
-	background-position: 0 -280;
-	}
-#classnavbar li.studyhall a:hover {
-	background-position: -108px -324px;
-}
-#classnavbar li.forum a:hover {
-	background-position: -277px -368px;	
-}
-#classnavbar li.courseresource a, #classnavbar li.courseresource a:link, #classnavbar li.courseresource a:hover, #classnavbar li.courseresource a:visited {
-	background: none;
-	color:#fff;
-	font-weight:600;
-	text-align:center;
-	padding-top:7px;
-	width:120px;
-}
-#classnavbar li.courseresource a:hover{
-	background-color:#4885b8
-}
-#page-course-view-stanford #classnavbar li.courselink a {
-	background-position: 0 0;
-}
-#page-mod-linqto-view #classnavbar li.studyhall a {
-	background-position: -108px -44px;
-}
-#page-mod-lti-view #classnavbar li.forum a {
-	background-position: -277px -88px;	
 }
 
 /*main content*/
@@ -574,7 +497,7 @@ form.togglecompletion, .availabilityinfo {
 	padding: 0px;
 }
 
-#region-pre .header, .block .header {
+/*#region-pre .header, .block .header {
 	background-color: #fff;
 	background-image: none;
 	background-repeat: none;
@@ -606,7 +529,7 @@ form.togglecompletion, .availabilityinfo {
 }
 .block .header .block_action, .block_course_overview .content {
 	margin:0;
-}
+}*/
 h2.headingblock {
 	font-size: 1em;
 	color:#fff;
