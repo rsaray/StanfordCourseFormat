@@ -201,13 +201,13 @@ ul.stanford_course_list li.section {
 }
 
 /*main content*/
-.summary h3 {
+#page-course-view-stanford .summary h3 {
 	margin-bottom: 0;
 }
-.summary .iconsmall.edit {
+#page-course-view-stanford .summary .iconsmall.edit {
 	/*margin-left:-300px;*/
 }
-.activity {
+#page-course-view-stanford .activity {
 	
 	width: 320px;
 	margin: 0 auto!important;
@@ -218,30 +218,30 @@ ul.stanford_course_list li.section {
 	background: none;
 }
 
-.activity.label {
+#page-course-view-stanford .activity.label {
 	width: 100%;
 	margin-left:0!important;
 }
-.mod-indent {
+#page-course-view-stanford .mod-indent {
 	background: url([[pix:format_stanford|course-node-connector-bottom]]) no-repeat center top;
 	padding-top: 14px;
 }
-.mod-indent .activityinstance {
+#page-course-view-stanford .mod-indent .activityinstance {
 	background: url([[pix:format_stanford|course-node-connector-top]]) no-repeat center bottom;
 	padding-bottom: 14px!important;
 }
-.mod-indent-1 .activityinstance {
+#page-course-view-stanford .mod-indent-1 .activityinstance {
 	background-image:none;
 	padding-bottom: 0!important;
 }
-.mod-indent.mod-indent-1 {
+#page-course-view-stanford .mod-indent.mod-indent-1 {
 	background-image:none!important;
 	padding-top:0;
 }
-.activity.modtype_resource .mod-indent-1 {
+#page-course-view-stanford .activity.modtype_resource .mod-indent-1 {
 	padding-top:20px!important;
 }
-.mod-indent-1 h4 {
+#page-course-view-stanford .mod-indent-1 h4 {
 	padding: 8px;
 	background: #8C1515;
 	color: #FFF;
@@ -253,14 +253,14 @@ ul.stanford_course_list li.section {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
-.mod-indent-1 h4 a.autolink {
+#page-course-view-stanford .mod-indent-1 h4 a.autolink {
 	background-color:transparent;
 	color: #FFF;
 	font-size: 16px;
 	line-height: 1;
 	font-weight: 600;
 }
-.mod-indent .module-description, .mod-indent .description {
+#page-course-view-stanford .mod-indent .module-description, .mod-indent .description {
 	margin: 0 15px 1em 15px;
 	padding: 1em;
 	background-color:#f2f1eb;
@@ -269,34 +269,34 @@ ul.stanford_course_list li.section {
 	border-radius: 3px;
 }
 /* remove the initial connector bottom edge from first node*/
-li.firstchild .mod-indent {
+#page-course-view-stanford li.firstchild .mod-indent {
 	padding-top: 0;
 	background: none;
 }
 /* remove the trailing half-line from last node*/
-li.lastchild .activityinstance {
+#page-course-view-stanford li.lastchild .activityinstance {
 	background: none;
 	padding-bottom: 5px;
 }
 /* additional indent level */
-.mod-indent-3 {
+#page-course-view-stanford .mod-indent-3 {
 	background: url([[pix:format_stanford|course-mod-indent-3]]) no-repeat center top;
 	padding-left: 184px;
 	padding-top: 0;
 }
 
 /*activity icons*/
-.activityinstance img.iconlarge {
+#page-course-view-stanford .activityinstance img.iconlarge {
 	display:none;
 }
-.activityinstance img.activityicon {
+#page-course-view-stanford .activityinstance img.activityicon {
 	display:none;
 }
-.mod-indent-3 .activityinstance {
+#page-course-view-stanford .mod-indent-3 .activityinstance {
 	padding-bottom: 0!important;
 	background: none;
 }
-.activityinstance a, .activityinstance div.dimmed_text {
+#page-course-view-stanford .activityinstance a, .activityinstance div.dimmed_text {
 	display: block;
 	width: 320px;
 	height: 50px;
@@ -312,116 +312,96 @@ li.lastchild .activityinstance {
 	-moz-box-shadow:    1px 1px 4px rgba(86, 83, 71, 0.65);
 	box-shadow:         1px 1px 4px rgba(86, 83, 71, 0.65);
 }
-.richmedia .activityinstance a {
+#page-course-view-stanford .richmedia .activityinstance a {
 	background-position: 0 -55px;
 }
-.richmedia .activityinstance div.done, .richmedia .activityinstance a.done {
+#page-course-view-stanford .richmedia .activityinstance div.done, .richmedia .activityinstance a.done {
 	background-position: -55px -225px;
 }
-.richmedia .activityinstance div.dimmed_text, .richmedia .activityinstance a.dimmed {
+#page-course-view-stanford .richmedia .activityinstance div.dimmed_text, .richmedia .activityinstance a.dimmed {
 	background-position: -110px -395px;
 }
-.resource .activityinstance a {
+#page-course-view-stanford .resource .activityinstance a {
 	background-position: 0 0;
 }
-.resource .activityinstance div.done, .resource .activityinstance a.done {
+#page-course-view-stanford .resource .activityinstance div.done, .resource .activityinstance a.done {
 	background-position: -55px -170px;
 }
-.resource .activityinstance div.dimmed_text, .resource .activityinstance a.dimmed {
+#page-course-view-stanford .resource .activityinstance div.dimmed_text, .resource .activityinstance a.dimmed {
 	background-position: -110px -340px;
 }
-.quiz .activityinstance a, .url .activityinstance a {
+#page-course-view-stanford .quiz .activityinstance a, .url .activityinstance a {
 	background-position: 0 -110px;
 }
-.url.final .activityinstance a {
+#page-course-view-stanford .url.final .activityinstance a {
 	background-position: 0 -1200px;
 }
 
-.url .activityinstance a {
+#page-course-view-stanford .url .activityinstance a {
 	background-position: 0 -1200px;	
 }
 
-.quiz .activityinstance div.done, .quiz .activityinstance a.done, .url .activityinstance div.done, .url .activityinstance a.done {
+#page-course-view-stanford .quiz .activityinstance div.done, .quiz .activityinstance a.done, .url .activityinstance div.done, .url .activityinstance a.done {
 	background-position: -55px -280px;
 }
-.quiz .activityinstance div.dimmed_text, .quiz .activityinstance a.dimmed, .url .activityinstance div.dimmed_text, .url .activityinstance a.dimmed {
+#page-course-view-stanford .quiz .activityinstance div.dimmed_text, .quiz .activityinstance a.dimmed, .url .activityinstance div.dimmed_text, .url .activityinstance a.dimmed {
 	background-position: -110px -450px;
 }
 
 
-.book .activityinstance a {
+#page-course-view-stanford .book .activityinstance a {
 	background-position: 0 -620px;
 }
-.book .activityinstance div.done, .book .activityinstance a.done {
+#page-course-view-stanford .book .activityinstance div.done, .book .activityinstance a.done {
 	background-position: -55px -790px;
 }
-.book .activityinstance div.dimmed_text, .book .activityinstance a.dimmed {
+#page-course-view-stanford .book .activityinstance div.dimmed_text, .book .activityinstance a.dimmed {
 	background-position: -110px -960px;
 }
 
-.choice .activityinstance a {
+#page-course-view-stanford .choice .activityinstance a {
 	background-position: 0 -565px;
 }
-.choice .activityinstance div.done, .choice .activityinstance a.done {
+#page-course-view-stanford .choice .activityinstance div.done, .choice .activityinstance a.done {
 	background-position: -55px -735px;
 }
-.choice .activityinstance div.dimmed_text, .choice .activityinstance a.dimmed {
+#page-course-view-stanford .choice .activityinstance div.dimmed_text, .choice .activityinstance a.dimmed {
 	background-position: -110px -905px;
 }
 
-.assign .activityinstance a {
+#page-course-view-stanford .assign .activityinstance a {
 	background-position: 0 -1020px;
 }
-.assign .activityinstance div.done, .assign .activityinstance a.done {
+#page-course-view-stanford .assign .activityinstance div.done, .assign .activityinstance a.done {
 	background-position: -55px -1080px;
 }
-.assign .activityinstance div.dimmed_text, .assign .activityinstance a.dimmed {
+#page-course-view-stanford .assign .activityinstance div.dimmed_text, .assign .activityinstance a.dimmed {
 	background-position: -110px -1140px;
 }
 
-.chat .activityinstance a {
+#page-course-view-stanford .chat .activityinstance a {
 	background-position: 0 -510px;
 }
-.chat .activityinstance div.done, .chat .activityinstance a.done {
+#page-course-view-stanford .chat .activityinstance div.done, .chat .activityinstance a.done {
 	background-position: -55px -680px;
 }
-.chat .activityinstance div.dimmed_text, .chat .activityinstance a.dimmed {
+#page-course-view-stanford .chat .activityinstance div.dimmed_text, .chat .activityinstance a.dimmed {
 	background-position: -110px -850px;
 }
 
-.lti .activityinstance a {
-	background-position: 0 -1200px;
-}
-.lti .activityinstance div.done, .lti .activityinstance a.done {
-	background-position: -55px -1260px;
-}
-.lti .activityinstance div.dimmed_text, .lti .activityinstance a.dimmed {
-	background-position: -110px -1320px;
-}
 
-
-.forum .activityinstance a {
+#page-course-view-stanford .forum .activityinstance a {
 	background-position: 0 -1380px;
 }
-.forum .activityinstance div.done, .forum .activityinstance a.done {
+#page-course-view-stanford .forum .activityinstance div.done, .forum .activityinstance a.done {
 	background-position: -55px -1440px;
 }
-.forum .activityinstance div.dimmed_text, .forum .activityinstance a.dimmed {
+#page-course-view-stanford .forum .activityinstance div.dimmed_text, .forum .activityinstance a.dimmed {
 	background-position: -110px -1500px;
 }
 
-.linqto .activityinstance a {
-	background-position: 0 -1560px;
-}
-.linqto .activityinstance div.done, .linqto .activityinstance a.done {
-	background-position: -55px -1620px;
-}
-.linqto .activityinstance div.dimmed_text, .linqto .activityinstance a.dimmed {
-	background-position: -110px -1680px;
-}
 
-
-.activityinstance span {
+#page-course-view-stanford .activityinstance span {
 	position: absolute;
 	display: block;
 	left: 50px;
@@ -438,10 +418,11 @@ li.lastchild .activityinstance {
 	color: #336699;
 	background: url([[pix:format_stanford|course-node-gradient]]) repeat-x left top;
 }
-.activityinstance a.dimmed span {
+#page-course-view-stanford .activityinstance a.dimmed span {
 	color: #8A887D;
 }
-.instancename .accesshide, .activityinstance .dimmed_text .accesshide {
+#page-course-view-stanford .instancename .accesshide, 
+#page-course-view-stanford .activityinstance .dimmed_text .accesshide {
 	position: absolute;
 	left: 10px;
 	top: 10px;
@@ -458,7 +439,8 @@ li.lastchild .activityinstance {
 li.activity.modtype_lti, li.activity.modtype_forum, li.activity.modtype_linqto {
 	/*display:none;*/
 }
-form.togglecompletion, .availabilityinfo {
+#page-course-view-stanford form.togglecompletion, 
+#page-course-view-stanford .availabilityinfo {
 	display:none;
 }
 
@@ -485,15 +467,16 @@ form.togglecompletion, .availabilityinfo {
 	left: 12px;
 	width: 220px;
 }
-#region-pre .block {
+#page-course-view-stanford #region-pre .block {
 	border: none;
 	margin-bottom:1.5em;
 }
-#region-pre .block .content {
+#page-course-view-stanford #region-pre .block .content {
 	background-color: #fff;
 	border:none;
 }
-#region-pre .block .content,#region-pre .block.block_html .content .no-overflow {
+#page-course-view-stanford #region-pre .block .content,
+#page-course-view-stanford #region-pre .block.block_html .content .no-overflow {
 	padding: 0px;
 }
 
