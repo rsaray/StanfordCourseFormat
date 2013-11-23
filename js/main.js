@@ -181,7 +181,7 @@ $(function() {/* clicking left Navigation to hide/show right content */
 	});
 
 
-	$('#ta_feedback_menu>a').click(function() {
+	$('#slideuptafeedback').click(function() {
 		if($('#ta_feedback_dropdown').hasClass('drop')) {
 			$('#ta_feedback_dropdown').removeClass('drop');
 		}else {

@@ -57,6 +57,7 @@ if (!empty($displaysection)) {
 }
 
 if(!$PAGE->user_allowed_editing()){
+    echo ta_feedback($USER->id,$course->id);
     ob_start("remove_left_nav");
     echo left_nav_bar($course->id);
 }

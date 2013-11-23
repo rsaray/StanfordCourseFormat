@@ -404,6 +404,46 @@ function left_nav_bar($courseid) {
     return $stanfordleftnavbar;
 }
 
+
+function ta_feedback($userid,$courseid) {
+    global $DB,$CFG;
+
+    $ta_feedback_sql = "SELECT quiza.id,quiz.name 
+                      FROM `mdl_quiz_attempts` quiza 
+                 LEFT JOIN `mdl_quiz` quiz ON quiza.quiz = quiz.id 
+                     WHERE quiza.userid = :userid 
+                           AND quiz.course = :course 
+                           AND quiza.uniqueid IN (SELECT qa.questionusageid 
+                                                    FROM `mdl_question_attempt_step_data` qasd 
+                                               LEFT JOIN `mdl_question_attempt_steps` qas ON qasd.attemptstepid = qas.id 
+                                               LEFT JOIN `mdl_question_attempts` qa ON qa.id = qas.questionattemptid 
+                                                   WHERE qasd.name = :name)";
+    $ta_feedback_rs = $DB->get_recordset_sql($ta_feedback_sql, array('userid'=>$userid,'course'=>$courseid,'name'=>'-comment'));
+
+    $add_feedback_count = 0;
+    $tafeedbacklistcontent = '';
+    foreach ($ta_feedback_rs as $record) {
+        $add_feedback_count++;
+
+        $tmpcontent = html_writer::link('javascript:void(0)','<span>'.$record->name.'</span>',array('url_data'=>$record->id,'data-popup'=>$CFG->wwwroot."/mod/quiz/review.php?attempt=".$record->id));
+        $tafeedbacklistcontent .= html_writer::tag('li',$tmpcontent,array('class' => ''));
+
+    }
+    $ta_feedback_rs->close(); 
+
+
+    $o = '';
+    $o .= html_writer::start_tag('div',array('id'=>'ta_feedback_menu'));
+    $o .= html_writer::link("javascript:void(0)",'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',array('id'=>'slideuptafeedback'));
+    if($add_feedback_count>0) {
+        $o .= html_writer::tag('div',$add_feedback_count,array('id'=>'feedback_number'));
+    }
+    $o .= html_writer::tag('ul',$tafeedbacklistcontent,array('id'=>"ta_feedback_dropdown"));
+
+    $o .= html_writer::end_tag('div');  
+    return $o; 
+}
+
 /**
  * supplemental on the video page
  *
@@ -578,3 +618,4 @@ function lecture_supplemental($courseid,$id){
 
     return $sArray;
 }
+
