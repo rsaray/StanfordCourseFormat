@@ -62,6 +62,8 @@ $headeroutput .= '<link rel="stylesheet" href="css/zPlayer.css">';
 echo $headeroutput;
 
 echo "</head><body id='pageLecture'>";
+if(get_user_browser() !=='firefox'){
+
 ?>
 	<div id="videoContainer" class="mobile">
 		<video id="html5tester" autoplay poster="" class="video-js" preload="metadata" onloadedmetadata="zPlayer.showDuration();" onplay="zPlayer.showCurrentTime()">
@@ -118,6 +120,19 @@ echo "</head><body id='pageLecture'>";
 
 	<!-- <div id="supplementalBlock"> -->
 	<?php 
+}else {
+	
+	echo '<div id="videoContainer" class="mobile" style="height: 102%;">';
+	echo '<object style="height:100%;width:100%;" type="application/x-shockwave-flash" data="js/StrobeMediaPlayback.swf">
+                <param name="movie" value="js/StrobeMediaPlayback.swf"></param>
+                <param name="flashvars" value="src='.$exturl.'"></param>
+                <param name="allowFullScreen" value="true"></param>
+                <param name="allowscriptaccess" value="always"></param>
+                <param name="wmode" value="direct"></param>
+            </object>';
+	echo '</div>';
+	
+}
 	$outputsupplementcontent ='';
 	$outputsupplementcontent .= html_writer::start_tag('div',array('id'=>'supplementalBlock'));
 
