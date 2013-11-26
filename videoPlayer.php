@@ -37,6 +37,11 @@ if (empty($exturl) or $exturl === 'http://') {
     notice(get_string('invalidstoredurl', 'url'), new moodle_url('/course/view.php', array('id'=>$cm->course)));
     die;
 }
+
+if(strpos($exturl, '.mp4') === false){
+	// echo $exturl;
+	redirect($exturl);
+}
 // unset($exturl);
 
 /* start getting supplemental */
@@ -123,7 +128,7 @@ if(get_user_browser() !=='firefox'){
 }else {
 	
 	echo '<div id="videoContainer" class="mobile" style="height: 102%;">';
-	echo '<object style="height:100%;width:100%;" type="application/x-shockwave-flash" data="js/StrobeMediaPlayback.swf">
+	echo '<object height="489" width="810" type="application/x-shockwave-flash" data="js/StrobeMediaPlayback.swf">
                 <param name="movie" value="js/StrobeMediaPlayback.swf"></param>
                 <param name="flashvars" value="src='.$exturl.'"></param>
                 <param name="allowFullScreen" value="true"></param>
