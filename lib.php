@@ -54,7 +54,8 @@ class format_stanford extends format_base {
         } else if ($section->section == 0) {
             return get_string('section0name', 'format_stanford');
         } else {
-            return get_string('stanford').' '.$section->section;
+            // return get_string('stanford').' '.$section->section;
+            return get_string('sectionname').' '.$section->section;
         }
     }
 
