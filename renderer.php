@@ -19,7 +19,6 @@
  *
  * @package Stanford Course Format
  * @copyright 2013 Stanford University
- * @author Michael Rouan, Ray Saray, ZhaoFeng Zeng
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.5
  */
