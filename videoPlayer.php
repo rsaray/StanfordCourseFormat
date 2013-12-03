@@ -58,11 +58,17 @@ if (empty($exturl) or $exturl === 'http://') {
     notice(get_string('invalidstoredurl', 'url'), new moodle_url('/course/view.php', array('id'=>$cm->course)));
     die;
 }
-
+$externalvideoresource = false;
 if(strpos($exturl, '.mp4') === false){
 	// echo $exturl;
-	redirect($exturl);
+	if(strpos($exturl, 'youtube.com')) {
+		$externalvideoresource = true;
+	}else {
+		redirect($exturl);	
+	}
+	
 }
+
 // unset($exturl);
 
 /* start getting supplemental */
@@ -88,6 +94,18 @@ $headeroutput .= '<link rel="stylesheet" href="css/zPlayer.css">';
 echo $headeroutput;
 
 echo "</head><body id='pageLecture'>";
+
+if($externalvideoresource) {
+
+	echo '<div id="videoContainer" class="mobile" style="top:0;bottom:0;">';
+	if(get_user_browser() !=='firefox'){
+		echo '<iframe class="externalvideoresourceiframe_normalb" src="'.$exturl.'" frameborder="0" allowfullscreen></iframe>';	
+	}else {
+		echo '<iframe class="externalvideoresourceiframe" src="'.$exturl.'" frameborder="0" allowfullscreen></iframe>';
+	}
+	
+	echo '</div>';
+}else {
 if(get_user_browser() !=='firefox'){
 
 ?>
@@ -158,6 +176,7 @@ if(get_user_browser() !=='firefox'){
             </object>';
 	echo '</div>';
 	
+}
 }
 	$outputsupplementcontent ='';
 	$outputsupplementcontent .= html_writer::start_tag('div',array('id'=>'supplementalBlock'));
