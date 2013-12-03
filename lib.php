@@ -54,7 +54,8 @@ class format_stanford extends format_base {
         } else if ($section->section == 0) {
             return get_string('section0name', 'format_stanford');
         } else {
-            return get_string('stanford').' '.$section->section;
+            // return get_string('stanford').' '.$section->section;
+            return get_string('sectionname').' '.$section->section;
         }
     }
 
@@ -456,6 +457,7 @@ function ta_feedback($userid,$courseid) {
 function lecture_supplemental($courseid,$id){
     global $DB,$CFG;
     $sArray = array();
+    $verifySingleRecord = array();
     $course_section_labels_sql = "SELECT * 
                                     FROM mdl_course_modules 
                                    WHERE module = (SELECT m.id FROM {modules} m WHERE m.name = 'label') 
