@@ -19,7 +19,6 @@
  *
  * @package stanford course formate
  * @copyright 2013 Stanford University
- * @author Zhao
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.5
  */
@@ -325,12 +324,10 @@ class stanford_course_renderer extends core_course_renderer {
 
         //Accessibility: for files get description via icon, this is very ugly hack!
         $instancename = $mod->get_formatted_name();
-        // $altname = $mod->modfullname;
+        $altname = $mod->modfullname;
 
-        if($mod->module == 23) {
+        if($mod->modfullname == 'Rich Media') {
             $altname = 'Video';    
-        }else {
-            $altname = $mod->modfullname;    
         }
 
         // Avoid unnecessary duplication: if e.g. a forum name already
@@ -395,7 +392,7 @@ class stanford_course_renderer extends core_course_renderer {
         if ($mod->uservisible) {
             // $output .= html_writer::link($url, $activitylink, array('class' => $linkclasses, 'onclick' => $onclick)) .
             //         $groupinglabel;
-            if($mod->module == 23 || $mod->module == 16 ){
+            if($mod->modfullname == 'Rich Media' || $mod->modfullname == 'Quiz' ){
                 if($newstate !== COMPLETION_COMPLETE){
                     $output .= html_writer::link("javascript:void(0);", $activitylink, array('class' => $linkclasses." done", 'onclick' => $onclick,'data-url'=>$url)) .
                     $groupinglabel;

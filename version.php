@@ -19,7 +19,6 @@
  *
  * @package stanford course formate
  * @copyright 2013 Stanford University
- * @author Zhao
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.5
  */

@@ -1,6 +1,27 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-// defined('MOODLE_INTERNAL') || die();
+/**
+ * Renderer for outputting the topics course format.
+ *
+ * @package stanford course formate
+ * @copyright 2013 Stanford University
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since Moodle 2.5
+ */
 
 require_once('../../../config.php');
 require_once($CFG->libdir.'/filelib.php');
@@ -128,7 +149,7 @@ if(get_user_browser() !=='firefox'){
 }else {
 	
 	echo '<div id="videoContainer" class="mobile" style="height: 102%;">';
-	echo '<object height="489" width="810" type="application/x-shockwave-flash" data="js/StrobeMediaPlayback.swf">
+	echo '<object height="621" width="956" type="application/x-shockwave-flash" data="js/StrobeMediaPlayback.swf">
                 <param name="movie" value="js/StrobeMediaPlayback.swf"></param>
                 <param name="flashvars" value="src='.$exturl.'"></param>
                 <param name="allowFullScreen" value="true"></param>
