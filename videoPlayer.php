@@ -98,7 +98,7 @@ echo "</head><body id='pageLecture'>";
 if($externalvideoresource) {
 
 	echo '<div id="videoContainer" class="mobile" style="top:0;bottom:0;">';
-	if(get_user_browser() !=='firefox'){
+	if(get_user_browser() !=='firefox' || get_user_browser() !=='ie11' || get_user_browser() !=='ie'){
 		echo '<iframe class="externalvideoresourceiframe_normalb" src="'.$exturl.'" frameborder="0" allowfullscreen></iframe>';	
 	}else {
 		echo '<iframe class="externalvideoresourceiframe" src="'.$exturl.'" frameborder="0" allowfullscreen></iframe>';

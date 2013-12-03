@@ -97,7 +97,9 @@ function switchpdf(elem) {
 		$('.pdfsidebarTab').html('<iframe  frameBorder=0 seamless style="display:block;" class="supplementView" src="'+url+'"></iframe>');
 	}else if(BrowserDetect.browser == "Chrome") {
 		$('.pdfsidebarTab').html('<iframe  frameBorder=0 seamless style="display:block;" class="supplementView" src="'+url+'"></iframe>');
-	} 
+	} else if(BrowserDetect.browser == "Mozilla" && myPDF.get("pluginTypeFound") == null){
+		$('.pdfsidebarTab').html('<iframe frameBorder=0 seamless style="display:block;" class="supplementView" src="'+url+'"></iframe>');
+	}
 	else {
 		$('#sidebarTab-pdf-sub-nav').css('display','none');
 		$('#viewmodes').css('display','none');
@@ -127,7 +129,9 @@ function loadFirstPDF() {
 			// $('.pdfsidebarTab').html('<iframe  frameBorder=0 seamless style="display:block;" class="supplementView" src="pdfweb/viewer.php?url='+urlid+'"></iframe>');
 		}else if(BrowserDetect.browser == "Chrome") {
 			$('.pdfsidebarTab').html('<iframe  frameBorder=0 seamless style="display:block;" class="supplementView" src="pdfweb/viewer.php?url='+urlid+'"></iframe>');
-		} 
+		} else if(BrowserDetect.browser == "Mozilla" && myPDF.get("pluginTypeFound") == null){
+			$('.pdfsidebarTab').html('<iframe frameBorder=0 seamless style="display:block;" class="supplementView" src="'+url+'"></iframe>');
+		}
 		else {
 			// $('.pdfsidebarTab').html('<p>It appears you do not have Adobe Reader or PDF support in this web browser. <a href="http://get.adobe.com/reader/" target="_blank">Click here to download the PDF Reader</a></p>');
 			$('#sidebarTab-pdf-sub-nav').css('display','none');
