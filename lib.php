@@ -648,7 +648,9 @@ function get_user_browser()
     elseif(preg_match('/Opera/i',$u_agent)) 
     { 
         $ub = "opera"; 
-    } 
+    } elseif(preg_match('Mozilla', $u_agent)){
+        $ub = 'ie11';
+    }
     
     return $ub; 
 } 

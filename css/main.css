@@ -149,6 +149,14 @@ iframe.supplementView {
 	/*height:85%;*/
 	width:28%;
 }
+iframe.externalvideoresourceiframe{
+	width:100%;
+	min-height: 37em;
+}
+iframe.externalvideoresourceiframe_normalb{
+	width: 100%;
+	height: 100%;
+}
 #tablet_pdf_nav {
 	list-style-type: none;
 	margin:0;
