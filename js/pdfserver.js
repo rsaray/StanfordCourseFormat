@@ -94,9 +94,9 @@ function switchpdf(elem) {
 	if(myPDF.get("pluginTypeFound") != null) {
 		$('.pdfsidebarTab').html('<iframe frameBorder=0 seamless style="display:block;" class="supplementView" src="'+url+'"></iframe>');
 	}else if(BrowserDetect.browser == "Firefox"){
-		$('.pdfsidebarTab').html('<iframe  frameBorder=0 seamless style="display:block;" class="supplementView" src="pdfweb/viewer.php?url='+urlid+'"></iframe>');
+		$('.pdfsidebarTab').html('<iframe  frameBorder=0 seamless style="display:block;" class="supplementView" src="'+url+'"></iframe>');
 	}else if(BrowserDetect.browser == "Chrome") {
-		$('.pdfsidebarTab').html('<iframe  frameBorder=0 seamless style="display:block;" class="supplementView" src="pdfweb/viewer.php?url='+urlid+'"></iframe>');
+		$('.pdfsidebarTab').html('<iframe  frameBorder=0 seamless style="display:block;" class="supplementView" src="'+url+'"></iframe>');
 	} 
 	else {
 		$('#sidebarTab-pdf-sub-nav').css('display','none');
