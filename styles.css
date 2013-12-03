@@ -26,8 +26,7 @@ body {
 	margin: 0;
 	padding: 0;
 }
-#page-mod-linqto-view .navbar,
-#page-mod-lti-view .navbar,
+
 #page-course-view-stanford .navbar {
     display:block;
     border-bottom:1px dotted #D5D0C0;
@@ -46,7 +45,7 @@ body {
 	font-size: 1em;
 	margin-top: -23px;
 }
-#page-header>h1.headermain,
+/*#page-header>h1.headermain,*/
 #page-course-view-stanford #page-header .headermain {
 	float: none;
 	padding: 0;
@@ -166,8 +165,7 @@ ul.stanford_course_list li.section {
 	margin: 0 20px;
 	padding: 10px 20px 0 0;
 }
-#page-mod-linqto-view .navbar,
-#page-mod-lti-view .navbar,
+
 #page-course-view-stanford .navbar {
     display:block;
     border-bottom:1px dotted #D5D0C0;
@@ -180,8 +178,7 @@ ul.stanford_course_list li.section {
 	background-color: #fff;
 	width: auto;
 }
-#page-mod-linqto-view .navbar .breadcrumb,
-#page-mod-lti-view .navbar .breadcrumb,
+
 #page-course-view-stanford .navbar .breadcrumb {
     padding: 0;
     margin:.25em 0 .25em 0;
@@ -190,8 +187,6 @@ ul.stanford_course_list li.section {
     display:inline;
     border-bottom:none;
 }
-#page-mod-linqto-view .navbar ul#classnavbar,
-#page-mod-lti-view .navbar ul#classnavbar,
 #page-course-view-stanford .navbar ul#classnavbar {
 	width:auto;
 	float:right;
@@ -204,87 +199,15 @@ ul.stanford_course_list li.section {
 #page-course-view-stanford .navbar .navbutton {
     float:right;
 }
-#classnavbar li {
-	list-style:none;
-	text-indent: -9999em;
-	height:33px;
-	float:left;
-	margin:0 0 0 2px;
-}
-#classnavbar li.forum {
-	width:94px;
-}
-#classnavbar li.courselink {
-	width:105px;
-	}
-#classnavbar li.studyhall {
-	width:166px;
-	}
-#classnavbar li.courseresource {
-	width:120px;
-	text-indent: 0;
-	background-color: #369;
-	-webkit-border-radius: 3px 3px 0 0;
-	-moz-border-radius: 3px 3px 0 0;
-	border-radius: 3px 3px 0 0;	
-}
-#classnavbar li a {
-	background-image: url([[pix:format_stanford|scpd-moodle-breadcrumb-buttons]]);	
-	background-repeat: no-repeat;
-	height:33px;
-	float:right;
-}
-#classnavbar li.courselink a {
-	background-position: 0 -140px;
-	width:105px;
-}
-#classnavbar li.studyhall a {
-	background-position: -108px -184px;
-	width:166px;
-}
-#classnavbar li.forum a {
-	background-position: -277px -228px;	
-	width:94px;
-}
-
-#classnavbar li.courselink a:hover {
-	background-position: 0 -280;
-	}
-#classnavbar li.studyhall a:hover {
-	background-position: -108px -324px;
-}
-#classnavbar li.forum a:hover {
-	background-position: -277px -368px;	
-}
-#classnavbar li.courseresource a, #classnavbar li.courseresource a:link, #classnavbar li.courseresource a:hover, #classnavbar li.courseresource a:visited {
-	background: none;
-	color:#fff;
-	font-weight:600;
-	text-align:center;
-	padding-top:7px;
-	width:120px;
-}
-#classnavbar li.courseresource a:hover{
-	background-color:#4885b8
-}
-#page-course-view-stanford #classnavbar li.courselink a {
-	background-position: 0 0;
-}
-#page-mod-linqto-view #classnavbar li.studyhall a {
-	background-position: -108px -44px;
-}
-#page-mod-lti-view #classnavbar li.forum a {
-	background-position: -277px -88px;	
-}
 
 /*main content*/
-.summary h3 {
+#page-course-view-stanford .summary h3 {
 	margin-bottom: 0;
 }
-.summary .iconsmall.edit {
+#page-course-view-stanford .summary .iconsmall.edit {
 	/*margin-left:-300px;*/
 }
-.activity {
+#page-course-view-stanford .activity {
 	
 	width: 320px;
 	margin: 0 auto!important;
@@ -295,30 +218,30 @@ ul.stanford_course_list li.section {
 	background: none;
 }
 
-.activity.label {
+#page-course-view-stanford .activity.label {
 	width: 100%;
 	margin-left:0!important;
 }
-.mod-indent {
+#page-course-view-stanford .mod-indent {
 	background: url([[pix:format_stanford|course-node-connector-bottom]]) no-repeat center top;
 	padding-top: 14px;
 }
-.mod-indent .activityinstance {
+#page-course-view-stanford .mod-indent .activityinstance {
 	background: url([[pix:format_stanford|course-node-connector-top]]) no-repeat center bottom;
 	padding-bottom: 14px!important;
 }
-.mod-indent-1 .activityinstance {
+#page-course-view-stanford .mod-indent-1 .activityinstance {
 	background-image:none;
 	padding-bottom: 0!important;
 }
-.mod-indent.mod-indent-1 {
+#page-course-view-stanford .mod-indent.mod-indent-1 {
 	background-image:none!important;
 	padding-top:0;
 }
-.activity.modtype_resource .mod-indent-1 {
+#page-course-view-stanford .activity.modtype_resource .mod-indent-1 {
 	padding-top:20px!important;
 }
-.mod-indent-1 h4 {
+#page-course-view-stanford .mod-indent-1 h4 {
 	padding: 8px;
 	background: #8C1515;
 	color: #FFF;
@@ -330,14 +253,14 @@ ul.stanford_course_list li.section {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
-.mod-indent-1 h4 a.autolink {
+#page-course-view-stanford .mod-indent-1 h4 a.autolink {
 	background-color:transparent;
 	color: #FFF;
 	font-size: 16px;
 	line-height: 1;
 	font-weight: 600;
 }
-.mod-indent .module-description, .mod-indent .description {
+#page-course-view-stanford .mod-indent .module-description, .mod-indent .description {
 	margin: 0 15px 1em 15px;
 	padding: 1em;
 	background-color:#f2f1eb;
@@ -346,34 +269,34 @@ ul.stanford_course_list li.section {
 	border-radius: 3px;
 }
 /* remove the initial connector bottom edge from first node*/
-li.firstchild .mod-indent {
+#page-course-view-stanford li.firstchild .mod-indent {
 	padding-top: 0;
 	background: none;
 }
 /* remove the trailing half-line from last node*/
-li.lastchild .activityinstance {
+#page-course-view-stanford li.lastchild .activityinstance {
 	background: none;
 	padding-bottom: 5px;
 }
 /* additional indent level */
-.mod-indent-3 {
+#page-course-view-stanford .mod-indent-3 {
 	background: url([[pix:format_stanford|course-mod-indent-3]]) no-repeat center top;
 	padding-left: 184px;
 	padding-top: 0;
 }
 
 /*activity icons*/
-.activityinstance img.iconlarge {
+#page-course-view-stanford .activityinstance img.iconlarge {
 	display:none;
 }
-.activityinstance img.activityicon {
+#page-course-view-stanford .activityinstance img.activityicon {
 	display:none;
 }
-.mod-indent-3 .activityinstance {
+#page-course-view-stanford .mod-indent-3 .activityinstance {
 	padding-bottom: 0!important;
 	background: none;
 }
-.activityinstance a, .activityinstance div.dimmed_text {
+#page-course-view-stanford .activityinstance a, .activityinstance div.dimmed_text {
 	display: block;
 	width: 320px;
 	height: 50px;
@@ -389,116 +312,96 @@ li.lastchild .activityinstance {
 	-moz-box-shadow:    1px 1px 4px rgba(86, 83, 71, 0.65);
 	box-shadow:         1px 1px 4px rgba(86, 83, 71, 0.65);
 }
-.richmedia .activityinstance a {
+#page-course-view-stanford .richmedia .activityinstance a {
 	background-position: 0 -55px;
 }
-.richmedia .activityinstance div.done, .richmedia .activityinstance a.done {
+#page-course-view-stanford .richmedia .activityinstance div.done, .richmedia .activityinstance a.done {
 	background-position: -55px -225px;
 }
-.richmedia .activityinstance div.dimmed_text, .richmedia .activityinstance a.dimmed {
+#page-course-view-stanford .richmedia .activityinstance div.dimmed_text, .richmedia .activityinstance a.dimmed {
 	background-position: -110px -395px;
 }
-.resource .activityinstance a {
+#page-course-view-stanford .resource .activityinstance a {
 	background-position: 0 0;
 }
-.resource .activityinstance div.done, .resource .activityinstance a.done {
+#page-course-view-stanford .resource .activityinstance div.done, .resource .activityinstance a.done {
 	background-position: -55px -170px;
 }
-.resource .activityinstance div.dimmed_text, .resource .activityinstance a.dimmed {
+#page-course-view-stanford .resource .activityinstance div.dimmed_text, .resource .activityinstance a.dimmed {
 	background-position: -110px -340px;
 }
-.quiz .activityinstance a, .url .activityinstance a {
+#page-course-view-stanford .quiz .activityinstance a, .url .activityinstance a {
 	background-position: 0 -110px;
 }
-.url.final .activityinstance a {
+#page-course-view-stanford .url.final .activityinstance a {
 	background-position: 0 -1200px;
 }
 
-.url .activityinstance a {
+#page-course-view-stanford .url .activityinstance a {
 	background-position: 0 -1200px;	
 }
 
-.quiz .activityinstance div.done, .quiz .activityinstance a.done, .url .activityinstance div.done, .url .activityinstance a.done {
+#page-course-view-stanford .quiz .activityinstance div.done, .quiz .activityinstance a.done, .url .activityinstance div.done, .url .activityinstance a.done {
 	background-position: -55px -280px;
 }
-.quiz .activityinstance div.dimmed_text, .quiz .activityinstance a.dimmed, .url .activityinstance div.dimmed_text, .url .activityinstance a.dimmed {
+#page-course-view-stanford .quiz .activityinstance div.dimmed_text, .quiz .activityinstance a.dimmed, .url .activityinstance div.dimmed_text, .url .activityinstance a.dimmed {
 	background-position: -110px -450px;
 }
 
 
-.book .activityinstance a {
+#page-course-view-stanford .book .activityinstance a {
 	background-position: 0 -620px;
 }
-.book .activityinstance div.done, .book .activityinstance a.done {
+#page-course-view-stanford .book .activityinstance div.done, .book .activityinstance a.done {
 	background-position: -55px -790px;
 }
-.book .activityinstance div.dimmed_text, .book .activityinstance a.dimmed {
+#page-course-view-stanford .book .activityinstance div.dimmed_text, .book .activityinstance a.dimmed {
 	background-position: -110px -960px;
 }
 
-.choice .activityinstance a {
+#page-course-view-stanford .choice .activityinstance a {
 	background-position: 0 -565px;
 }
-.choice .activityinstance div.done, .choice .activityinstance a.done {
+#page-course-view-stanford .choice .activityinstance div.done, .choice .activityinstance a.done {
 	background-position: -55px -735px;
 }
-.choice .activityinstance div.dimmed_text, .choice .activityinstance a.dimmed {
+#page-course-view-stanford .choice .activityinstance div.dimmed_text, .choice .activityinstance a.dimmed {
 	background-position: -110px -905px;
 }
 
-.assign .activityinstance a {
+#page-course-view-stanford .assign .activityinstance a {
 	background-position: 0 -1020px;
 }
-.assign .activityinstance div.done, .assign .activityinstance a.done {
+#page-course-view-stanford .assign .activityinstance div.done, .assign .activityinstance a.done {
 	background-position: -55px -1080px;
 }
-.assign .activityinstance div.dimmed_text, .assign .activityinstance a.dimmed {
+#page-course-view-stanford .assign .activityinstance div.dimmed_text, .assign .activityinstance a.dimmed {
 	background-position: -110px -1140px;
 }
 
-.chat .activityinstance a {
+#page-course-view-stanford .chat .activityinstance a {
 	background-position: 0 -510px;
 }
-.chat .activityinstance div.done, .chat .activityinstance a.done {
+#page-course-view-stanford .chat .activityinstance div.done, .chat .activityinstance a.done {
 	background-position: -55px -680px;
 }
-.chat .activityinstance div.dimmed_text, .chat .activityinstance a.dimmed {
+#page-course-view-stanford .chat .activityinstance div.dimmed_text, .chat .activityinstance a.dimmed {
 	background-position: -110px -850px;
 }
 
-.lti .activityinstance a {
-	background-position: 0 -1200px;
-}
-.lti .activityinstance div.done, .lti .activityinstance a.done {
-	background-position: -55px -1260px;
-}
-.lti .activityinstance div.dimmed_text, .lti .activityinstance a.dimmed {
-	background-position: -110px -1320px;
-}
 
-
-.forum .activityinstance a {
+#page-course-view-stanford .forum .activityinstance a {
 	background-position: 0 -1380px;
 }
-.forum .activityinstance div.done, .forum .activityinstance a.done {
+#page-course-view-stanford .forum .activityinstance div.done, .forum .activityinstance a.done {
 	background-position: -55px -1440px;
 }
-.forum .activityinstance div.dimmed_text, .forum .activityinstance a.dimmed {
+#page-course-view-stanford .forum .activityinstance div.dimmed_text, .forum .activityinstance a.dimmed {
 	background-position: -110px -1500px;
 }
 
-.linqto .activityinstance a {
-	background-position: 0 -1560px;
-}
-.linqto .activityinstance div.done, .linqto .activityinstance a.done {
-	background-position: -55px -1620px;
-}
-.linqto .activityinstance div.dimmed_text, .linqto .activityinstance a.dimmed {
-	background-position: -110px -1680px;
-}
 
-
-.activityinstance span {
+#page-course-view-stanford .activityinstance span {
 	position: absolute;
 	display: block;
 	left: 50px;
@@ -515,10 +418,11 @@ li.lastchild .activityinstance {
 	color: #336699;
 	background: url([[pix:format_stanford|course-node-gradient]]) repeat-x left top;
 }
-.activityinstance a.dimmed span {
+#page-course-view-stanford .activityinstance a.dimmed span {
 	color: #8A887D;
 }
-.instancename .accesshide, .activityinstance .dimmed_text .accesshide {
+#page-course-view-stanford .instancename .accesshide, 
+#page-course-view-stanford .activityinstance .dimmed_text .accesshide {
 	position: absolute;
 	left: 10px;
 	top: 10px;
@@ -535,7 +439,8 @@ li.lastchild .activityinstance {
 li.activity.modtype_lti, li.activity.modtype_forum, li.activity.modtype_linqto {
 	/*display:none;*/
 }
-form.togglecompletion, .availabilityinfo {
+#page-course-view-stanford form.togglecompletion, 
+#page-course-view-stanford .availabilityinfo {
 	display:none;
 }
 
@@ -562,19 +467,20 @@ form.togglecompletion, .availabilityinfo {
 	left: 12px;
 	width: 220px;
 }
-#region-pre .block {
+#page-course-view-stanford #region-pre .block {
 	border: none;
 	margin-bottom:1.5em;
 }
-#region-pre .block .content {
+#page-course-view-stanford #region-pre .block .content {
 	background-color: #fff;
 	border:none;
 }
-#region-pre .block .content,#region-pre .block.block_html .content .no-overflow {
+#page-course-view-stanford #region-pre .block .content,
+#page-course-view-stanford #region-pre .block.block_html .content .no-overflow {
 	padding: 0px;
 }
 
-#region-pre .header, .block .header {
+/*#region-pre .header, .block .header {
 	background-color: #fff;
 	background-image: none;
 	background-repeat: none;
@@ -606,7 +512,7 @@ form.togglecompletion, .availabilityinfo {
 }
 .block .header .block_action, .block_course_overview .content {
 	margin:0;
-}
+}*/
 h2.headingblock {
 	font-size: 1em;
 	color:#fff;
@@ -805,14 +711,16 @@ p.errormessage {color: #8c1515;
 
 
 /* STANFORD:; TA Feedback - Zhao*/
-.navbar.clearfix > #classnavbar > #ta_feedback_menu #ta_feedback_dropdown {
+#ta_feedback_menu #ta_feedback_dropdown {
 	display: none;
 	list-style: none;
 	height: auto;
 	background: #F2F1EB;
-	width: 15em;
-	margin: 2.6em 0em 0em -2em;
+	/*width: 15em;*/
+	/*margin: 2.6em 0em 0em -2em;*/
 	position: absolute;
+	right: -13px;
+	top: 20px;
 	z-index: 99;
 	-moz-box-shadow: 3px 3px 4px #8A887D;
 	-webkit-box-shadow: 3px 3px 4px #8A887D;
@@ -823,7 +731,9 @@ p.errormessage {color: #8c1515;
 	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#8A887D');
 }
 
-.navbar.clearfix > #classnavbar > #ta_feedback_menu {
+#ta_feedback_menu {
+	position: absolute;
+	right: 1.3%;
 	text-decoration: none;
 	color: #8C1515;
 	border: 1px solid #D5D0C0;
@@ -839,7 +749,7 @@ p.errormessage {color: #8c1515;
 	height: 32px;
 }
 
-.navbar.clearfix > #classnavbar > #ta_feedback_menu #ta_feedback_dropdown li.unread {
+#ta_feedback_menu #ta_feedback_dropdown li.unread {
 	border-top: 1px solid #8C1515;
 	width: 15em;
 	cursor: pointer;
@@ -847,22 +757,20 @@ p.errormessage {color: #8c1515;
 	background: #eed3d7;
 }
 
-.navbar.clearfix > #classnavbar > #ta_feedback_menu #ta_feedback_dropdown li {
+#ta_feedback_menu #ta_feedback_dropdown li {
 	border-top: 1px solid #8C1515;
 	width: 15em;
 	cursor: pointer;
 	text-indent: 0;
 }
-.navbar.clearfix > #classnavbar > #ta_feedback_menu #ta_feedback_dropdown li:hover {
+#ta_feedback_menu #ta_feedback_dropdown li:hover {
 	background-color: #fff;
 	cursor: pointer;
 }
-
-.navbar.clearfix > #classnavbar > #ta_feedback_menu > #ta_feedback_dropdown.drop {
+#ta_feedback_menu > #ta_feedback_dropdown.drop {
 	display: block;
 }
-
-.navbar.clearfix > #classnavbar > #ta_feedback_menu > #ta_feedback_dropdown  a{
+#ta_feedback_menu > #ta_feedback_dropdown  a{
 	background-image:none;
 	float: left;
 	padding: 5px;
@@ -878,27 +786,32 @@ p.errormessage {color: #8c1515;
 	white-space: nowrap;
 	color: #369;
 }
-
-.navbar.clearfix > #classnavbar > #ta_feedback_menu > a{
+#ta_feedback_menu > a{
 	text-decoration: none;
 	background: transparent url([[pix:format_stanford|scpd-moodle-ta-feedback-flag]]) no-repeat;	
 	float: left;
 	text-indent: 0;
 	color: transparent; 
 	margin: 3px;
+	height: 30px;
 }
-
-.navbar.clearfix > #classnavbar > #ta_feedback_menu.with > a{
+#ta_feedback_menu.with > a{
 	background: transparent url([[pix:format_stanford|scpd-moodle-ta-feeback-flag_blue]]) no-repeat;	
 }
-.navbar.clearfix > #classnavbar > #ta_feedback_menu #feedback_number{
+#ta_feedback_menu #feedback_number{
 	text-indent: 0;
 	position: absolute;
 	-webkit-border-radius: 7px;
 	-webkit-border-radius: 7px;
 	-moz-border-radius: 7px;
 	border-radius: 10px;
-	width: 1%;
+	background: #336699;
+	width: 66%;
+	color: #fff;
+	text-align: center;
+	right: -8px;
+	top: -10px;
+	/*width: 1%;
 	height: 0.13%;
 	padding-top: 3px;
 	text-align: center;
@@ -906,7 +819,7 @@ p.errormessage {color: #8c1515;
 	background: #336699;
 	color: #fff;
 	font-size: .7em;
-	margin-left: 13px;
+	margin-left: 13px;*/
 }
 
 

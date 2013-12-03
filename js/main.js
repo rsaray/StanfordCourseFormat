@@ -181,7 +181,7 @@ $(function() {/* clicking left Navigation to hide/show right content */
 	});
 
 
-	$('#ta_feedback_menu>a').click(function() {
+	$('#slideuptafeedback').click(function() {
 		if($('#ta_feedback_dropdown').hasClass('drop')) {
 			$('#ta_feedback_dropdown').removeClass('drop');
 		}else {
@@ -203,7 +203,6 @@ $(function() {/* clicking left Navigation to hide/show right content */
 });
 
 function unlockModules(moduleid) {
-	console.log(moduleid);
 	moduleid = moduleid.replace('module-','');
 	/* Making ajax call to togglecompletion.php*/
 	
@@ -216,7 +215,6 @@ function unlockModules(moduleid) {
 		  	url: 'format/stanford/unlockmodules.php?id='+moduleid
 		}).done(function (data) {
 			unlockNodes = jQuery.parseJSON(data);
-			console.log(unlockNodes);			  
 			var unlockNodesArray = new Array();
 			var domainName = document.domain;
 			var subDomainName = window.location;
@@ -273,7 +271,6 @@ function unlockModules(moduleid) {
 function showvideoplayer(elem) {
 	var moduleid = elem.parent('.activityinstance').parent('.mod-indent').parent('.activity').attr('id');
 	moduleid = moduleid.replace('module-','');
-	console.log(moduleid);
 	var popUpUrl = "format/stanford/videoPlayer.php?id="+moduleid;
 	$('#dropdownvideopage iframe').attr('src',popUpUrl);
 	$('#dropdownvideopage').slideDown('slow');
