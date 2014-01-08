@@ -410,14 +410,14 @@ function ta_feedback($userid,$courseid) {
     global $DB,$CFG;
 
     $ta_feedback_sql = "SELECT quiza.id,quiz.name 
-                      FROM `mdl_quiz_attempts` quiza 
-                 LEFT JOIN `mdl_quiz` quiz ON quiza.quiz = quiz.id 
+                      FROM {quiz_attempts} quiza 
+                 LEFT JOIN {quiz} quiz ON quiza.quiz = quiz.id 
                      WHERE quiza.userid = :userid 
                            AND quiz.course = :course 
                            AND quiza.uniqueid IN (SELECT qa.questionusageid 
-                                                    FROM `mdl_question_attempt_step_data` qasd 
-                                               LEFT JOIN `mdl_question_attempt_steps` qas ON qasd.attemptstepid = qas.id 
-                                               LEFT JOIN `mdl_question_attempts` qa ON qa.id = qas.questionattemptid 
+                                                    FROM {question_attempt_step_data} qasd 
+                                               LEFT JOIN {question_attempt_steps} qas ON qasd.attemptstepid = qas.id 
+                                               LEFT JOIN {question_attempts} qa ON qa.id = qas.questionattemptid 
                                                    WHERE qasd.name = :name)";
     $ta_feedback_rs = $DB->get_recordset_sql($ta_feedback_sql, array('userid'=>$userid,'course'=>$courseid,'name'=>'-comment'));
 
@@ -459,7 +459,7 @@ function lecture_supplemental($courseid,$id){
     $sArray = array();
     $verifySingleRecord = array();
     $course_section_labels_sql = "SELECT * 
-                                    FROM mdl_course_modules 
+                                    FROM {course_modules} 
                                    WHERE module = (SELECT m.id FROM {modules} m WHERE m.name = 'label') 
                                          AND section = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = :id)";
     $course_section_labels = $DB->get_recordset_sql($course_section_labels_sql,array('id'=>$id));
