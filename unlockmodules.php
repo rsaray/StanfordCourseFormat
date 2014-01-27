@@ -3,7 +3,7 @@
 	* webservice created by zhao.
 	*/
 	require_once('../../../config.php');
-	require_once('ChromePhp.php');
+	// require_once('ChromePhp.php');
 	
 	$id = optional_param('id', 0, PARAM_INT);
 	global $DB;

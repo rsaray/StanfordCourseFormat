@@ -60,6 +60,8 @@ class stanford_course_renderer extends core_course_renderer {
 
     public function stanford_course_section_cm_list($course, $section, $sectionreturn = null, $displayoptions = array()) {
         global $USER,$DB;
+        
+        // ChromePhp::log("stanford course section course module list");
 
         $output = '';
         $modinfo = get_fast_modinfo($course);
@@ -80,7 +82,10 @@ class stanford_course_renderer extends core_course_renderer {
         // Get the list of modules visible to user (excluding the module being moved if there is one)
         $moduleshtml = array();
         if (!empty($modinfo->sections[$section->section])) {
+
             foreach ($modinfo->sections[$section->section] as $key => $modnumber) {
+                $modNext = new stdClass();
+                $modNext->modname = '';
                 $mod = $modinfo->cms[$modnumber];
                 $modNextModNumber = $modinfo->sections[$section->section][$key+1];
                 if(!empty($modNextModNumber)) {

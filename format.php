@@ -56,11 +56,11 @@ if (!empty($displaysection)) {
 	$renderer->stanford_print_multiple_section_page($course, null, null, null, null);
 }
 
-if(!$PAGE->user_allowed_editing()){
-    echo ta_feedback($USER->id,$course->id);
-    ob_start("remove_left_nav");
-    echo left_nav_bar($course->id);
-}
+// if(!$PAGE->user_allowed_editing()){
+//     echo ta_feedback($USER->id,$course->id);
+//     ob_start("remove_left_nav");
+//     echo left_nav_bar($course->id);
+// }
 
 echo output_dropdown();
 
