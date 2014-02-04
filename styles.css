@@ -464,8 +464,10 @@ li.activity.modtype_lti, li.activity.modtype_forum, li.activity.modtype_linqto {
 
 /* BLOCK ELEMENTS */
 #page-course-view-stanford #page-content #region-pre{
-	left: 12px;
-	width: 220px;
+	/*left: 12px;
+	width: 220px;*/
+	left: 35px;
+	width: 271px;
 }
 #page-course-view-stanford #region-pre .block {
 	border: none;

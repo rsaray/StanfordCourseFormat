@@ -87,9 +87,9 @@ class stanford_course_renderer extends core_course_renderer {
                 $modNext = new stdClass();
                 $modNext->modname = '';
                 $mod = $modinfo->cms[$modnumber];
-                $modNextModNumber = $modinfo->sections[$section->section][$key+1];
-                if(!empty($modNextModNumber)) {
-                  $modNext = $modinfo->cms[$modNextModNumber];    
+                // $modNextModNumber = $modinfo->sections[$section->section][$key+1];
+                if(!empty($modinfo->sections[$section->section][$key+1])) {
+                  $modNext = $modinfo->cms[$modinfo->sections[$section->section][$key+1]];    
                 }
 
                 if ($ismoving and $mod->id == $USER->activitycopy) {
