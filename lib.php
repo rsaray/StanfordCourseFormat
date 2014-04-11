@@ -340,6 +340,7 @@ class format_stanford extends format_base {
 function remove_left_nav($buffer) {
     return (str_replace('<div id="region-pre" class="block-region">','<div id="region-pre" class="block-region block-region-none">' , $buffer));
 }
+
 /**
  * output a dropdown iframe for embedding quiz,video,pdf pages
  * @return string
