@@ -60,7 +60,7 @@ if (!empty($displaysection)) {
 if(!$PAGE->user_allowed_editing()){
     echo ta_feedback($USER->id,$course->id);
     ob_start("remove_left_nav");
-    echo '<script>var d = document.getElementById("region-main-wrap");d.className = d.className + "studentview";</script>';
+    echo '<script>var regionmainwrapid = document.getElementById("region-main-wrap");regionmainwrapid.className = regionmainwrapid.className + "studentview";</script>';
     
 }
 echo left_nav_bar($course->id);
