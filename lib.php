@@ -17,16 +17,22 @@
 /**
  * This file contains main class for the course format Topic
  *
- * @since     2.5
+ * @since     2.0
  * @package   format_stanford
- * @copyright 2013 Stanford University
+ * @copyright 2009 Sam Hemelryk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
-// require_once($CFG->dirroot. 'config.php');
 require_once($CFG->dirroot. '/course/format/lib.php');
 
+/**
+ * Main class for the stanford course format
+ *
+ * @package    format_stanford
+ * @copyright  2012 Marina Glancy
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class format_stanford extends format_base {
 
     /**
@@ -54,8 +60,7 @@ class format_stanford extends format_base {
         } else if ($section->section == 0) {
             return get_string('section0name', 'format_stanford');
         } else {
-            // return get_string('stanford').' '.$section->section;
-            return get_string('sectionname').' '.$section->section;
+            return get_string('topic').' '.$section->section;
         }
     }
 
@@ -139,7 +144,7 @@ class format_stanford extends format_base {
         }
 
         // check if there are callbacks to extend course navigation
-        // parent::extend_course_navigation($navigation, $node);
+        parent::extend_course_navigation($navigation, $node);
     }
 
     /**
@@ -171,15 +176,15 @@ class format_stanford extends format_base {
      */
     public function get_default_blocks() {
         return array(
-            BLOCK_POS_RIGHT => array(),
-            BLOCK_POS_LEFT => array('search_forums', 'news_items', 'calendar_upcoming', 'recent_activity')
+            BLOCK_POS_LEFT => array(),
+            BLOCK_POS_RIGHT => array('search_forums', 'news_items', 'calendar_upcoming', 'recent_activity')
         );
     }
 
     /**
      * Definitions of the additional options that this course format uses for course
      *
-     * Topics format uses the following options:
+     * stanford format uses the following options:
      * - coursedisplay
      * - numsections
      * - hiddensections
@@ -286,7 +291,7 @@ class format_stanford extends format_base {
     /**
      * Updates format options for a course
      *
-     * In case if course format was changed to 'topics', we try to copy options
+     * In case if course format was changed to 'stanford', we try to copy options
      * 'coursedisplay', 'numsections' and 'hiddensections' from the previous format.
      * If previous course format did not have 'numsections' option, we populate it with the
      * current number of sections
@@ -322,14 +327,8 @@ class format_stanford extends format_base {
         }
         return $this->update_format_options($data);
     }
-    
-    // public function extend_course_navigation($navigation, navigation_node $node) {
-    //     if ($course = $this->get_course()) {
-    //         $navigation->load_generic_course_sections($course, $node);
-    //     }
-    //     return array();
-    // }
 }
+
 
 /**
  * remove the moodle left navigation bar 
@@ -376,7 +375,7 @@ function left_nav_bar($courseid) {
                         FROM {course_modules} cm 
                    LEFT JOIN {label} l ON l.id = cm.instance 
                    LEFT JOIN {course_sections} cs ON cs.id = cm.instance 
-                       WHERE cm.module = 12 
+                       WHERE cm.module = 12 AND cm.visible = 1
                              AND cm.course = :course";
     $subsidebarArray = array();
     $subsidebar = $DB->get_recordset_sql($subsidebarSQL,array('course'=>$courseid));
@@ -445,181 +444,7 @@ function ta_feedback($userid,$courseid) {
     return $o; 
 }
 
-/**
- * supplemental on the video page
- *
- * @param course module id
- * @param course id
- * @return array() with supplemental url
- */
 
-// function lecture_supplemental($id,$courseid) {
-function lecture_supplemental($courseid,$id){
-    global $DB,$CFG;
-    $sArray = array();
-    $verifySingleRecord = array();
-    $course_section_labels_sql = "SELECT * 
-                                    FROM {course_modules} 
-                                   WHERE module = (SELECT m.id FROM {modules} m WHERE m.name = 'label') 
-                                         AND section = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = :id)";
-    $course_section_labels = $DB->get_recordset_sql($course_section_labels_sql,array('id'=>$id));
-
-    // Trying to get the first label id from the labels array
-    $section_label_ids = array();
-    $course_section_labels_key = 0;
-    $first_label = '';
-    foreach ($course_section_labels as $value) {
-        if($course_section_labels_key == 0) {
-            $first_label = $value->id;
-        }
-        $course_section_labels_key++;
-        array_push($section_label_ids, $value->id);
-    }
-    $course_section_labels->close();
-
-    // getting modules' id for the current section
-    $section_sequence_sql = "SELECT cs.sequence 
-                               FROM {course_sections} cs 
-                              WHERE id = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = :id)";
-    $section_sequence = $DB->get_record_sql($section_sequence_sql, array('id'=>$id));
-    $piecesOfSequence = explode(",", $section_sequence->sequence);
-
-    // only get resources(PDFs) before the first label 
-    $piecesOfSequenceItems = array();
-    foreach ($piecesOfSequence as $value) {
-        if($first_label == $value){
-            break;
-        }
-        $piecesOfSequenceItems[] = $value;
-    }
-    if(count($piecesOfSequenceItems) > 0) {
-        $piecesOfSequenceItemString = join(',',$piecesOfSequenceItems);
-
-        $moduleslideGroup = "SELECT cm.*, m.revision 
-                               FROM {course_modules} cm 
-                               JOIN {modules} md ON md.id = cm.module 
-                               JOIN {resource} m ON m.id = cm.instance 
-                          LEFT JOIN {course_sections} cw ON cw.id = cm.section 
-                              WHERE cm.id IN (".$piecesOfSequenceItemString.") 
-                                    AND md.name = 'resource' AND cm.course = :course";
-
-        $moduleslideGrouprs = $DB->get_recordset_sql($moduleslideGroup,array('course'=>$courseid));
-
-        // pushing the resouces(PDFs) URLs to supplementsArray
-        foreach ($moduleslideGrouprs as $key => $value) {
-            $rescontext = get_context_instance(CONTEXT_MODULE, $value->id);
-            $resfs = get_file_storage();
-            $resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
-            if (count($resfiles) < 1) {
-                resource_print_filenotfound($resource, $cm, $course);
-                die;
-            } else {
-                $file = reset($resfiles);
-                unset($resfiles);
-            }
-            $filename=$file->get_filename();
-            $rest = substr($filename, 0, -4);
-            if(!in_array($rest, $verifySingleRecord)) {
-                $verifySingleRecord[] = $rest;
-                if(substr($filename,-3)=="pdf"){
-                    $supplementnewex=",true";
-                }
-                $path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$value->revision.$file->get_filepath().$filename;
-                $unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$value->id);
-                $sArray[] = $unitArray;
-            }
-            
-        }
-        $moduleslideGrouprs->close();
-    }
-
-    // END: General resource 
-
-    // Looking for videos' resources(PDFs)
-    $targetSequece = array();
-    $finallyTarget = array();
-
-    for($slIndex = 0; $slIndex < count($section_label_ids); $slIndex++) {
-        $haschild = '';
-        $locker = false;
-        for($sqIndex = 0; $sqIndex < count($piecesOfSequence); $sqIndex++){
-            if(($section_label_ids[$slIndex] == $piecesOfSequence[$sqIndex]) && ($locker == false)){
-                $haschild = true;
-                $locker = true;
-            }
-            if($haschild == true && $haschild != ''){
-                array_push($targetSequece, $piecesOfSequence[$sqIndex]);
-            }
-            if($piecesOfSequence[$sqIndex] == $section_label_ids[$slIndex+1]){
-                $haschild = false;  
-            }
-        }
-        foreach ($targetSequece as $value) {
-            
-            if($value == $id){
-
-                $finallyTarget = $targetSequece;
-
-            }
-        }
-        $targetSequece = array();       
-    }
-
-    $finallocker = false;
-
-    // $finalTarget has all the all the modules' id between two labels 
-    
-    if(count($finallyTarget) > 0){
-        $finallyTargetString = join(',',$finallyTarget);
-        $finallyTargetGroup = "SELECT cm.*, m.revision 
-                                 FROM {course_modules} cm 
-                                 JOIN {modules} md ON md.id = cm.module 
-                                 JOIN {resource} m ON m.id = cm.instance 
-                            LEFT JOIN {course_sections} cw ON cw.id = cm.section 
-                                WHERE cm.id IN (".$finallyTargetString.") 
-                                      AND md.name = 'resource' 
-                                      AND cm.course = :course";
-
-        $finallyTargetGroups = $DB->get_recordset_sql($finallyTargetGroup,array('course'=>$courseid));
-
-        foreach ($finallyTarget as $value1) {
-            
-            if($finallocker == true) {
-                foreach ($finallyTargetGroups as $finallyTargetGroupItem) {
-                    if($value1 == $finallyTargetGroupItem->id && ($finallyTargetGroupItem->indent ==3 || $finallyTargetGroupItem->indent ==1)){
-                        $rescontext = get_context_instance(CONTEXT_MODULE, $finallyTargetGroupItem->id);
-            
-                        $resfs = get_file_storage();
-                        $resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
-                        if (count($resfiles) < 1) {
-                            resource_print_filenotfound($resource, $cm, $course);
-                            die;
-                        } else {
-                            $file = reset($resfiles);
-                            unset($resfiles);
-                        }
-                        $filename=$file->get_filename();
-                        $rest = substr($filename, 0, -4);
-                        if(!in_array($rest, $verifySingleRecord)) {
-                            $verifySingleRecord[] = $rest;
-                            if(substr($filename,-3)=="pdf"){
-                                $supplementnewex=",true";
-                            }
-                                $path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$finallyTargetGroupItem->revision.$file->get_filepath().$filename;
-                                $unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$finallyTargetGroupItem->id);
-                                $sArray[] = $unitArray;
-                        }
-                    }
-                }
-            }
-            if($value1 == $id) {
-                $finallocker = true;
-            }
-        }
-    }
-
-    return $sArray;
-}
 
 function get_user_browser() 
 { 
@@ -654,8 +479,3 @@ function get_user_browser()
     
     return $ub; 
 } 
-
-
-
-
-

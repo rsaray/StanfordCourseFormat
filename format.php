@@ -15,24 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Renderer for outputting the topics course format.
+ * stanford course format.  Display the whole course as "stanford" made of modules.
  *
- * @package stanford course formate
- * @copyright 2013 Stanford University
+ * @package format_stanford
+ * @copyright 2006 The Open University
+ * @author N.D.Freear@open.ac.uk, and others.
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since Moodle 2.5
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/filelib.php');
-require_once($CFG->libdir.'/completionlib.php');
+
 
 // Horrible backwards compatible parameter aliasing..
 if ($stanford = optional_param('stanford', 0, PARAM_INT)) {
     $url = $PAGE->url;
     $url->param('section', $stanford);
-    debugging('Outdated topic param passed to course/view.php', DEBUG_DEVELOPER);
+    debugging('Outdated stanford param passed to course/view.php', DEBUG_DEVELOPER);
     redirect($url);
 }
 // End backwards-compatible aliasing..
@@ -51,21 +51,23 @@ course_create_sections_if_missing($course, range(0, $course->numsections));
 $renderer = $PAGE->get_renderer('format_stanford');
 
 if (!empty($displaysection)) {
-	$renderer->stanford_print_single_section_page($course, null, null, null, null, $displaysection);
+    $renderer->stanford_print_single_section_page($course, null, null, null, null, $displaysection);
 } else {
-	$renderer->stanford_print_multiple_section_page($course, null, null, null, null);
+    $renderer->stanford_print_multiple_section_page($course, null, null, null, null);
 }
 
-if(!$PAGE->user_allowed_editing()){
-    echo ta_feedback($USER->id,$course->id);
-    ob_start("remove_left_nav");
-    echo left_nav_bar($course->id);
-}
+
+// if(!$PAGE->user_allowed_editing()){
+//     // echo ta_feedback($USER->id,$course->id);
+//     // ob_start("remove_left_nav");
+//     echo left_nav_bar($course->id);
+// }
 
 echo output_dropdown();
+echo "<div id='cohortkeyContainer' ><a><img src='format/stanford/css/img/icon_close.png' /></a><iframe src='' width='1000' height='500'></iframe></div>";
 
 // Include course format js module
 $PAGE->requires->js('/course/format/stanford/format.js');
 echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>';
-echo '<script type="text/javascript" src="format/stanford/js/main.js"></script>';
-// $PAGE->requires->js('/course/format/stanford/js/main.js');
+$PAGE->requires->js('/course/format/stanford/js/main.js');
+// echo '<script type="text/javascript" src="format/stanford/left-bar.js"></script>';

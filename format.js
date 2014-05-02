@@ -1,4 +1,4 @@
-// Javascript functions for Stanford course format
+// Javascript functions for stanford course format
 
 M.course = M.course || {};
 
@@ -8,7 +8,7 @@ M.course.format = M.course.format || {};
  * Get sections config for this format
  *
  * The section structure is:
- * <ul class="topics">
+ * <ul class="stanford">
  *  <li class="section">...</li>
  *  <li class="section">...</li>
  *   ...
@@ -85,5 +85,3 @@ M.course.format.process_sections = function(Y, sectionlist, response, sectionfro
         }
     }
 }
-
-
