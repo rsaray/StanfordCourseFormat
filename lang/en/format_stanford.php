@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,21 +16,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Renderer for outputting the topics course format.
+ * Strings for component 'format_topics', language 'en', branch 'MOODLE_20_STABLE'
  *
- * @package stanford course formate
- * @copyright 2013 Stanford University
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since Moodle 2.5
+ * @package   format_topics
+ * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['currentsection'] = 'This topic';
-$string['sectionname'] = 'Stanford';
+$string['sectionname'] = 'Topic';
 $string['pluginname'] = 'Stanford format';
 $string['section0name'] = 'General';
-$string['page-course-view-topics'] = 'Any course main page in topics format';
-$string['page-course-view-topics-x'] = 'Any course page in topics format';
+$string['page-course-view-stanford'] = 'Any course main page in Stanford format';
+$string['page-course-view-stanford-x'] = 'Any course page in Stanford format';
 $string['hidefromothers'] = 'Hide topic';
 $string['showfromothers'] = 'Show topic';
-$string['stanford'] = 'section';
-$string['moodle'] = 'section';
