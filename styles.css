@@ -9,24 +9,8 @@
 .course-content ul.topics li.section .left .section-handle img.icon { padding:0; vertical-align: baseline; }
 
 
-#addition_header_custom {
-	position: absolute;
-	margin: 0 15px;
-	z-index: 1;
-	top: 7px;
-}
-body {
-	margin: 0;
-	padding: 0;
-}
-
-header.clearfix h1 {
-	display: none;
-}
-
-#page-course-view-stanford {
-	min-height:100%;
-	position:relative;
+ul.stanford li.section{
+	list-style: none;
 }
 
 #page-course-view-stanford .site-topic ul.section, 
@@ -34,10 +18,9 @@ header.clearfix h1 {
 	margin:0;
 }
 
-/*#page-course-view-stanford #page-content {
+#page-course-view-stanford #page-content {
 	overflow: visible;
-}*/
-
+}
 #page-course-view-stanford h3.sectionname {
 	display:inline-block;
 	font-size:1.4em;
@@ -62,29 +45,77 @@ header.clearfix h1 {
 	width:0;
 }
 
-.editing .activity {
+#page-course-view-stanford .editing .activity {
 	width: 320px;
 	margin: 0 auto!important;
 	overflow: visible;	
 }
 
-.editing .activity ul.menubar {
+#page-course-view-stanford .editing .activity ul.menubar {
 	display: none;
 }
 
-.editing .activity .moodle-actionmenu[data-enhance] ul.menu {
+#page-course-view-stanford .editing .activity .moodle-actionmenu[data-enhance] ul.menu {
 	display: block;
 	margin: 59px 154px 0px -251px;
 	position: absolute;
 	z-index: 9999;
 }
-.editing .activity .moodle-actionmenu[data-enhance] ul.menu li .menu-action-text {
+#page-course-view-stanford .editing .activity .moodle-actionmenu[data-enhance] ul.menu li .menu-action-text {
 	display:none;
 }
 
-.editing .section .activity .editing_move {
+#page-course-view-stanford .editing .section .activity .editing_move {
     top: 45px;
 	left: -20px;
+}
+
+
+#page-course-view-stanford #addition_header_custom {
+	position: absolute;
+	margin: 0 15px;
+	z-index: 1;
+	top: 7px;
+}
+body {
+	margin: 0;
+	padding: 0;
+}
+
+header.clearfix h1 {
+	display: none;
+}
+
+#page-course-view-stanford {
+	min-height:100%;
+	position:relative;
+}
+
+#page-course-view-stanford .site-topic ul.section, 
+#page-course-view-stanford .course-content ul.section {
+	margin:0;
+}
+
+#page-course-view-stanford h3.sectionname {
+	display:inline-block;
+	font-size:1.4em;
+	color:#8c1515;
+	width:auto;
+	margin-bottom:.5em;
+	margin-right:20px;
+}
+#page-course-view-stanford .course-content ul.stanford_course_ul li#section-0.section h3.sectionname {
+	height:0;
+	margin:0;
+	padding:0;
+	display:none;
+}
+
+#page-course-view-stanford .left {
+	width:0;
+}
+#page-course-view-stanford .right {
+	width:0;
 }
 
 #page-course-view-stanford {
@@ -102,6 +133,7 @@ header.clearfix h1 {
 	padding-bottom: 0;
 	margin: 0;
 }
+
 
 #page-course-view-stanford .site-topic ul.section, #page-course-view-stanford .course-content ul.section {
 	background-image: url([[pix:format_stanford|course-page-content]]);
@@ -134,9 +166,7 @@ header.clearfix h1 {
 	background: linear-gradient(to bottom,  #ffffff 0%,#fbfbf9 24%,#f8f8f5 51%,#f6f5f0 75%,#f3f2ec 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f3f2ec',GradientType=0 ); /* IE6-9 */
 }
-#page-course-view-stanford .course-content ul.stanford_course_ul li.section .content li.richmedia .richmedia_intr {
-	display: none;
-}
+
 #page-course-view-stanford .course-content ul.stanford_course_ul li.section .content li.richmedia .expand_richmedia_desc {
 	position: absolute;
 	z-index: 10;
@@ -254,6 +284,29 @@ background-position: 0 -55px;
 background-position: -55px -225px;
 }
 
+#page-course-view-stanford .richmedia .activityinstance div.dimmed_text, .richmedia .activityinstance a.dimmed {
+	background-position: -110px -395px;
+}
+#page-course-view-stanford .resource .activityinstance a {
+	background-position: 0 0;
+}
+#page-course-view-stanford .resource .activityinstance div.done, .resource .activityinstance a.done {
+	background-position: -55px -170px;
+}
+#page-course-view-stanford .resource .activityinstance div.dimmed_text, .resource .activityinstance a.dimmed {
+	background-position: -110px -340px;
+}
+#page-course-view-stanford .quiz .activityinstance a, .url .activityinstance a {
+	background-position: 0 -110px;
+}
+#page-course-view-stanford .url.final .activityinstance a {
+	background-position: 0 -1200px;
+}
+
+#page-course-view-stanford .url .activityinstance a {
+	background-position: 0 -1200px;	
+}
+
 #page-course-view-stanford .course-content .section li.activity, 
 #page-course-view-stanford .sitetopic .section .activity .activityinstance, 
 #page-course-view-stanford .course-content .section .activity .activityinstance{
@@ -267,7 +320,7 @@ background-position: -55px -225px;
 }
 #page-course-view-stanford .mod-indent + div .activityinstance {
 	background: url([[pix:format_stanford|course-node-connector-top]]) no-repeat center bottom;
-	padding-bottom: 14px!important;
+	padding-bottom: 40px!important;
 
 }
 #page-course-view-stanford .mod-indent + div {
@@ -295,4 +348,229 @@ padding-top: 14px;
 #page-course-view-stanford .mod-indent-2 +div, 
 #page-course-view-stanford .mod-indent-3 +div {
 	margin-left: 0;
+}
+
+/* additional indent level */
+#page-course-view-stanford li.resourcefirstchild .mod-indent.mod-indent-3 + div {
+	background: url([[pix:format_stanford|course-mod-indent-3]]) no-repeat center top;
+	padding-left: 184px;
+	padding-top: 0;
+}
+
+#page-course-view-stanford li.resourcefirstchild .mod-indent-3 + div .activityinstance {
+	padding-bottom: 0!important;
+	background: none;	
+	height: 50px;
+}
+
+
+/*activity icons*/
+#page-course-view-stanford .activityinstance img.iconlarge {
+	display:none;
+}
+#page-course-view-stanford .activityinstance img.activityicon {
+	display:none;
+}
+#page-course-view-stanford .mod-indent-3 .activityinstance {
+	padding-bottom: 0!important;
+	background: none;
+}
+#page-course-view-stanford .activityinstance a, .activityinstance div.dimmed_text {
+	display: block;
+	width: 320px;
+	height: 50px;
+	position: relative;
+	overflow: hidden;
+	margin: 0 0 0 0;
+	background-image:url([[pix:format_stanford|scpd-moodle-module-icons]]);
+	background-repeat: no-repeat;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-box-shadow: 1px 1px 4px rgba(86, 83, 71, 0.65);
+	-moz-box-shadow:    1px 1px 4px rgba(86, 83, 71, 0.65);
+	box-shadow:         1px 1px 4px rgba(86, 83, 71, 0.65);
+}
+
+/*******COURSE PAGES RESET + WEBINARS*******/
+
+#page-course-view-stanford #block-region-side-post {
+	display:none;
+}
+
+#page-course-view-stanford .stanford_course_ul {
+	list-style: none;
+	margin: 0;
+}
+
+#page-course-view-stanford #page-content {
+	overflow-x:hidden;
+	overflow-y:visible;
+	margin-top: 0;
+}
+#page-course-view-stanford #page-content #region-main-box {
+	left: 0px;
+}
+#page-course-view-stanford #page-content #region-main {
+	margin-left: 0;
+	padding-left: 10px;
+	margin-right: 0;
+	padding-right: 20px;
+}
+#page-course-view-stanford #page-content #region-main .region-content {
+	padding-right:0;
+	margin-top:0;
+	overflow-visible;
+}
+#page-course-view-stanford .course-content {
+	float:right;
+	width:75%;	
+}
+
+#page-course-view-stanford #region-sidebar {
+	width:22%;
+	position:relative; 
+	float:left;
+	margin-top:25px;
+}
+#page-course-view-stanford #page-content #region-pre {
+    left: 10px;
+}
+#page-course-view-stanford #page-content #region-post-box {
+	margin-left: 0px;
+}
+#page-course-view-stanford #page-content #region-post-box .hidebar {display:none;}
+#page-course-view-stanford .course-content .section li.activity, #page-course-view-stanford .sitetopic .section .activity .activityinstance, #page-course-view-stanford .course-content .section .activity .activityinstance {
+	padding:0;
+}
+#page-course-view-stanford .sitetopic .section li.activity, #page-course-view-stanford .course-content .section li.activity {
+	padding: 0;
+}
+.path-course-view .weeks .content, .path-course-view .stanford_course_ul .content, .path-course-view .weeks .section, .path-course-view .stanford_course_ul .section {
+	background-color:transparent;
+}
+#page-course-view-stanford .sitetopic .section li.activity:hover, #page-course-view-stanford .course-content .section li.activity:hover {
+	background-color:transparent;
+}
+#page-course-view-stanford .path-course-view li.activity span.autocompletion img, #page-course-view-stanford .path-course-view li.activity form.togglecompletion input {
+	display:none;
+}
+#page-course-view-stanford .sitetopic .section .activity .activityinstance, #page-course-view-stanford .course-content .section .activity .activityinstance, #page-course-view-stanford .sitetopic .section .activity .activityinstance div, #page-course-view-stanford .course-content .section .activity .activityinstance div {
+	display:block;
+}
+#page-course-view-stanford .site-topic ul.section, #page-course-view-stanford .course-content ul.section {
+	margin:0;
+}
+#page-course-view-stanford #region-main h2 {
+	font-size:1.6em;
+	color:#8c1515;
+	text-align:left!important;
+	background-color: #fff;
+	background-image: none;
+	background-repeat: none;
+	padding:0;
+	margin: 0 0 .75em 0;
+	border:none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+#page-course-view-stanford .course-content .section li.activity.modtype_label {
+	margin-bottom:1em;
+}
+#page-course-view-stanford .mod-indent-1, #page-course-view-stanford .mod-indent-2, #page-course-view-stanford .mod-indent-3 {
+	margin-left:0;
+}
+
+#page-navbar.clearfix {
+	display: block;
+	border-bottom: 1px dotted #D5D0C0;
+	margin: 0;
+	padding: 0;
+}
+
+#page-course-view-stanford .course-content ul.stanford_course_ul li.section .content li.richmedia .richmedia_intr {
+	display: none;
+}
+#page-course-view-stanford .course-content ul.stanford_course_ul li.section .content li.richmedia .expand_richmedia_desc {
+	position: absolute;
+	z-index: 10;
+	bottom: 8px;
+	right: 38px;
+	padding: 6px 0;
+	width: 0;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+#page-course-view-stanford .course-content ul.stanford_course_ul li.section .content .summary {
+	display:inline-block;
+	background-color:#fff;
+	padding-bottom:0;
+	margin:0;
+}
+
+#page-course-view-stanford .course-content ul.stanford_course_ul li.section .content .summary:after {
+	content:"\0020";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+}
+#page-course-view-stanford .course-content ul.stanford_course_ul li#section-0.section .content .summary {
+	float:inherit;
+	background-image: none;
+	background-color:#fff;
+	height:auto;
+	width:auto;
+	padding-bottom:0;
+	margin-top:15px;	
+}
+/* Question for activity */
+@media screen and (min-width: 860px) and (max-width: 969px) {
+#page-course-view-stanford  .activity {
+ margin: 0 0 0 100px!important;
+}
+}
+@media screen and (min-width: 769px) and (max-width: 859px) {
+#page-course-view-stanford  .activity {
+ margin: 0 0 0 50px!important;
+}
+}
+@media screen and (min-width: 481px) and (max-width: 768px) {
+#page-course-view-stanford .activity {
+ margin: 0 0 0 20px!important;
+}
+}
+@media only screen and (min-device-width : 320px) and (max-device-width : 568px) and (orientation : landscape) { 
+	#page-course-view-stanford .activity {
+		margin: 0 0 0 20px!important;
+	}
+}
+#page-course-view-stanford form.togglecompletion, .availabilityinfo {
+	display: none;
+}
+
+/* remove the initial connector bottom edge from first node*/
+#page-course-view-stanford li.firstchild .mod-indent + div {
+	padding-top: 0;
+	background: none;
+}
+/* remove the trailing half-line from last node*/
+#page-course-view-stanford li.lastchild .activityinstance {
+	background: none;
+	padding-bottom: 5px;
+}
+
+#page-course-view-stanford li.forumfirstchild .mod-indent + div {
+	background: none;
+}
+
+#page-course-view-stanford li.resourcefirstchild .mod-indent + div {
+	background: none;
+}
+
+#page-course-view-stanford li.label .mod-indent.mod-indent-1 + div{
+	background-image: none!important;
+	padding-top: 0;
 }

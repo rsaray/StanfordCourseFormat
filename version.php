@@ -15,16 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Renderer for outputting the topics course format.
  *
- * @package    format
- * @subpackage topics
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package stanford course formate
+ * @copyright 2013 Stanford University
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since Moodle 2.5
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2013110500;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2013110500;        // Requires this Moodle version.
+$plugin->version   = 2013050100;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2013050100;        // Requires this Moodle version.
 $plugin->component = 'format_stanford';    // Full name of the plugin (used for diagnostics).

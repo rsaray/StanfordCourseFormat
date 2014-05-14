@@ -17,9 +17,9 @@
 /**
  * Topics course format.  Display the whole course as "topics" made of modules.
  *
- * @package format_topics
- * @copyright 2006 The Open University
- * @author N.D.Freear@open.ac.uk, and others.
+ * @package format_stanford
+ * @copyright 2013 Stanford University
+ * @author Zhao
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
