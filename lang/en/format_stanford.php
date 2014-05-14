@@ -18,8 +18,8 @@
 /**
  * Strings for component 'format_topics', language 'en', branch 'MOODLE_20_STABLE'
  *
- * @package   format_stanford
- * @copyright 2014 Stanford University
+ * @package   format_topics
+ * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
