@@ -25,6 +25,7 @@
  *
  * @author      Serban Ghita <serbanghita@gmail.com>
  *              Victor Stanciu <vic.stanciu@gmail.com> (until v1.0)
+ *              modified by Stanford University (since moodle2.5)
  * @license     MIT License https://github.com/serbanghita/Mobile-Detect/blob/master/LICENSE.txt
  * @link        Official page: http://mobiledetect.net
  *              GitHub Repository: https://github.com/serbanghita/Mobile-Detect

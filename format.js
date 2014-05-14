@@ -1,4 +1,4 @@
-// Javascript functions for Stanford course format
+// Javascript functions for Topics course format
 
 M.course = M.course || {};
 
@@ -85,5 +85,3 @@ M.course.format.process_sections = function(Y, sectionlist, response, sectionfro
         }
     }
 }
-
-

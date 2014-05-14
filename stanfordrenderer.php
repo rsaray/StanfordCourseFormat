@@ -20,20 +20,18 @@
  * @package stanford course formate
  * @copyright 2013 Stanford University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since Moodle 2.5
+ * @since Moodle 2.6
  */
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/renderer.php');
 
 /**
- * The core course renderer
- *
- * Can be retrieved with the following:
- * $renderer = $PAGE->get_renderer('core','course');
- */
+* Stanford course format core renderer
+*/
+
 class stanford_course_renderer extends core_course_renderer {
-    const COURSECAT_SHOW_COURSES_NONE = 0; /* do not show courses at all */
+	const COURSECAT_SHOW_COURSES_NONE = 0; /* do not show courses at all */
     const COURSECAT_SHOW_COURSES_COUNT = 5; /* do not show courses but show number of courses next to category name */
     const COURSECAT_SHOW_COURSES_COLLAPSED = 10;
     const COURSECAT_SHOW_COURSES_AUTO = 15; /* will choose between collapsed and expanded automatically */
@@ -58,7 +56,19 @@ class stanford_course_renderer extends core_course_renderer {
         
     }
 
-    public function stanford_course_section_cm_list($course, $section, $sectionreturn = null, $displayoptions = array()) {
+    /**
+     * Renders HTML to display a list of course modules in a course section
+     * Also displays "move here" controls in Javascript-disabled mode
+     *
+     * This function calls {@link core_course_renderer::course_section_cm()}
+     *
+     * @param stdClass $course course object
+     * @param int|stdClass|section_info $section relative section number or section object
+     * @param int $sectionreturn section number to return to
+     * @param int $displayoptions
+     * @return void
+     */
+public function stanford_course_section_cm_list($course, $section, $sectionreturn = null, $displayoptions = array()) {
         global $USER,$DB;
         
         // ChromePhp::log("stanford course section course module list");
@@ -87,7 +97,7 @@ class stanford_course_renderer extends core_course_renderer {
                 $modNext = new stdClass();
                 $modNext->modname = '';
                 $mod = $modinfo->cms[$modnumber];
-                // $modNextModNumber = $modinfo->sections[$section->section][$key+1];
+                
                 if(!empty($modinfo->sections[$section->section][$key+1])) {
                   $modNext = $modinfo->cms[$modinfo->sections[$section->section][$key+1]];    
                 }
@@ -119,7 +129,11 @@ class stanford_course_renderer extends core_course_renderer {
             $totalElement = count($moduleshtml);
             $elementCounter = 0;
             $firstOrLastChild = false;
+            $resourcefirstchild = 0;
             foreach ($moduleshtml as $modnumber => $modulehtml) {
+            	if($elementCounter == 0){
+            		$resourcefirstchild = 1;
+            	}
                 $elementCounter ++;
                 if ($ismoving) {
                     $movingurl = new moodle_url('/course/mod.php', array('moveto' => $modnumber, 'sesskey' => sesskey()));
@@ -130,10 +144,20 @@ class stanford_course_renderer extends core_course_renderer {
                 $mod = $modinfo->cms[$modnumber];
 
                 $liclasses = array();
+                
+                if($resourcefirstchild == 1 && $mod->modname == 'resource'){
+                	$liclasses[] = 'resourcefirstchild';
+                	$resourcefirstchild = 0;
+                }
+
+                if($totalElement == 1) {
+                  $liclasses[] = 'forumfirstchild';      
+                }
+                
                 if($mod->modname == 'linqto') {
                   $liclasses[] = 'navitem';      
                 }
-
+			
                 if($firstOrLastChild) {
                   $liclasses[] = 'firstchild';
                   $firstOrLastChild = false;
@@ -146,7 +170,9 @@ class stanford_course_renderer extends core_course_renderer {
                 if($modulehtml[1] == 'lastchild' && $elementCounter!=1) {
                   $liclasses[] = 'lastchild';
                 }
-
+                if($modulehtml[1] == 'lastchild' && $mod->modname == 'resource') {
+                	$liclasses[] = 'lastchild';
+                }
                 if($totalElement == $elementCounter) {
                   $liclasses[] = 'lastchild';
                 }
@@ -235,19 +261,47 @@ class stanford_course_renderer extends core_course_renderer {
                 $indentclasses .= ' mod-indent-huge';
             }
         }
-        $output .= html_writer::start_tag('div', array('class' => $indentclasses));
 
-        // Start the div for the activity title, excluding the edit icons.
-        $output .= html_writer::start_tag('div', array('class' => 'activityinstance'));
+        $output .= html_writer::start_tag('div');
+
+        if ($this->page->user_is_editing()) {
+            $output .= course_get_cm_move($mod, $sectionreturn);
+        }
+        $indentclassouter = 'mod-indent-outer';
+        // if (!empty($mod->indent)) {
+        //     $indentclassouter .= ' mod-indent-'.$mod->indent;
+        //     if ($mod->indent > 15) {
+        //         $indentclassouter .= ' mod-indent-huge';
+        //     }
+        // }
+        $output .= html_writer::start_tag('div', array('class' => $indentclassouter));
+
+        // This div is used to indent the content.
+        $output .= html_writer::div('', $indentclasses);
+
+        // Start a wrapper for the actual content to keep the indentation consistent
+        $output .= html_writer::start_tag('div');
 
         // Display the link to the module (or do nothing if module has no url)
-        $output .= $this->stanford_course_section_cm_name($course, $completioninfo, $mod, $displayoptions);
+//         $cmname = $this->course_section_cm_name($mod, $displayoptions);
+        
+        $cmname= $this->stanford_course_section_cm_name($course, $completioninfo, $mod, $displayoptions);
+        if (!empty($cmname)) {
+            // Start the div for the activity title, excluding the edit icons.
+            $output .= html_writer::start_tag('div', array('class' => 'activityinstance'));
+            $output .= $cmname;
 
-        // Module can put text after the link (e.g. forum unread)
-        $output .= $mod->get_after_link();
 
-        // Closing the tag which contains everything but edit icons. Content part of the module should not be part of this.
-        $output .= html_writer::end_tag('div'); // .activityinstance
+            if ($this->page->user_is_editing()) {
+                $output .= ' ' . course_get_cm_rename_action($mod, $sectionreturn);
+            }
+
+            // Module can put text after the link (e.g. forum unread)
+            $output .= $mod->get_after_link();
+
+            // Closing the tag which contains everything but edit icons. Content part of the module should not be part of this.
+            $output .= html_writer::end_tag('div'); // .activityinstance
+        }
 
         // If there is content but NO link (eg label), then display the
         // content here (BEFORE any icons). In this case cons must be
@@ -261,13 +315,18 @@ class stanford_course_renderer extends core_course_renderer {
             $output .= $contentpart;
         }
 
+        $modicons = '';
         if ($this->page->user_is_editing()) {
             $editactions = course_get_cm_edit_actions($mod, $mod->indent, $sectionreturn);
-            $output .= ' '. $this->course_section_cm_edit_actions($editactions);
-            $output .= $mod->get_after_edit_icons();
+            $modicons .= ' '. $this->course_section_cm_edit_actions($editactions, $mod, $displayoptions);
+            $modicons .= $mod->get_after_edit_icons();
         }
 
-        $output .= $this->course_section_cm_completion($course, $completioninfo, $mod, $displayoptions);
+        $modicons .= $this->course_section_cm_completion($course, $completioninfo, $mod, $displayoptions);
+
+        if (!empty($modicons)) {
+            $output .= html_writer::span($modicons, 'actions');
+        }
 
         // If there is content AND a link, then display the content here
         // (AFTER any icons). Otherwise it was displayed before
@@ -277,31 +336,17 @@ class stanford_course_renderer extends core_course_renderer {
 
         // show availability info (if module is not available)
         $output .= $this->course_section_cm_availability($mod, $displayoptions);
-        
-        /* it should be removed when you are using richmedia */
-        // if($mod->module ==23){
-        //     global $DB;
-        //     $richmediaDescription = $DB->get_field('richmedia', 'intro', array('id'=>$mod->instance), IGNORE_MISSING);
-        //     $output .= html_writer::start_tag('div', array('class' => 'richmedia_intr'));
-        //         $output .= $richmediaDescription;
-        //     $output .= html_writer::end_tag('div');    
-        // }
 
         $output .= html_writer::end_tag('div'); // $indentclasses
 
-        /* it should be removed when you are using richmedia */
-        // if($mod->module ==23){
-        //     global $DB;
-        //     $richmediaDescription = $DB->get_field('richmedia', 'intro', array('id'=>$mod->instance), IGNORE_MISSING);
-        //     $output .= html_writer::start_tag('div', array('class' => 'richmedia_intr'));
-        //         $output .= $richmediaDescription;
-        //     $output .= html_writer::end_tag('div');    
-        // }
+        // End of indentation div.
+        $output .= html_writer::end_tag('div');
 
+        $output .= html_writer::end_tag('div');
         return $output;
     }
 
-    /**
+	/**
      * Renders html to display a name with the link to the course module on a course page
      *
      * If module is unavailable for user but still needs to be displayed
@@ -315,7 +360,7 @@ class stanford_course_renderer extends core_course_renderer {
      * @return string
      */
     public function stanford_course_section_cm_name($course, &$completioninfo, cm_info $mod, $displayoptions = array()) {
-        global $CFG;
+        global $CFG,$PAGE;
         $output = '';
         if (!$mod->uservisible &&
                 (empty($mod->showavailability) || empty($mod->availableinfo))) {
@@ -330,16 +375,14 @@ class stanford_course_renderer extends core_course_renderer {
         //Accessibility: for files get description via icon, this is very ugly hack!
         $instancename = $mod->get_formatted_name();
         $altname = $mod->modfullname;
-
         if($mod->modfullname == 'Rich Media') {
-            $altname = 'Video';    
+        	$altname = 'Video';
         }
-
         // Avoid unnecessary duplication: if e.g. a forum name already
         // includes the word forum (or Forum, etc) then it is unhelpful
         // to include that in the accessible description that is added.
-        if (false !== strpos(textlib::strtolower($instancename),
-                textlib::strtolower($altname))) {
+        if (false !== strpos(core_text::strtolower($instancename),
+                core_text::strtolower($altname))) {
             $altname = '';
         }
         // File type after name, for alphabetic lists (screen reader).
@@ -352,25 +395,27 @@ class stanford_course_renderer extends core_course_renderer {
         // viewhiddenactivities, so that teachers see 'items which might not
         // be available to some students' dimmed but students do not see 'item
         // which is actually available to current student' dimmed.
-        $conditionalhidden = $this->is_cm_conditionally_hidden($mod);
-        $accessiblebutdim = (!$mod->visible || $conditionalhidden) &&
-                (!$mod->uservisible || has_capability('moodle/course:viewhiddenactivities',
-                        context_course::instance($mod->course)));
-
         $linkclasses = '';
         $accesstext = '';
         $textclasses = '';
-        if ($accessiblebutdim) {
-            $linkclasses .= ' dimmed';
-            $textclasses .= ' dimmed_text';
-            if ($conditionalhidden) {
-                $linkclasses .= ' conditionalhidden';
-                $textclasses .= ' conditionalhidden';
-            }
-            if ($mod->uservisible) {
-                // show accessibility note only if user can access the module himself
+        if ($mod->uservisible) {
+            $conditionalhidden = $this->is_cm_conditionally_hidden($mod);
+            $accessiblebutdim = (!$mod->visible || $conditionalhidden) &&
+                has_capability('moodle/course:viewhiddenactivities',
+                        context_course::instance($mod->course));
+            if ($accessiblebutdim) {
+                $linkclasses .= ' dimmed';
+                $textclasses .= ' dimmed_text';
+                if ($conditionalhidden) {
+                    $linkclasses .= ' conditionalhidden';
+                    $textclasses .= ' conditionalhidden';
+                }
+                // Show accessibility note only if user can access the module himself.
                 $accesstext = get_accesshide(get_string('hiddenfromstudents').':'. $mod->modfullname);
             }
+        } else {
+            $linkclasses .= ' dimmed';
+            $textclasses .= ' dimmed_text';
         }
 
         // Get on-click attribute value if specified and decode the onclick - it
@@ -385,11 +430,11 @@ class stanford_course_renderer extends core_course_renderer {
         }
 
         if ($completioninfo === null) {
-            $completioninfo = new completion_info($course);
+        	$completioninfo = new completion_info($course);
         }
         $completiondata = $completioninfo->get_data($mod, true);
         $newstate = $completiondata->completionstate == COMPLETION_COMPLETE? COMPLETION_INCOMPLETE: COMPLETION_COMPLETE;
-
+        
         // Display link itself.
         $activitylink = html_writer::empty_tag('img', array('src' => $mod->get_icon_url(),
                 'class' => 'iconlarge activityicon', 'alt' => ' ', 'role' => 'presentation')) . $accesstext .
@@ -421,6 +466,5 @@ class stanford_course_renderer extends core_course_renderer {
                     $groupinglabel;
         }
         return $output;
-    }
-
+    }    
 }

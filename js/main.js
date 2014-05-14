@@ -1,63 +1,63 @@
-var  appendProgressBar= (function(){
-	var append = function(id){
-		
-		var labelID = '';
-		var elementID = '';
-		$('#region-sidebar .progressBar').html('');
-		$('#'+id+'>.content>ul li').each(function(index) {
+;(function(window,document,$) {/* clicking left Navigation to hide/show right content */
+	var  appendProgressBar= (function(){
+		var append = function(id){
+			
+			var labelID = '';
+			var elementID = '';
+			$('#region-sidebar .progressBar').html('');
+			$('#'+id+'>.content>ul li').each(function(index) {
 
-			if($(this).hasClass('label')){
-				labelID = $(this).attr('id');
-			}
-			elementID = $(this).attr('id');
+				if($(this).hasClass('label')){
+					labelID = $(this).attr('id');
+				}
+				elementID = $(this).attr('id');
 
-			if(labelID !== '' && !$(this).hasClass('label')){
-				if(typeof elementID !== 'undefined'){
-					if($(this).hasClass('richmedia')){
-						var completionstate = $(this).find("input[name='completionstate']").attr('value');
-						if(completionstate == 1) {
-							if($(this).children('.mod-indent').children('.availabilityinfo').length>0) {
-								$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="video restricted" id="progressEleShowId-'+elementID+'"></li>');	
+				if(labelID !== '' && !$(this).hasClass('label')){
+					if(typeof elementID !== 'undefined'){
+						if($(this).hasClass('richmedia')){
+							var completionstate = $(this).find("input[name='completionstate']").attr('value');
+							if(completionstate == 1) {
+								if($(this).children('.mod-indent').children('.availabilityinfo').length>0) {
+									$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="video restricted" id="progressEleShowId-'+elementID+'"></li>');	
+								}else {
+									$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="video" id="progressEleShowId-'+elementID+'"></li>');	
+								}
+										
+							}else if(completionstate == 0){
+								$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="video done" id="progressEleShowId-'+elementID+'"></li>');		
 							}else {
-								$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="video" id="progressEleShowId-'+elementID+'"></li>');	
+								$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="video" id="progressEleShowId-'+elementID+'"></li>');
 							}
-									
-						}else if(completionstate == 0){
-							$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="video done" id="progressEleShowId-'+elementID+'"></li>');		
+							
+						}else if($(this).hasClass('quiz')) {
+							var completionstate = $(this).find("input[name='completionstate']").attr('value');
+							if(completionstate == 1) {
+								$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="exercise" id="progressEleShowId-'+elementID+'"></li>');			
+							}else{
+								$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="exercise done" id="progressEleShowId-'+elementID+'"></li>');		
+							}
 						}else {
-							$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="video" id="progressEleShowId-'+elementID+'"></li>');
+							if($(this).children('.mod-indent').children('.availabilityinfo').length>0){
+								$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="file restricted" id="progressEleShowId-'+elementID+'"></li>');	
+							}else {
+								$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="file" id="progressEleShowId-'+elementID+'"></li>');	
+							}
+							
 						}
-						
-					}else if($(this).hasClass('quiz')) {
-						var completionstate = $(this).find("input[name='completionstate']").attr('value');
-						if(completionstate == 1) {
-							$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="exercise" id="progressEleShowId-'+elementID+'"></li>');			
-						}else{
-							$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="exercise done" id="progressEleShowId-'+elementID+'"></li>');		
-						}
-					}else {
-						if($(this).children('.mod-indent').children('.availabilityinfo').length>0){
-							$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="file restricted" id="progressEleShowId-'+elementID+'"></li>');	
-						}else {
-							$('#region-sidebar li[data-id="'+labelID+'"]').children('.progressBar').append('<li style="float:left;" class="file" id="progressEleShowId-'+elementID+'"></li>');	
-						}
-						
 					}
 				}
-			}
-		});
-		return false;
-};
-var update = function(){
-	
-};
-return {
-	append : append,
-	update : update
-};
-})();
+			});
+			return false;
+		};
+		var update = function(){
+			
+		};
+		return {
+			append : append,
+			update : update
+		};
+	})();
 
-$(function() {/* clicking left Navigation to hide/show right content */
 	$('#region-sidebar>ul>li').click(function(){/* click section title */
 		var id4hide = $(this).attr('data-id');
 
@@ -152,7 +152,7 @@ $(function() {/* clicking left Navigation to hide/show right content */
 		}else {
 			popUpUrl = popUpUrl+'&embedded';	
 		}
-		$('#dropdownvideopage>a').attr('data-moduleid',$(this).parent('.activityinstance').parent('.mod-indent').parent('.quiz').attr('id'));
+		$('#dropdownvideopage>a').attr('data-moduleid',$(this).parent('.activityinstance').parent('div').parent('.mod-indent-outer').parent('div').parent('.quiz').attr('id'));
 		$('#dropdownvideopage>a').attr('data-moduletype','quiz');		
 
 		$('#dropdownvideopage iframe').attr('src',popUpUrl);
@@ -161,7 +161,7 @@ $(function() {/* clicking left Navigation to hide/show right content */
 
 
 	$('.section.img-text .url .activityinstance>a').click(function() {
-		var moduleid = $(this).parent('.activityinstance').parent('.mod-indent').parent('.url').attr('id');
+		var moduleid = $(this).parent('.activityinstance').parent('div').parent('.mod-indent-outer').parent('div').parent('.url').attr('id');
 		moduleid = moduleid.replace('module-','');
 		console.log(moduleid);
 		var popUpUrl = "format/stanford/videoPlayer.php?id="+moduleid;
@@ -200,84 +200,92 @@ $(function() {/* clicking left Navigation to hide/show right content */
 		$('#dropdownvideopage').slideDown('slow');
 	});
 
-});
-
-function unlockModules(moduleid) {
-	moduleid = moduleid.replace('module-','');
-	/* Making ajax call to togglecompletion.php*/
-	
-	$.ajax({
-		type: "GET",
-	  	url: 'format/stanford/togglecompletionlib.php?op=quiz&cmid='+moduleid
-	}).done(function (data) {
+	function unlockModules(moduleid) {
+		moduleid = moduleid.replace('module-','');
+		/* Making ajax call to togglecompletion.php*/
+		
 		$.ajax({
 			type: "GET",
-		  	url: 'format/stanford/unlockmodules.php?id='+moduleid
+		  	url: 'format/stanford/togglecompletionlib.php?op=quiz&cmid='+moduleid
 		}).done(function (data) {
-			unlockNodes = jQuery.parseJSON(data);
-			var unlockNodesArray = new Array();
-			var domainName = document.domain;
-			var subDomainName = window.location;
-			var parts = subDomainName.toString().split('/'.toString());
-			var protocolValue = 'http'; 
-			if (window.location.protocol == "https:"){
-				protocolValue = 'https'
-			}
-			$.each(unlockNodes, function(index, unlockNode) {
-				// unlockNodesArray[index] = unlockNode.toString();
-				// console.log(unlockNode);
-				var targetUnlockNode = $('#module-'+unlockNode);
-				
-				// handle richmedia node
-				if(targetUnlockNode.hasClass('richmedia') && (targetUnlockNode.find('.availabilityinfo').length > 0)) {
-					// console.log('richmedia');
-					if(targetUnlockNode.find('.dimmed_text>span').length > 0) {
-						targetUnlockNode.find('.dimmed_text>span').addClass('instancename');
-					var objectcontent = targetUnlockNode.find('.dimmed_text').html();
-					targetUnlockNode.find('.activityinstance').html('<a class onclick="" href="javascript: void(0)" data-url="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/richmedia/view.php?id='+unlockNode+'">'+objectcontent+'</a>');	
-					}
+			$.ajax({
+				type: "GET",
+			  	url: 'format/stanford/unlockmodules.php?id='+moduleid
+			}).done(function (data) {
+				unlockNodes = jQuery.parseJSON(data);
+				var unlockNodesArray = new Array();
+				var domainName = document.domain;
+				var subDomainName = window.location;
+				var parts = subDomainName.toString().split('/'.toString());
+				var protocolValue = 'http'; 
+				if (window.location.protocol == "https:"){
+					protocolValue = 'https'
 				}
-				// handle resource node
-				if(targetUnlockNode.hasClass('resource') && (targetUnlockNode.find('.availabilityinfo').length > 0)) {
-					// console.log('pdf');
-					if(targetUnlockNode.find('.dimmed_text>span').length > 0) {
-					targetUnlockNode.find('.dimmed_text>span').addClass('instancename');
-					var resourceobjectcontent = targetUnlockNode.find('.dimmed_text').html();
-					targetUnlockNode.find('.activityinstance').html('<a class="" onclick="window.open(\''+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/resource/view.php?id='+unlockNode+'&amp;redirect=1\', \'\', \'width=620,height=450,toolbar=no,location=no,menubar=no,copyhistory=no,status=no,directories=no,scrollbars=yes,resizable=yes\'); return false;" href="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/resource/view.php?id='+unlockNode+'">'+resourceobjectcontent+'</a>');
+				$.each(unlockNodes, function(index, unlockNode) {
+					// unlockNodesArray[index] = unlockNode.toString();
+					// console.log(unlockNode);
+					var targetUnlockNode = $('#module-'+unlockNode);
+					
+					// handle richmedia node
+					if(targetUnlockNode.hasClass('richmedia') && (targetUnlockNode.find('.availabilityinfo').length > 0)) {
+						// console.log('richmedia');
+						if(targetUnlockNode.find('.dimmed_text>span').length > 0) {
+							targetUnlockNode.find('.dimmed_text>span').addClass('instancename');
+						var objectcontent = targetUnlockNode.find('.dimmed_text').html();
+						targetUnlockNode.find('.activityinstance').html('<a class onclick="" href="javascript: void(0)" data-url="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/richmedia/view.php?id='+unlockNode+'">'+objectcontent+'</a>');	
+						}
 					}
-				}
-				// handle final exame node
-				if(targetUnlockNode.hasClass('modtype_url') && (targetUnlockNode.find('.availabilityinfo').length > 0)) {
-					if(targetUnlockNode.find('.dimmed_text>span').length > 0) {
-						// console.log("getting in");
+					// handle resource node
+					if(targetUnlockNode.hasClass('resource') && (targetUnlockNode.find('.availabilityinfo').length > 0)) {
+						// console.log('pdf');
+						if(targetUnlockNode.find('.dimmed_text>span').length > 0) {
 						targetUnlockNode.find('.dimmed_text>span').addClass('instancename');
 						var resourceobjectcontent = targetUnlockNode.find('.dimmed_text').html();
-						if(targetUnlockNode.attr('title') == 'zPlayer'){
-							targetUnlockNode.find('.activityinstance').html('<a class="" onclick="showvideoplayer($(this));" href="javascript:void(0);">'+resourceobjectcontent+'</a>');
-						}else {
-
-							targetUnlockNode.find('.activityinstance').html('<a class="" onclick="window.open(\''+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'&amp;redirect=1\', \'\', \'width=620,height=450,toolbar=no,location=no,menubar=no,copyhistory=no,status=no,directories=no,scrollbars=yes,resizable=yes\'); return false;" href="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'">'+resourceobjectcontent+'</a>');
+						targetUnlockNode.find('.activityinstance').html('<a class="" onclick="window.open(\''+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/resource/view.php?id='+unlockNode+'&amp;redirect=1\', \'\', \'width=620,height=450,toolbar=no,location=no,menubar=no,copyhistory=no,status=no,directories=no,scrollbars=yes,resizable=yes\'); return false;" href="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/resource/view.php?id='+unlockNode+'">'+resourceobjectcontent+'</a>');
 						}
-						
 					}
-				}
+					// handle final exame node
+					if(targetUnlockNode.hasClass('modtype_url') && (targetUnlockNode.find('.availabilityinfo').length > 0)) {
+						if(targetUnlockNode.find('.dimmed_text>span').length > 0) {
+							// console.log("getting in");
+							targetUnlockNode.find('.dimmed_text>span').addClass('instancename');
+							var resourceobjectcontent = targetUnlockNode.find('.dimmed_text').html();
+							if(targetUnlockNode.attr('title') == 'zPlayer'){
+								targetUnlockNode.find('.activityinstance').html('<a class="" onclick="showvideoplayer($(this));" href="javascript:void(0);">'+resourceobjectcontent+'</a>');
+							}else {
+
+								targetUnlockNode.find('.activityinstance').html('<a class="" onclick="window.open(\''+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'&amp;redirect=1\', \'\', \'width=620,height=450,toolbar=no,location=no,menubar=no,copyhistory=no,status=no,directories=no,scrollbars=yes,resizable=yes\'); return false;" href="'+protocolValue+'://'+domainName+'/'+parts[3]+'/mod/url/view.php?id='+unlockNode+'">'+resourceobjectcontent+'</a>');
+							}
+							
+						}
+					}
+				});
 			});
 		});
-	});
 
 
-}
+	}
 
-function showvideoplayer(elem) {
-	var moduleid = elem.parent('.activityinstance').parent('.mod-indent').parent('.activity').attr('id');
-	moduleid = moduleid.replace('module-','');
-	var popUpUrl = "format/stanford/videoPlayer.php?id="+moduleid;
-	$('#dropdownvideopage iframe').attr('src',popUpUrl);
-	$('#dropdownvideopage').slideDown('slow');
-}
+	function showvideoplayer(elem) {
+		var moduleid = elem.parent('.activityinstance').parent('.mod-indent').parent('.activity').attr('id');
+		moduleid = moduleid.replace('module-','');
+		var popUpUrl = "format/stanford/videoPlayer.php?id="+moduleid;
+		$('#dropdownvideopage iframe').attr('src',popUpUrl);
+		$('#dropdownvideopage').slideDown('slow');
+	}
 
-function slideUPFromLiner(moduleid) {
-	$('#dropdownvideopage').slideUp('slow');
-	$('#dropdownvideopage iframe').attr('src','about:blank');
-}
+	function slideUPFromLiner(moduleid) {
+		$('#dropdownvideopage').slideUp('slow');
+		$('#dropdownvideopage iframe').attr('src','about:blank');
+	}
+
+	window.appendProgressBar = appendProgressBar;
+	window.unlockModules = unlockModules;
+	window.showvideoplayer = showvideoplayer;
+	window.slideUPFromLiner = slideUPFromLiner;
+
+
+})(window,document,jQuery);
+
+
 

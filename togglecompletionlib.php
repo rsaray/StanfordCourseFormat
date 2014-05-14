@@ -1,7 +1,7 @@
 <?php
 require_once('../../../config.php');
 require_once($CFG->libdir.'/completionlib.php');
-// require_once('ChromePhp.php');
+//require_once('ChromePhp.php');
 
 $operation = optional_param('op', '', PARAM_ALPHANUM);
 $moduleid = optional_param('cmid', 0, PARAM_INT);

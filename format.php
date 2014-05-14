@@ -15,12 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Renderer for outputting the topics course format.
+ * Topics course format.  Display the whole course as "topics" made of modules.
  *
- * @package stanford course formate
+ * @package format_stanford
  * @copyright 2013 Stanford University
+ * @author Zhao
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since Moodle 2.5
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -32,7 +32,7 @@ require_once($CFG->libdir.'/completionlib.php');
 if ($stanford = optional_param('stanford', 0, PARAM_INT)) {
     $url = $PAGE->url;
     $url->param('section', $stanford);
-    debugging('Outdated topic param passed to course/view.php', DEBUG_DEVELOPER);
+    debugging('Outdated stanford param passed to course/view.php', DEBUG_DEVELOPER);
     redirect($url);
 }
 // End backwards-compatible aliasing..
@@ -42,9 +42,8 @@ $context = context_course::instance($course->id);
 if (($marker >=0) && has_capability('moodle/course:setcurrentsection', $context) && confirm_sesskey()) {
     $course->marker = $marker;
     course_set_marker($course->id, $marker);
+
 }
-
-
 // make sure all sections are created
 $course = course_get_format($course)->get_course();
 course_create_sections_if_missing($course, range(0, $course->numsections));
@@ -52,16 +51,15 @@ course_create_sections_if_missing($course, range(0, $course->numsections));
 $renderer = $PAGE->get_renderer('format_stanford');
 
 if (!empty($displaysection)) {
-	$renderer->stanford_print_single_section_page($course, null, null, null, null, $displaysection);
+    $renderer->stanford_print_single_section_page($course, null, null, null, null, $displaysection);
 } else {
-	$renderer->stanford_print_multiple_section_page($course, null, null, null, null);
+    $renderer->stanford_print_multiple_section_page($course, null, null, null, null);
 }
 
 if(!$PAGE->user_allowed_editing()){
     echo ta_feedback($USER->id,$course->id);
     ob_start("remove_left_nav");
     echo '<script>var regionmainwrapid = document.getElementById("region-main-wrap");regionmainwrapid.className = regionmainwrapid.className + "studentview";</script>';
-    
 }
 echo left_nav_bar($course->id);
 echo output_dropdown();
@@ -69,5 +67,6 @@ echo output_dropdown();
 // Include course format js module
 $PAGE->requires->js('/course/format/stanford/format.js');
 echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>';
+// $PAGE->requires->js('/course/format/flow/left-bar.js');
 echo '<script type="text/javascript" src="format/stanford/js/main.js"></script>';
-// $PAGE->requires->js('/course/format/stanford/js/main.js');
+// echo '<script type="text/javascript" src="format/stanford/left-bar.js"></script>';

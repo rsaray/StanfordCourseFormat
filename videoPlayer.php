@@ -26,7 +26,7 @@
 require_once('../../../config.php');
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir . '/completionlib.php');
-// require_once('ChromePhp.php');
+require_once('ChromePhp.php');
 include 'Mobile_Detect.php';
 
 $id = optional_param('id', 0, PARAM_INT);        // Course module ID

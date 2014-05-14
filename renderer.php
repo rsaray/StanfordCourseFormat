@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Renderer for outputting the topics course format.
+ * Renderer for outputting the stanford course format.
  *
- * @package Stanford Course Format
- * @copyright 2013 Stanford University
+ * @package format_stanford
+ * @copyright 2014 Stanford University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.5
  */
@@ -29,10 +29,15 @@ require_once($CFG->dirroot.'/course/format/renderer.php');
 require_once($CFG->dirroot.'/course/format/stanford/stanfordrenderer.php');
 
 
+/**
+ * Basic renderer for stanford format.
+ *
+ * @copyright 2012 Dan Poltawski
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class format_stanford_renderer extends format_section_renderer_base {
 
     protected $stanfordcourserender;
-
     /**
      * Constructor method, calls the parent constructor
      *
@@ -42,7 +47,7 @@ class format_stanford_renderer extends format_section_renderer_base {
     public function __construct(moodle_page $page, $target) {
         parent::__construct($page, $target);
 
-        // Since format_topics_renderer::section_edit_controls() only displays the 'Set current section' control when editing mode is on
+        // Since format_stanford_renderer::section_edit_controls() only displays the 'Set current section' control when editing mode is on
         // we need to be sure that the link 'Turn editing mode on' is available for a user who does not have any other managing capability.
         $page->set_other_editing_capability('moodle/course:setcurrentsection');
         $this->stanfordcourserender = new stanford_course_renderer($page,$target);
@@ -116,6 +121,77 @@ class format_stanford_renderer extends format_section_renderer_base {
         return array_merge($controls, parent::section_edit_controls($course, $section, $onsectionpage));
     }
 
+
+
+    /**
+     * Generate the display of the header part of a section before
+     * course modules are included
+     *
+     * @param stdClass $section The course_section entry from DB
+     * @param stdClass $course The course entry from DB
+     * @param bool $onsectionpage true if being printed on a single-section page
+     * @param int $sectionreturn The section to return to after an action
+     * @return string HTML to output.
+     */
+    protected function stanford_section_header($section, $course, $onsectionpage, $sectionreturn=null) {
+        global $PAGE;
+
+        $o = '';
+        $currenttext = '';
+        $sectionstyle = '';
+
+        if ($section->section != 0) {
+            // Only in the non-general sections.
+            if (!$section->visible) {
+                $sectionstyle = ' hidden';
+            } else if (course_get_format($course)->is_section_current($section)) {
+                $sectionstyle = ' current';
+            }
+        }
+
+        $o.= html_writer::start_tag('li', array('id' => 'section-'.$section->section,
+            'class' => 'section main clearfix'.$sectionstyle, 'role'=>'region',
+            'aria-label'=> get_section_name($course, $section)));
+
+        $leftcontent = $this->section_left_content($section, $course, $onsectionpage);
+        $o.= html_writer::tag('div', $leftcontent, array('class' => 'left side'));
+
+        $rightcontent = $this->section_right_content($section, $course, $onsectionpage);
+        $o.= html_writer::tag('div', $rightcontent, array('class' => 'right side'));
+        $o.= html_writer::start_tag('div', array('class' => 'content'));
+
+        // When not on a section page, we display the section titles except the general section if null
+        $hasnamenotsecpg = (!$onsectionpage && ($section->section != 0 || !is_null($section->name)));
+
+        // When on a section page, we only display the general section title, if title is not the default one
+        $hasnamesecpg = ($onsectionpage && ($section->section == 0 && !is_null($section->name)));
+
+        $classes = ' accesshide';
+        if ($hasnamenotsecpg || $hasnamesecpg) {
+            $classes = '';
+        }
+        $o.= $this->output->heading($this->section_title($section, $course), 3, 'sectionname' . $classes);
+        
+        $o.= html_writer::tag('div', '', array('class' => 'title_badge'));
+        $o.= html_writer::start_tag('div', array('class' => 'summary'));
+        $o.= $this->format_summary_text($section);
+
+        $context = context_course::instance($course->id);
+        if ($PAGE->user_is_editing() && has_capability('moodle/course:update', $context)) {
+            $url = new moodle_url('/course/editsection.php', array('id'=>$section->id, 'sr'=>$sectionreturn));
+            $o.= html_writer::link($url,
+                html_writer::empty_tag('img', array('src' => $this->output->pix_url('i/settings'),
+                    'class' => 'iconsmall edit', 'alt' => get_string('edit'))),
+                array('title' => get_string('editsummary')));
+        }
+        $o.= html_writer::end_tag('div');
+
+        $o .= $this->section_availability_message($section,
+                has_capability('moodle/course:viewhiddensections', $context));
+
+        return $o;
+    }
+
     /**
      * Output the html for a single section page .
      *
@@ -170,15 +246,16 @@ class format_stanford_renderer extends format_section_renderer_base {
         // Title with section navigation links.
         $sectionnavlinks = $this->get_nav_links($course, $modinfo->get_section_info_all(), $displaysection);
         $sectiontitle = '';
-        $sectiontitle .= html_writer::start_tag('div', array('class' => 'section-navigation header headingblock'));
+        $sectiontitle .= html_writer::start_tag('div', array('class' => 'section-navigation navigationtitle'));
         $sectiontitle .= html_writer::tag('span', $sectionnavlinks['previous'], array('class' => 'mdl-left'));
         $sectiontitle .= html_writer::tag('span', $sectionnavlinks['next'], array('class' => 'mdl-right'));
         // Title attributes
-        $titleattr = 'mdl-align title';
+        $classes = 'sectionname';
         if (!$thissection->visible) {
-            $titleattr .= ' dimmed_text';
+            $classes .= ' dimmed_text';
         }
-        $sectiontitle .= html_writer::tag('div', get_section_name($course, $displaysection), array('class' => $titleattr));
+        $sectiontitle .= $this->output->heading(get_section_name($course, $displaysection), 3, $classes);
+
         $sectiontitle .= html_writer::end_tag('div');
         echo $sectiontitle;
 
@@ -209,6 +286,16 @@ class format_stanford_renderer extends format_section_renderer_base {
         echo html_writer::end_tag('div');
     }
 
+
+    /**
+     * Output the html for a multiple section page
+     *
+     * @param stdClass $course The course entry from DB
+     * @param array $sections (argument not used)
+     * @param array $mods (argument not used)
+     * @param array $modnames (argument not used)
+     * @param array $modnamesused (argument not used)
+     */
     public function stanford_print_multiple_section_page($course, $sections, $mods, $modnames, $modnamesused) {
         global $PAGE;
 
@@ -261,7 +348,7 @@ class format_stanford_renderer extends format_section_renderer_base {
                 // Display section summary only.
                 echo $this->section_summary($thissection, $course, null);
             } else {
-                echo $this->section_header($thissection, $course, false, 0);
+                echo $this->stanford_section_header($thissection, $course, false, 0);
                 if ($thissection->uservisible) {
                     echo $this->stanfordcourserender->stanford_course_section_cm_list($course, $thissection, 0);
                     echo $this->stanfordcourserender->course_section_add_cm_control($course, $section, 0);
@@ -311,65 +398,5 @@ class format_stanford_renderer extends format_section_renderer_base {
             echo $this->end_section_list();
         }
 
-    }
-    protected function section_header($section, $course, $onsectionpage, $sectionreturn=null) {
-        global $PAGE;
-
-        $o = '';
-        $currenttext = '';
-        $sectionstyle = '';
-
-        if ($section->section != 0) {
-            // Only in the non-general sections.
-            if (!$section->visible) {
-                $sectionstyle = ' hidden';
-            } else if (course_get_format($course)->is_section_current($section)) {
-                $sectionstyle = ' current';
-            }
-        }
-
-        $o.= html_writer::start_tag('li', array('id' => 'section-'.$section->section,
-            'class' => 'section main clearfix'.$sectionstyle));
-
-        $leftcontent = $this->section_left_content($section, $course, $onsectionpage);
-        $o.= html_writer::tag('div', $leftcontent, array('class' => 'left side'));
-
-        $rightcontent = $this->section_right_content($section, $course, $onsectionpage);
-        $o.= html_writer::tag('div', $rightcontent, array('class' => 'right side'));
-        $o.= html_writer::start_tag('div', array('class' => 'content'));
-
-        // When not on a section page, we display the section titles except the general section if null
-        $hasnamenotsecpg = (!$onsectionpage && ($section->section != 0 || !is_null($section->name)));
-
-        // When on a section page, we only display the general section title, if title is not the default one
-        $hasnamesecpg = ($onsectionpage && ($section->section == 0 && !is_null($section->name)));
-
-        if ($hasnamenotsecpg || $hasnamesecpg) {
-            $o.= $this->output->heading($this->section_title($section, $course), 3, 'sectionname');
-        }
-
-        $o.= html_writer::start_tag('div', array('class' => 'summary'));
-        $o.= $this->format_summary_text($section);
-
-        $context = context_course::instance($course->id);
-        if ($PAGE->user_is_editing() && has_capability('moodle/course:update', $context)) {
-            $url = new moodle_url('/course/editsection.php', array('id'=>$section->id, 'sr'=>$sectionreturn));
-            $o.= html_writer::link($url,
-                html_writer::empty_tag('img', array('src' => $this->output->pix_url('t/edit'),
-                    'class' => 'iconsmall edit', 'alt' => get_string('edit'))),
-                array('title' => get_string('editsummary')));
-        }
-        $o.= html_writer::end_tag('div');
-
-        /* Stanford: add one more div to each section in order to add explanation for each section */
-        if ($section->section != 0) {
-            $o.= html_writer::start_tag('div', array('class' => 'title_badge'));
-            $o.= html_writer::end_tag('div');    
-        }
-
-        $o .= $this->section_availability_message($section,
-                has_capability('moodle/course:viewhiddensections', $context));
-
-        return $o;
     }
 }
