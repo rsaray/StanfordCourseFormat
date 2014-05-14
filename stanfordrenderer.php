@@ -440,33 +440,25 @@ public function stanford_course_section_cm_list($course, $section, $sectionretur
                 'class' => 'iconlarge activityicon', 'alt' => ' ', 'role' => 'presentation')) . $accesstext .
                 html_writer::tag('span', $instancename . $altname, array('class' => 'instancename'));
         if ($mod->uservisible) {
-//             $output .= html_writer::link($url, $activitylink, array('class' => $linkclasses, 'onclick' => $onclick)) .
-//                     $groupinglabel;
-        	if($mod->modfullname == 'Rich Media' || $mod->modfullname == 'Quiz' ){
-        		if($newstate !== COMPLETION_COMPLETE){
-              if(has_capability('mod/quiz:preview', context_course::instance($mod->course)) && $mod->modfullname == 'Quiz') {
+            // $output .= html_writer::link($url, $activitylink, array('class' => $linkclasses, 'onclick' => $onclick)) .
+            //         $groupinglabel;
+            if($mod->modfullname == 'Rich Media' || $mod->modfullname == 'Quiz' ){
+                if($newstate !== COMPLETION_COMPLETE){
+                    $output .= html_writer::link("javascript:void(0);", $activitylink, array('class' => $linkclasses." done", 'onclick' => $onclick,'data-url'=>$url)) .
+                    $groupinglabel;
+                }else {
+                    $output .= html_writer::link("javascript:void(0);", $activitylink, array('class' => $linkclasses, 'onclick' => $onclick,'data-url'=>$url)) .
+                    $groupinglabel;
+                }
+                
+            }else if($mod->module == 20){
+                $output .= html_writer::link("javascript:void(0);", $activitylink, array('class' => $linkclasses)) .
+                    $groupinglabel;
+            }else {
                 $output .= html_writer::link($url, $activitylink, array('class' => $linkclasses, 'onclick' => $onclick)) .
                     $groupinglabel;
-              }else {
-          			$output .= html_writer::link("javascript:void(0);", $activitylink, array('class' => $linkclasses." done", 'onclick' => $onclick,'data-url'=>$url,'data-moduleid'=>$mod->id)) .
-          			$groupinglabel;
-              }
-        		}else {
-              if(has_capability('mod/quiz:preview', context_course::instance($mod->course)) && $mod->modfullname == 'Quiz') {
-                $output .= html_writer::link($url, $activitylink, array('class' => $linkclasses, 'onclick' => $onclick)) .
-                    $groupinglabel;
-              }else {
-          			$output .= html_writer::link("javascript:void(0);", $activitylink, array('class' => $linkclasses, 'onclick' => $onclick,'data-url'=>$url,'data-moduleid'=>$mod->id)) .
-          			$groupinglabel;
-              }
-        		}
-        	}else if($mod->module == 22){
-            $output .= html_writer::link("javascript:void(0);", $activitylink, array('class' => $linkclasses, 'onclick' => $onclick,'data-url'=>$url,'data-moduleid'=>$mod->id)) .
-              $groupinglabel;
-          }else {
-        		$output .= html_writer::link($url, $activitylink, array('class' => $linkclasses, 'onclick' => $onclick)) .
-        		$groupinglabel;
-        	}
+            }
+
         } else {
             // We may be displaying this just in order to show information
             // about visibility, without the actual link ($mod->uservisible)

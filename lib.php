@@ -445,6 +445,215 @@ function ta_feedback($userid,$courseid) {
     return $o; 
 }
 
+/**
+ * supplemental on the video page
+ *
+ * @param course module id
+ * @param course id
+ * @return array() with supplemental url
+ */
+
+// function lecture_supplemental($id,$courseid) {
+function lecture_supplemental($courseid,$id,$modulepdfid=''){
+    global $DB,$CFG;
+    $sArray = array();
+    if($modulepdfid === '') {
+        $piecesOfSequence = array();
+        $verifySingleRecord = array();
+        $course_section_labels_sql = "SELECT * 
+                                        FROM {course_modules} 
+                                       WHERE module = (SELECT m.id FROM {modules} m WHERE m.name = 'label') 
+                                             AND section = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = :id)";
+        $course_section_labels = $DB->get_recordset_sql($course_section_labels_sql,array('id'=>$id));
+
+        // Trying to get the first label id from the labels array
+        $section_label_ids = array();
+        $course_section_labels_key = 0;
+        $first_label = '';
+        foreach ($course_section_labels as $value) {
+            if($course_section_labels_key == 0) {
+                $first_label = $value->id;
+            }
+            $course_section_labels_key++;
+            array_push($section_label_ids, $value->id);
+        }
+        $course_section_labels->close();
+
+        // getting modules' id for the current section
+        $section_sequence_sql = "SELECT cs.sequence 
+                                   FROM {course_sections} cs 
+                                  WHERE id = (SELECT cm.section FROM {course_modules} cm WHERE cm.id = :id)";
+        $section_sequence = $DB->get_record_sql($section_sequence_sql, array('id'=>$id));
+        $piecesOfSequence = explode(",", $section_sequence->sequence);
+
+        // only get resources(PDFs) before the first label 
+        $piecesOfSequenceItems = array();
+        foreach ($piecesOfSequence as $value) {
+            if($first_label == $value){
+                break;
+            }
+            $piecesOfSequenceItems[] = $value;
+        }
+        if(count($piecesOfSequenceItems) > 0) {
+            $piecesOfSequenceItemString = join(',',$piecesOfSequenceItems);
+
+            $moduleslideGroup = "SELECT cm.*, m.revision 
+                                   FROM {course_modules} cm 
+                                   JOIN {modules} md ON md.id = cm.module 
+                                   JOIN {resource} m ON m.id = cm.instance 
+                              LEFT JOIN {course_sections} cw ON cw.id = cm.section 
+                                  WHERE cm.id IN (".$piecesOfSequenceItemString.") 
+                                        AND md.name = 'resource' AND cm.course = :course";
+
+            $moduleslideGrouprs = $DB->get_recordset_sql($moduleslideGroup,array('course'=>$courseid));
+
+            // pushing the resouces(PDFs) URLs to supplementsArray
+            foreach ($moduleslideGrouprs as $key => $value) {
+    //             $rescontext = get_context_instance(CONTEXT_MODULE, $value->id);
+                $rescontext = context_module::instance($value->id);
+                $resfs = get_file_storage();
+                $resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
+                if (count($resfiles) < 1) {
+                    resource_print_filenotfound($resource, $cm, $course);
+                    die;
+                } else {
+                    $file = reset($resfiles);
+                    unset($resfiles);
+                }
+                $filename=$file->get_filename();
+                $rest = substr($filename, 0, -4);
+                if(!in_array($rest, $verifySingleRecord)) {
+                    $verifySingleRecord[] = $rest;
+                    if(substr($filename,-3)=="pdf"){
+                        $supplementnewex=",true";
+                    }
+                    $path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$value->revision.$file->get_filepath().$filename;
+                    $unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$value->id);
+                    $sArray[] = $unitArray;
+                }
+                
+            }
+            $moduleslideGrouprs->close();
+        }
+
+        // END: General resource 
+
+        // Looking for videos' resources(PDFs)
+        $targetSequece = array();
+        $finallyTarget = array();
+        $sectionlabelidsarraysize = count($section_label_ids);
+        for($slIndex = 0; $slIndex < $sectionlabelidsarraysize; $slIndex++) {
+            $haschild = '';
+            $locker = false;
+            for($sqIndex = 0; $sqIndex < count($piecesOfSequence); $sqIndex++){
+                if(($section_label_ids[$slIndex] == $piecesOfSequence[$sqIndex]) && ($locker == false)){
+                    $haschild = '1';
+                    $locker = true;
+                }
+                if($locker == true && $haschild != ''){
+                    array_push($targetSequece, $piecesOfSequence[$sqIndex]);
+                }
+                $altslIndex = $slIndex+1;
+                if($altslIndex !== $sectionlabelidsarraysize){
+                    if($piecesOfSequence[$sqIndex] === $section_label_ids[$altslIndex]){
+                        $haschild = '';
+                    }   
+                }
+            }
+            foreach ($targetSequece as $value) {
+                
+                if($value == $id){
+
+                    $finallyTarget = $targetSequece;
+
+                }
+            }
+            $targetSequece = array();       
+        }
+
+        $finallocker = false;
+
+        // $finalTarget has all the all the modules' id between two labels 
+        
+        if(count($finallyTarget) > 0){
+            $finallyTargetString = join(',',$finallyTarget);
+            $finallyTargetGroup = "SELECT cm.*, m.revision 
+                                     FROM {course_modules} cm 
+                                     JOIN {modules} md ON md.id = cm.module 
+                                     JOIN {resource} m ON m.id = cm.instance 
+                                LEFT JOIN {course_sections} cw ON cw.id = cm.section 
+                                    WHERE cm.id IN (".$finallyTargetString.") 
+                                          AND md.name = 'resource' 
+                                          AND cm.course = :course";
+
+            $finallyTargetGroups = $DB->get_recordset_sql($finallyTargetGroup,array('course'=>$courseid));
+
+            foreach ($finallyTarget as $value1) {
+                
+                if($finallocker == true) {
+                    foreach ($finallyTargetGroups as $finallyTargetGroupItem) {
+                        if($value1 == $finallyTargetGroupItem->id && ($finallyTargetGroupItem->indent ==3 || $finallyTargetGroupItem->indent ==1)){
+    //                         $rescontext = get_context_instance(CONTEXT_MODULE, $finallyTargetGroupItem->id);
+                            $rescontext = context_module::instance($finallyTargetGroupItem->id);
+                
+                            $resfs = get_file_storage();
+                            $resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
+                            if (count($resfiles) < 1) {
+                                resource_print_filenotfound($resource, $cm, $course);
+                                die;
+                            } else {
+                                $file = reset($resfiles);
+                                unset($resfiles);
+                            }
+                            $filename=$file->get_filename();
+                            $rest = substr($filename, 0, -4);
+                            if(!in_array($rest, $verifySingleRecord)) {
+                                $verifySingleRecord[] = $rest;
+                                if(substr($filename,-3)=="pdf"){
+                                    $supplementnewex=",true";
+                                }
+                                    $path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$finallyTargetGroupItem->revision.$file->get_filepath().$filename;
+                                    $unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$finallyTargetGroupItem->id);
+                                    $sArray[] = $unitArray;
+                            }
+                        }
+                    }
+                }
+                if($value1 == $id) {
+                    $finallocker = true;
+                }
+            }
+        }
+    }else {
+
+        $rescontext = get_context_instance(CONTEXT_MODULE, $modulepdfid);
+
+        $resresource = get_coursemodule_from_id('resource', $modulepdfid, $courseid, false, MUST_EXIST);
+        $revision = $DB->get_record_sql('SELECT revision FROM {resource} WHERE id = '.$resresource->instance);
+        
+        $resfs = get_file_storage();
+        $resfiles = $resfs->get_area_files($rescontext->id, 'mod_resource', 'content', 0, 'sortorder DESC, id ASC', false); // TODO: this is quite inefficient!!
+        if (count($resfiles) < 1) {
+            resource_print_filenotfound($resource, $cm, $course);
+            die;
+        } else {
+            $file = reset($resfiles);
+            unset($resfiles);
+        }
+        $filename=$file->get_filename();
+        $rest = substr($filename, 0, -4);
+        if(!in_array($rest, $verifySingleRecord)) {
+            $verifySingleRecord[] = $rest;
+            if(substr($filename,-3)=="pdf"){
+                $supplementnewex=",true";
+            }
+                $path = $CFG->wwwroot.'/pluginfile.php/'.$rescontext->id.'/mod_resource/content/'.$revision->revision.$file->get_filepath().$filename;
+                $unitArray = array('url'=>$path,'name'=>$rest,'urlid'=>$modulepdfid);
+                $sArray[] = $unitArray;
+        }
+    }
+    return $sArray;
+}
 
 
 function get_user_browser() 
