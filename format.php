@@ -68,4 +68,5 @@ echo output_dropdown();
 $PAGE->requires->js('/course/format/stanford/format.js');
 echo '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>';
 // $PAGE->requires->js('/course/format/flow/left-bar.js');
-echo '<script type="text/javascript" src="format/stanford/left-bar.js"></script>';
+echo '<script type="text/javascript" src="format/stanford/js/main.js"></script>';
+// echo '<script type="text/javascript" src="format/stanford/left-bar.js"></script>';

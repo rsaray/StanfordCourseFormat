@@ -152,7 +152,7 @@ $(function() {/* clicking left Navigation to hide/show right content */
 		}else {
 			popUpUrl = popUpUrl+'&embedded';	
 		}
-		$('#dropdownvideopage>a').attr('data-moduleid',$(this).parent('.activityinstance').parent('.mod-indent').parent('.quiz').attr('id'));
+		$('#dropdownvideopage>a').attr('data-moduleid',$(this).parent('.activityinstance').parent('div').parent('.mod-indent-outer').parent('div').parent('.quiz').attr('id'));
 		$('#dropdownvideopage>a').attr('data-moduletype','quiz');		
 
 		$('#dropdownvideopage iframe').attr('src',popUpUrl);

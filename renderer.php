@@ -58,7 +58,7 @@ class format_stanford_renderer extends format_section_renderer_base {
      * @return string HTML to output.
      */
     protected function start_section_list() {
-        return html_writer::start_tag('ul', array('class' => 'stanford'));
+        return html_writer::start_tag('ul', array('class' => 'stanford_course_list'));
     }
 
     /**
